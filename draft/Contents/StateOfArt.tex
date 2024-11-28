@@ -1,7 +1,3 @@
-\documentclass{book}
-
-\begin{document}
-
 \chapter{Estado del arte}
 
 \section{SAT}
@@ -56,16 +52,16 @@ La jerarquía de Chomsky consta de los siguientes niveles:
 \begin{enumerate}
       \item \textbf{Lenguajes regulares:}
             Son los lenguajes más simples dentro de la jerarquía y son reconocidos por autómatas finitos. Se definen mediante gramáticas de tipo 3, en las cuales las reglas de producción tienen una forma estrictamente restringida, como \( A \to aB \) o \( A \to a \), donde \( A \) y \( B \) son no terminales y \( a \) es un símbolo terminal. Estos lenguajes tienen aplicaciones prácticas en el análisis léxico y el diseño de patrones.
-
+            
       \item \textbf{Lenguajes libres de contexto \textit{CFL}:}
             Reconocidos por autómatas con pila, los lenguajes libres de contexto son definidos por gramáticas de tipo 2. En estas gramáticas, las reglas de producción tienen la forma \( A \to \alpha \), donde \( \alpha \) es una cadena de terminales y no terminales. Los lenguajes CFL son fundamentales para analizar la sintaxis de los lenguajes de programación y para modelar estructuras jerárquicas.
-
+            
       \item \textbf{Lenguajes sensibles al contexto:}
             Estos lenguajes son más expresivos y están definidos por gramáticas de tipo 1, que permiten reglas de producción de la forma \( \alpha A \beta \to \alpha \gamma \beta \), donde \( A \) es un no terminal, \( \alpha \) y \( \beta \) son cadenas de símbolos, y \( \gamma \) no es una cadena vacía. Los lenguajes sensibles al contexto son reconocidos por máquinas de Turing linealmente acotadas.
-
+            
       \item \textbf{Lenguajes recursivamente enumerables:}
             Estos lenguajes corresponden a los más generales y son definidos por gramáticas de tipo 0, que no tienen restricciones en las reglas de producción. Son reconocidos por máquinas de Turing y representan la clase completa de problemas que pueden ser computados.
-
+            
 \end{enumerate}
 
 
@@ -126,8 +122,3 @@ Continuando la línea del autómata booleano empleado en la resolución de insta
 consistió en analizar las gramáticas matriciales. Nuevamente intersectando el autómata booleano con un formalismo que
 cuente con un algoritmo para comprobar el problema del vacío en tiempo polinomial en este caso se eligieron las
 gramáticas matriciales que nuevamente ofrecen un conjunto más amplio de problemas que el CF-SAT.
-
-
-
-
-\end{document}

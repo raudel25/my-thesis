@@ -1,11 +1,3 @@
-\documentclass{book}
-
-\usepackage{multicol}
-\usepackage{tikz}
-\usetikzlibrary{automata, positioning}
-
-\begin{document}
-
 \chapter{Full SAT}
 
 En esta sección se presentará un nuevo enfoque distinto a los anteriores, el cual se basa en definir un lenguaje al cual
@@ -104,7 +96,7 @@ se define la función de transición $\delta$ de la siguiente manera:
                   \item $\delta_{SAT}(q_0,0)=(q_0,c)$
               \end{itemize}
           \end{multicols}
-
+          
     \item  transiciones para el estado $q_p$ (estado positivo de $T_{SAT}$): representa que para los valores de verdad de la cláusula obtiene un valor de verdad positivo.
           \begin{multicols}{2}
               \begin{itemize}
@@ -116,7 +108,7 @@ se define la función de transición $\delta$ de la siguiente manera:
                   \item $\delta_{SAT}(q_{p},0)=(q_{p},c)$
               \end{itemize}
           \end{multicols}
-
+          
     \item  transiciones para el estado $q_n$ (estado negativo de $T_{SAT}$): representa que para los valores de verdad la cláusula obtiene un valor de verdad negativo.
           \begin{multicols}{2}
               \begin{itemize}
@@ -132,23 +124,23 @@ se define la función de transición $\delta$ de la siguiente manera:
 
 \begin{figure}[h]
     \centering        \begin{tikzpicture}[shorten >=1pt, node distance=3cm, on grid, auto]
-
+        
         % Nodos
         \node[state, initial] (q0)   {$q_0$};
         \node[state] (qn) [above right=of q0] {$q_n$};
         \node[state, accepting] (qp) [below right=of q0] {$q_p$};
-
+        
         % Transiciones
         \path[->]
         (q0) edge [bend left] node {0/a,1/b} (qn)
         (q0) edge [bend right] node {1/a,0/b} (qp)
         (q0) edge [loop right] node {0/c,1/c} (q0)
-
+        
         (qn) edge [bend left] node {1/a,0/b} (qp)
         (qn) edge [loop above] node {0/a,1/b,0/c,1/c} (qn)
-
+        
         (qp) edge [loop below] node {1/a,0/b,0/a,1/b,0/c,1/c} (qp);
-
+        
     \end{tikzpicture}
     \caption{Transductor $T_{SAT}$.}
     \label{fig:transducer} % Esto es para referenciar la figura en el texto
@@ -172,6 +164,3 @@ Luego $L_{Full-SAT}$ contiene todas las fórmulas booleanas satisfacibles, pero 
 que permita conocer si una cadena que representa una fórmula booleana pertenece al lenguaje o no, para ello se necesita encontrar un formalismo que sea capaz
 de generar el lenguaje $L_{0,1}$ y al aplicarle el transductor $T_{Full-SAT}$ a dicho formalismo se obtenga un formalismo que cuente con un algoritmo de parsing
 para reconocer si una cadena pertenece a dicho formalismo o no.
-
-
-\end{document}
