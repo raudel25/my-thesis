@@ -1,4 +1,15 @@
-\chapter{Full SAT}
+\documentclass{article}
+
+\usepackage{multicol}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+
+\title{Full SAT}
+\author{Raudel Alejandro Gómez Molina}
+
+\begin{document}
+
+\maketitle
 
 En esta sección se presentará un nuevo enfoque distinto a los anteriores, el cual se basa en definir un lenguaje al cual
 pertenecen todos los problemas SAT que son satisfacible y al cual se le denominará \textit{Full SAT}.
@@ -164,3 +175,5 @@ Luego $L_{Full-SAT}$ contiene todas las fórmulas booleanas satisfacibles, pero 
 que permita conocer si una cadena que representa una fórmula booleana pertenece al lenguaje o no, para ello se necesita encontrar un formalismo que sea capaz
 de generar el lenguaje $L_{0,1}$ y al aplicarle el transductor $T_{Full-SAT}$ a dicho formalismo se obtenga un formalismo que cuente con un algoritmo de parsing
 para reconocer si una cadena pertenece a dicho formalismo o no.
+
+\end{document}
