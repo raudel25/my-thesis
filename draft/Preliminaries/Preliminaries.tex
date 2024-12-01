@@ -16,7 +16,6 @@
 
 \section{Teoría de Lenguajes}
 
-
 \subsection{Conceptos básicos}
 
 \paragraph{Alfabeto:} Un alfabeto, denotado como $\Sigma$, es un conjunto finito y no vacío de símbolos, ejemplo:
@@ -137,7 +136,7 @@ La \textbf{Jerarquía de Chomsky} (Figura~\ref{fig:ChomskySchema}) clasifica las
 
 \subsection{Máquina de Turing}
 
-Una Máquina de Turing es un modelo abstracto de computación universal introducido por Alan Turing en 1936. Este modelo formaliza el concepto de computación algorítmica y consiste en los siguientes componentes:
+Una Máquina de Turing \cite{authomataTheory} es un modelo abstracto de computación universal introducido por Alan Turing en 1936. Este modelo consiste en los siguientes componentes:
 
 \begin{itemize}
       \item \textbf{Cinta}: Un medio de almacenamiento infinito dividido en celdas, donde cada celda contiene un símbolo de un alfabeto finito.
@@ -180,29 +179,38 @@ La notación asintótica se utiliza para describir el comportamiento de una func
 \end{itemize}
 
 La notación asintótica permite describir el tiempo de ejecución un algoritmo en cuanto al número de operaciones básicos realizadas
-por un modelo formal de cómputo (por ejemplo una máquina de Turing). Por ejemplo algoritmos como determinar el mínimo y el máximo de
+por un modelo formal de cómputo (por ejemplo una máquina de Turing). Algoritmos como determinar el mínimo y el máximo de
 un array son $\Theta(n)$, ya que necesitan realizar una cantidad de operaciones de orden $n$ en relación con el tamaño de la entrada.
 
 \subsection{Clases de problemas}
 
-Los problemas computacionales se agrupan en diferentes clases según los recursos necesarios para resolverlos.
+Los problemas computacionales \cite{authomataTheory} se agrupan en diferentes clases según los recursos necesarios para resolverlos.
 
-\paragraph{Problemas en $\mathsf{P}$:}
-Un problema pertenece a $\mathsf{P}$ si puede resolverse en tiempo polinomial mediante una Máquina de Turing determinista. Es decir, existe un algoritmo determinista que, para una entrada de tamaño $n$, produce la solución en tiempo $O(n^k)$ para alguna constante $k$.
+\paragraph{Problemas en la clase P:}
+Un problema pertenece a la clase P si puede resolverse en tiempo polinomial mediante una Máquina de Turing determinista. Es decir, existe un algoritmo determinista que, para una entrada de tamaño $n$, produce la solución en tiempo $O(n^k)$ para alguna constante $k$.
 
-\paragraph{Problemas en $\mathsf{NP}$:}
-Un problema pertenece a $\mathsf{NP}$ si su solución puede verificarse en tiempo polinomial mediante una Máquina de Turing determinista. Alternativamente, un problema está en $\mathsf{NP}$ si puede resolverse en tiempo polinomial mediante una Máquina de Turing no determinista.
+\paragraph{Problemas en la clase NP:}
+Un problema pertenece a NP si su solución puede verificarse en tiempo polinomial mediante una Máquina de Turing determinista. Alternativamente, un problema está en NP si puede resolverse en tiempo polinomial mediante una Máquina de Turing no determinista.
+
+\paragraph{Problemas en la clase NP-Completo:}
+Un problema pertenece a la clase NP-Completo, si pertenece a NP y además es tan difícil como cualquier otro problema en NP. Esto significa que cualquier problema en NP puede reducirse a este problema en tiempo polinómico.
+
 \paragraph{Problemas no decidibles:}
 Un problema es no decidible si no existe una Máquina de Turing que pueda resolverlo correctamente para todas las entradas posibles. Esto significa que no hay algoritmo que garantice una respuesta en tiempo finito en todos los casos. Un ejemplo clásico de problema no decidible es el \textit{Problema de la Parada}, que consiste en determinar si una Máquina de Turing se detendrá para una entrada dada.
-\subsection{Relaciones entre clases}
+\subsection{P vs NP}
 
-La relación entre las clases $\mathsf{P}$ y $\mathsf{NP}$ es uno de los problemas abiertos más importantes en la teoría de la computación. Hasta la fecha, se desconoce si $\mathsf{P} = \mathsf{NP}$ o si $\mathsf{P} \neq \mathsf{NP}$. Además, existen problemas que no están en $\mathsf{P}$ ni en $\mathsf{NP}$, como los problemas indecidibles.
+La relación entre las clases P y NP es uno de los problemas abiertos más importantes en la teoría de la
+computación. Hasta la fecha, se desconoce si $\text{P} = \text{NP}$ o si $\text{P} \neq \text{NP}$. Por otro
+lado el conjunto de problemas NP-Completo brinda una base sólida para el problema anterior, ya que dada su
+definición cualquier problema perteneciente a este conjunto que sea soluble en tiempo polinomial
+implica que todos los problemas en NP lo son. Además, existen problemas que no están en P ni en NP, como
+los problemas indecidibles.
 
 \section{Mecanismos de escritura regulada}
 
 \subsection{Autómata regular}
 
-Un autómata regular, también conocido como autómata finito, es un modelo matemático para reconocer lenguajes regulares. Este tipo de autómata se define como una máquina abstracta que procesa cadenas de símbolos de un alfabeto finito y determina si una cadena pertenece a un lenguaje regular.
+Un autómata regular \cite{authomataTheory}, también conocido como autómata finito, es un modelo matemático para reconocer lenguajes regulares. Este tipo de autómata se define como una máquina abstracta que procesa cadenas de símbolos de un alfabeto finito y determina si una cadena pertenece a un lenguaje regular.
 
 Un autómata regular se puede representar como una 5-tupla $$\mathcal{A} = (Q, \Sigma, \delta, q_0, F)$$ donde:
 
@@ -221,7 +229,7 @@ Se puede demostrar que el conjunto de lenguajes reconocido por un autómata fini
 
 \subsection{Autómata de pila y Gramáticas libres del contexto}
 
-Un autómata de pila es un modelo matemático de computación que extiende los autómatas finitos al incluir una estructura de datos adicional: una pila. Este modelo es capaz de reconocer lenguajes libres de contexto,
+Un autómata de pila \cite{authomataTheory} es un modelo matemático de computación que extiende los autómatas finitos al incluir una estructura de datos adicional: una pila. Este modelo es capaz de reconocer lenguajes libres de contexto,
 proporcionando una conexión directa con las gramáticas libres de contexto \textit{CFG}, es decir dada una gramática libre del contexto se puede construir un autómata de pila que reconozca el lenguaje generado por la gramática y viceversa.
 
 Formalmente, un autómata de pila se define como una 7-tupla
@@ -245,7 +253,7 @@ Un autómata de pila procesa una cadena de entrada desde el estado inicial $q_0$
 
 \subsection{Gramáticas Matriciales}
 
-Una gramática matricial de grado $n$ \textit{$n$-MG} es una 4-tupla:
+Una gramática matricial \cite{simpleMatrixLanguages} de grado $n$ \textit{$n$-MG} es una 4-tupla:
 
 \[
       G_n = (V, P, S,\Sigma)
@@ -307,7 +315,7 @@ esta compuesta por una secuencia de subsecuentes de terminales de conjuntos dist
 
 \section{Gramáticas de Concatenación de Rango}
 
-Las gramáticas de concatenación de rango (\textit{RCG}) son un formalismo de gramáticas desarrollado para describir lenguajes más generales que los generados por gramáticas libres del contexto.
+Las gramáticas de concatenación de rango (\textit{RCG}) \cite{mainRCGBib} son un formalismo de gramáticas desarrollado para describir lenguajes más generales que los generados por gramáticas libres del contexto.
 Este formalismo extiende las capacidades descriptivas al incluir relaciones entre rangos de la cadena de una manera más flexible,
 permitiendo la generación de lenguajes sensibles al contexto.
 
@@ -403,7 +411,7 @@ A continuación se describen las principales propiedades de las RCG:
 \subsection{Problema de la palabra, problema del vacío y equivalencia de 2 RCG}
 
 \paragraph{Problema de la palabra:} En general en la mayoría de los casos este problema es polinomial y pasa por
-un algoritmo de memorización sobre las cadenas que son instanciadas en los rangos de los predicados de la RCG (como la cantidad
+un algoritmo de memorización sobre las cadenas que son instanciadas en los rangos de los predicados de la RCG \cite{mainRCGBib} (como la cantidad
 máxima de rangos de la cadena es $n^2$ y la máxima aridad de un predicado es constante, este proceso de memorización cuenta
 con cantidad polinomial de estados), en
 una complejidad de $O(|P|n^{2h(l+1)})$ donde $h$ es la máxima aridad en un predicado, $l$ es la máxima cantidad de predicados
@@ -413,7 +421,7 @@ Pero existen casos en los que el problema de la palabra no
 es polinomial, por ejemplo puede pasar que se instancien argumentos de en los predicados con rangos que no pertenezcan
 a la propia cadena de entrada y sean generados durante el proceso de reconocimiento.
 
-\paragraph{Problema del vacío:} El problema del vacío para una RCG es indecidible, la razón principal para esto es que como se mencionó anteriormente
+\paragraph{Problema del vacío:} El problema del vacío para una RCG es indecidible \cite{propertiesRCGBib}, la razón principal para esto es que como se mencionó anteriormente
 para toda CFL existe una RCG equivalente y como las RCG son cerradas bajo intersección existen RCG que describen
 la intersección de 2 lenguajes libres del contexto y determinar si dicha intersección es vacía es un problema indecidible.
 
@@ -467,21 +475,11 @@ Formalmente, se dice que una fórmula booleana en CNF es satisfacible si existe 
 
 Un SAT con exactamente $n$ variables distintas se denomina $n$-SAT.
 
-\subsection{Problemas NP-Completos}
+\subsection{SAT como Problema NP-Completo}
 
-Un problema se clasifica como $\mathsf{NP-completo}$ si satisface dos condiciones esenciales:
+El SAT es el primer problema demostrado como NP-Completo \cite{authomataTheory} y juega un rol central en la teoría de la complejidad computacional. Se define en la clase NP porque, dada una asignación de valores a las variables de la fórmula booleana, se puede verificar en tiempo polinómico si dicha asignación satisface la fórmula.
 
-\begin{enumerate}
-      \item \textbf{Pertenencia a $\mathsf{NP}$:} El problema está en la clase $\mathsf{NP}$, lo que significa que, dada una solución candidata, es posible verificar su corrección en tiempo polinómico con respecto al tamaño de la entrada.
-
-      \item \textbf{NP-dureza:} El problema es tan difícil como cualquier otro problema en $\mathsf{NP}$. Esto significa que cualquier problema en $\mathsf{NP}$ puede reducirse a este problema en tiempo polinómico.
-\end{enumerate}
-
-\subsection{SAT como Problema NP}
-
-El SAT es el primer problema demostrado como $\mathsf{NP-completo}$ y juega un rol central en la teoría de la complejidad computacional. Se define en la clase NP porque, dada una asignación de valores a las variables de la fórmula booleana, se puede verificar en tiempo polinómico si dicha asignación satisface la fórmula.
-
-Además, la prueba de que SAT es $\mathsf{NP-completo}$ fue una de las contribuciones principales de Stephen Cook en 1971, marcando el inicio de la teoría de la NP-completitud.
+Además, la prueba de que SAT es NP-Completo fue una de las contribuciones principales de Stephen Cook en 1971, marcando el inicio de la teoría de la NP-completitud.
 
 \subsection{Equivalencia entre SAT y 3-SAT}
 
@@ -521,5 +519,26 @@ principales casos:
             un literal positivo. Este problema puede ser resuelto en tiempo polinomial mediante el algoritmo de resolución de Horn.
 \end{enumerate}
 
+\begin{thebibliography}{9}
+
+      \bibitem{authomataTheory}
+      John E. Hopcroft, Rajeev Motwani, Jeffrey D. Ullman.
+      \textit{Introduction to Automata Theory, Languages, and Computation}.
+      Addison-Wesley,
+
+      \bibitem{simpleMatrixLanguages}
+      Oscar H. Ibarra.
+      \textit{Simple Matrix Languages}
+
+      \bibitem{mainRCGBib}
+      Pierre Boullier.
+      \textit{Proposal for a Natural Language Processing Syntactic Backbone},
+      1998.
+
+      \bibitem{propertiesRCGBib}
+      Pierre Boullier.
+      \textit{A Cubic Time Extension of Context-Free Grammars},
+      1999.
+\end{thebibliography}
 
 \end{document}
