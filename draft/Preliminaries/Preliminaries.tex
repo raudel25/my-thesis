@@ -1,5 +1,12 @@
 \documentclass{article}
 
+\usepackage[utf8]{inputenc} % Permite escribir caracteres especiales directamente
+\usepackage[spanish]{babel} % Configura el idioma a español
+
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{xcolor}
+
 \title{Preliminares}
 \author{Raudel Alejandro Gómez Molina}
 
@@ -7,128 +14,539 @@
 
 \maketitle
 
-\section{SAT}
+\section{Teoría de Lenguajes}
 
-La versión más básica de SAT es el 2-SAT, en este problema cada cláusula tiene a lo sumo 2 variables, dicho problema se puede
-resolver mediante una modelación basada en grafos con un algoritmo polinomial. Pero si se aumenta la cantidad de variables
-el problema se vuelve mucho más complejo, para el caso del 3-SAT (cada cláusula tiene a lo sumo 3 variables) no se conoce algoritmo
-polinomial que permita resolverlo y está demostrado que cualquier instancia del SAT puede ser reducida a una instancia del 3-SAT.
 
-En 1971, Stephen Cook demostró que SAT es NP-completo en su célebre artículo \textit{The Complexity of Theorem-Proving Procedures},
-estableciendo así el nacimiento de la teoría de NP-completitud. La demostración se basa en la construcción de una
-reducción polinómica desde cualquier problema en NP al 3-SAT, mostrando que todos los problemas de NP son, en esencia,
-tan difíciles como SAT.
+\subsection{Conceptos básicos}
 
-Posteriormente, Leonid Levin, de manera independiente, llegó a conclusiones similares en el contexto de la
-Unión Soviética. Esta coincidencia histórica resalta la importancia de SAT en la computación teórica y su rol como
-punto de partida en el estudio de problemas intratables.
+\paragraph{Alfabeto:} Un alfabeto, denotado como $\Sigma$, es un conjunto finito y no vacío de símbolos, ejemplo:
+$$\Sigma=\{1,0\}$$
+\paragraph{Cadena:} Una cadena es una sucesión finita de símbolos del alfabeto, ejemplo: la representación binaria de
+los números $3=11$ y $5=101$ puede ser un ejemplo de cadena sobre el alfabeto $\Sigma$ anteriormente
+definido.
+\paragraph{Lenguaje:} Un lenguaje es un conjunto de cadenas definido sobre un alfabeto, ejemplo: el lenguaje de la
+representación binaria de todos los números pares $L=\{w\,|\,\text{last}(w)=0\}$, $\text{last}(w)$
+representa el último caracter de la cadena $w$.
 
-\subsection{Problemas NP y la importancia de SAT}
+\subsection{Operaciones con Lenguajes}
 
-Después de la demostración de que SAT es NP-completo, surgió una cascada de descubrimientos de otros problemas
-NP-completos mediante reducciones polinómicas. Ejemplos emblemáticos incluyen el problema del \textit{clique},
-el del cubrimiento mínimo de vértices (\textit{vertex cover}), el problema del viajante (\textit{TSP}) y el problema de mochila (\textit{backpack problem}),
-estos 3 últimos en su versión del problema de decisión.
+\paragraph{Unión:} La unión de dos lenguajes $L_1$ y $L_2$ se define como el conjunto de cadenas que
+pertenecen a $L_1$ o a $L_2$:
+$$L_1\cup L_2=\{w\,|\,w\in L_1\,\vee\,w\in L_2\}$$
+\paragraph{Intersección:} La intersección de dos lenguajes $L_1$ y $L_2$ se define como el conjunto de
+cadenas que pertenecen a $L_1$ y a $L_2$:
+$$L_1\cap L_2=\{w\,|\,w\in L_1\,\wedge\,w\in L_2\}$$
+\paragraph{Concatenación:} La concatenación de dos lenguajes $L_1$ y $L_2$ se define como el conjunto
+de cadenas que resultan de concatenar una cadena de $L_1$ con una cadena de $L_2$:
+$$L_1\circ L_2=\{w_1w_2\,|\,w_1\in L_1\,\wedge\,w_2\in L_2\}$$
+\paragraph{Complemento:} El complemento de un lenguaje $L$ se define como el conjunto de cadenas que no
+pertenecen a $L$:
+$$\overline{L}=\{w\,|\,w\notin L\}$$
+\paragraph{Estrella de Kleene:} La estrella de Kleene de un lenguaje $L$ se define como el conjunto de
+cadenas que resultan de concatenar cero o más cadenas de $L$:
+$$L^*=\{w_1w_2\ldots w_n\,|\,n\geq 0\,\text{y}\,w_i\in L\}$$
 
-La existencia de estas reducciones polinómicas refuerza la importancia de SAT como núcleo de la clase NP.
-Resolver SAT eficientemente tendría implicaciones revolucionarias para la informática, ya que permitiría resolver
-cualquier problema en NP en tiempo polinómico.
+\subsection{Problemas relacionados con Lenguajes}
 
-\subsection{Problemas SAT solubles en tiempo polinomial}
+\paragraph{Problema de la palabra:} Consiste en determinar si una cadena pertenece a un lenguaje dado. Todo problema en Ciencias de la Computación puede ser reducido a un problema de la palabra, ya que cualquier problema
+puede ser codificado como un lenguaje formal.
+\paragraph{Problema del vacío:} Consiste en determinar si un lenguaje es vacío.
+\paragraph{Problema de la finitud:} Consiste en determinar si un lenguaje es finito.
+\paragraph{Problema de la equivalencia:} Consiste en determinar si dos $L_1$ y $L_2$ lenguajes son iguales (es decir si se cumple que
+$L_1\subseteq L_2 \wedge L_2\subseteq L_1$).
 
-Como se mencionó anteriormente no se conoce ningún algoritmo polinomial para resolver el problema SAT en general, pero
-existen casos particulares del problema que sí pueden ser resueltos en tiempo polinomial. A continuación se presentan los
-principales casos:
+\subsection{Gramáticas}
+
+Una \textbf{gramática} es un sistema matemático utilizado para describir lenguajes formales. Se define como una 4-tupla:
+\[
+      G = (N, \Sigma, P, S),
+\]
+donde:
+\begin{itemize}
+      \item \(N\): Es un conjunto finito de \textbf{símbolos no terminales}, que representan variables o categorías intermedias.
+      \item \(\Sigma\): Es un conjunto finito de \textbf{símbolos terminales}, que constituyen el alfabeto del lenguaje. Se cumple que \(N \cap \Sigma = \emptyset\).
+      \item \(P\): Es un conjunto finito de \textbf{reglas de producción}, cada una de la forma:
+            \[
+                  \alpha \to \beta, \quad \text{donde } \alpha \in (N \cup \Sigma)^* \wedge \beta \in (N \cup \Sigma)^*.
+            \]
+      \item \(S\): Es el \textbf{símbolo inicial}, \(S \in N\), que define el punto de partida para derivar cadenas del lenguaje.
+\end{itemize}
+
+El lenguaje generado por una gramática \(G\) se denota como:
+\[
+      L(G) = \{ w \in \Sigma^* \mid S \overset{*}{\Rightarrow} w \},
+\]
+donde \(\overset{*}{\Rightarrow}\) indica una derivación en cero o más pasos.
+
+\subsection{Jerarquía de Chomsky}
+
+La \textbf{Jerarquía de Chomsky} (Figura~\ref{fig:ChomskySchema}) clasifica las gramáticas en cuatro tipos, según las restricciones en sus reglas de producción y la capacidad expresiva de los lenguajes que generan.
 
 \begin{enumerate}
-    \item \textbf{1-SAT:} El problema 1-SAT es una instancia particular de SAT donde cada cláusula tiene a lo sumo un literal.
-          Este problema puede ser resuelto en tiempo polinomial mediante un algoritmo de asignación de valores de verdad.
-    \item \textbf{2-SAT:} Como se mencionó anteriormente, el problema 2-SAT puede ser resuelto en tiempo polinomial mediante
-          una modelación basada en grafos.
-    \item \textbf{Horn-SAT:} El problema Horn-SAT es una generalización del problema 2-SAT, donde cada cláusula tiene a lo sumo
-          un literal positivo. Este problema puede ser resuelto en tiempo polinomial mediante el algoritmo de resolución de Horn.
+      \item \textbf{Tipo 0: Gramáticas irrestrictas}
+            \begin{itemize}
+                  \item No tienen restricciones en las reglas de producción.
+                  \item Cada regla tiene la forma: \(\alpha \to \beta\), donde \(\alpha, \beta \in (N \cup \Sigma)^*\) y \(\alpha \neq \varepsilon\).
+                  \item Generan los \textbf{lenguajes recursivamente enumerables}.
+            \end{itemize}
+
+      \item \textbf{Tipo 1: Gramáticas sensibles al contexto}
+            \begin{itemize}
+                  \item Cada regla tiene la forma: \(\alpha A \gamma \to \alpha \beta \gamma\), donde \(A \in N\), \(\alpha, \beta, \gamma \in (N \cup \Sigma)^*\), y \(|\beta| \geq 1\).
+                  \item Generan los \textbf{lenguajes sensibles al contexto}.
+            \end{itemize}
+
+      \item \textbf{Tipo 2: Gramáticas libres de contexto}
+            \begin{itemize}
+                  \item Cada regla tiene la forma: \(A \to \beta\), donde \(A \in N\) y \(\beta \in (N \cup \Sigma)^*\).
+                  \item Generan los \textbf{lenguajes libres de contexto}.
+            \end{itemize}
+
+      \item \textbf{Tipo 3: Gramáticas regulares}
+            \begin{itemize}
+                  \item Las reglas tienen la forma:
+                        \[
+                              A \to aB \quad \text{o} \quad A \to a,
+                        \]
+                        donde \(A, B \in N\) y \(a \in \Sigma\).
+                  \item Generan los \textbf{lenguajes regulares}.
+            \end{itemize}
 \end{enumerate}
 
-\section{Teoría de lenguajes}
 
-La teoría de lenguajes formales surgió como una rama de la computación teórica en la década de 1950, impulsada por los estudios de Noam Chomsky sobre gramáticas formales y su relación con los modelos de computación. En este contexto, Chomsky propuso en 1956 una jerarquía que clasifica los lenguajes formales en cuatro niveles de complejidad creciente, basándose en las restricciones impuestas a las gramáticas que los generan y a las máquinas que los reconocen.
+\begin{figure}
+      \centering
+      \begin{tikzpicture}[scale=1]
+            \draw[thick, fill=red!20] (0,0) ellipse (4cm and 2cm);
+            \node at (0,1.7) {\textbf{\textcolor{red!70!black}{Tipo 0}}};
 
-\subsubsection{Jerarquía de Chomsky}
-La jerarquía de Chomsky consta de los siguientes niveles:
+            \draw[thick, fill=blue!20] (0,0) ellipse (3cm and 1.5cm);
+            \node at (0,1.2) {\textbf{\textcolor{blue!70!black}{Tipo 1}}};
 
+            \draw[thick, fill=green!20] (0,0) ellipse (2cm and 1cm);
+            \node at (0,0.7) {\textbf{\textcolor{green!70!black}{Tipo 2}}};
+
+            \draw[thick, fill=yellow!20] (0,0) ellipse (1cm and 0.5cm);
+            \node at (0,0) {\textbf{\textcolor{yellow!70!black}{Tipo 3}}};
+      \end{tikzpicture}
+      \caption{Esquema de la Jerarquía de Chomsky}
+      \label{fig:ChomskySchema} %
+\end{figure}
+
+\section{Complejidad computacional}
+
+\subsection{Máquina de Turing}
+
+Una Máquina de Turing es un modelo abstracto de computación universal introducido por Alan Turing en 1936. Este modelo formaliza el concepto de computación algorítmica y consiste en los siguientes componentes:
+
+\begin{itemize}
+      \item \textbf{Cinta}: Un medio de almacenamiento infinito dividido en celdas, donde cada celda contiene un símbolo de un alfabeto finito.
+      \item \textbf{Cabezal de lectura/escritura}: Un dispositivo que puede leer el contenido de una celda, escribir un nuevo símbolo y moverse a la izquierda o derecha.
+      \item \textbf{Conjunto de estados}: Una colección finita de estados internos que describen la configuración actual de la máquina.
+      \item \textbf{Función de transición}: Un conjunto de reglas que determinan cómo la máquina cambia de estado, escribe en la cinta y mueve el cabezal en función del estado actual y el símbolo leído.
+\end{itemize}
+
+\paragraph{Máquina de Turing determinista (\textit{DTM}):}
+En una Máquina de Turing determinista, para cada estado y cada símbolo leído, existe como máximo una transición
+definida.
+\paragraph{Máquina de Turing no determinista (\textit{NTM}):}
+En una Máquina de Turing no determinista, para cada estado y símbolo leído, pueden existir múltiples
+transiciones posibles.
+
+Una máquina de Turing consiste la definición formal de algoritmo en Ciencias de la Computación y es el eje central para la resolución de problemas.
+
+\subsection{Notación asintótica}
+
+La notación asintótica se utiliza para describir el comportamiento de una función $f(n)$ a medida que $n$ crece hacia el infinito. A continuación se definen las notaciones más comunes:
+
+\begin{itemize}
+      \item \textbf{Notación $O(f(n))$}: Una función $g(n)$ pertenece a $O(f(n))$ si existen constantes positivas $c$ y $n_0$ tales que:
+            \[
+                  g(n) \leq c \cdot f(n) \quad \text{para todo } n \geq n_0.
+            \]
+            Esta notación proporciona un límite superior asintótico para $g(n)$.
+
+      \item \textbf{Notación $\Omega(f(n))$}: Una función $g(n)$ pertenece a $\Omega(f(n))$ si existen constantes positivas $c$ y $n_0$ tales que:
+            \[
+                  g(n) \geq c \cdot f(n) \quad \text{para todo } n \geq n_0.
+            \]
+            Esta notación proporciona un límite inferior asintótico para $g(n)$.
+
+      \item \textbf{Notación $\Theta(f(n))$}: Una función $g(n)$ pertenece a $\Theta(f(n))$ si:
+            \[
+                  g(n) \in O(f(n)) \quad \text{y} \quad g(n) \in \Omega(f(n)).
+            \]
+            Es decir, $f(n)$ acota $g(n)$ tanto superior como inferiormente.
+\end{itemize}
+
+La notación asintótica permite describir el tiempo de ejecución un algoritmo en cuanto al número de operaciones básicos realizadas
+por un modelo formal de cómputo (por ejemplo una máquina de Turing). Por ejemplo algoritmos como determinar el mínimo y el máximo de
+un array son $\Theta(n)$, ya que necesitan realizar una cantidad de operaciones de orden $n$ en relación con el tamaño de la entrada.
+
+\subsection{Clases de problemas}
+
+Los problemas computacionales se agrupan en diferentes clases según los recursos necesarios para resolverlos.
+
+\paragraph{Problemas en $\mathsf{P}$:}
+Un problema pertenece a $\mathsf{P}$ si puede resolverse en tiempo polinomial mediante una Máquina de Turing determinista. Es decir, existe un algoritmo determinista que, para una entrada de tamaño $n$, produce la solución en tiempo $O(n^k)$ para alguna constante $k$.
+
+\paragraph{Problemas en $\mathsf{NP}$:}
+Un problema pertenece a $\mathsf{NP}$ si su solución puede verificarse en tiempo polinomial mediante una Máquina de Turing determinista. Alternativamente, un problema está en $\mathsf{NP}$ si puede resolverse en tiempo polinomial mediante una Máquina de Turing no determinista.
+\paragraph{Problemas no decidibles:}
+Un problema es no decidible si no existe una Máquina de Turing que pueda resolverlo correctamente para todas las entradas posibles. Esto significa que no hay algoritmo que garantice una respuesta en tiempo finito en todos los casos. Un ejemplo clásico de problema no decidible es el \textit{Problema de la Parada}, que consiste en determinar si una Máquina de Turing se detendrá para una entrada dada.
+\subsection{Relaciones entre clases}
+
+La relación entre las clases $\mathsf{P}$ y $\mathsf{NP}$ es uno de los problemas abiertos más importantes en la teoría de la computación. Hasta la fecha, se desconoce si $\mathsf{P} = \mathsf{NP}$ o si $\mathsf{P} \neq \mathsf{NP}$. Además, existen problemas que no están en $\mathsf{P}$ ni en $\mathsf{NP}$, como los problemas indecidibles.
+
+\section{Mecanismos de escritura regulada}
+
+\subsection{Autómata regular}
+
+Un autómata regular, también conocido como autómata finito, es un modelo matemático para reconocer lenguajes regulares. Este tipo de autómata se define como una máquina abstracta que procesa cadenas de símbolos de un alfabeto finito y determina si una cadena pertenece a un lenguaje regular.
+
+Un autómata regular se puede representar como una 5-tupla $$\mathcal{A} = (Q, \Sigma, \delta, q_0, F)$$ donde:
+
+\begin{itemize}
+      \item $Q$: Es un conjunto finito de \textbf{estados}.
+      \item $\Sigma$: Es el \textbf{alfabeto} finito de entrada.
+      \item $\delta$: Es la \textbf{función de transición}, $\delta: Q \times \Sigma \to Q$, que define cómo el autómata cambia de estado en función del símbolo leído.
+      \item $q_0 \in Q$: Es el \textbf{estado inicial} desde donde comienza la computación.
+      \item $F \subseteq Q$: Es el conjunto de \textbf{estados de aceptación o estados finales}.
+\end{itemize}
+
+El autómata comienza en el estado inicial $q_0$ y procesa una cadena de entrada símbolo por símbolo. En cada paso, la función de transición $\delta$ determina el siguiente estado del autómata. Si, después de procesar toda la cadena, el autómata termina en un estado de aceptación $q \in F$, entonces la cadena es aceptada; de lo contrario, es rechazada.
+
+Se puede extender el concepto de autómata finito añadiendo un nuevo tipo de transición que no consume ningún caracter, la cual recibe el nombre de transición $\varepsilon$.
+Se puede demostrar que el conjunto de lenguajes reconocido por un autómata finito sin transiciones $\varepsilon$ (\textit{autómata finito determinista}) es equivalente al conjunto de lenguajes reconocidos por un autómata finito con transiciones $\varepsilon$ (\textit{autómata finito no determinista}).
+
+\subsection{Autómata de pila y Gramáticas libres del contexto}
+
+Un autómata de pila es un modelo matemático de computación que extiende los autómatas finitos al incluir una estructura de datos adicional: una pila. Este modelo es capaz de reconocer lenguajes libres de contexto,
+proporcionando una conexión directa con las gramáticas libres de contexto \textit{CFG}, es decir dada una gramática libre del contexto se puede construir un autómata de pila que reconozca el lenguaje generado por la gramática y viceversa.
+
+Formalmente, un autómata de pila se define como una 7-tupla
+\[
+      \mathcal{A} = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, F),
+\]
+donde:
+
+\begin{itemize}
+      \item $Q$: Es un conjunto finito de \textbf{estados}.
+      \item $\Sigma$: Es el \textbf{alfabeto} finito de entrada.
+      \item $\Gamma$: Es el \textbf{alfabeto} finito de la pila (conjunto de símbolos que se pueden almacenar en la pila).
+      \item $\delta$: Es la función de transición, $\delta: Q \times (\Sigma \cup \{\varepsilon\}) \times \Gamma \to \mathcal{P}(Q \times \Gamma^*)$, que describe cómo cambia el estado, el contenido de la pila y la posición en la entrada.
+      \item $q_0 \in Q$: Es el \textbf{estado inicial} desde donde comienza la computación.
+      \item $Z_0 \in \Gamma$: Es el símbolo inicial en la pila.
+      \item $F \subseteq Q$: Es el conjunto de \textbf{estados de aceptación o estados finales}.
+\end{itemize}
+
+Un autómata de pila procesa una cadena de entrada desde el estado inicial $q_0$ y puede utilizar transiciones $\varepsilon$ (sin consumir entrada). En cada paso, la función $\delta$ determina el nuevo estado, los símbolos que se empujan o desapilan, y el avance en la entrada. Si, tras procesar toda la cadena, el autómata termina en un estado de aceptación o con una pila vacía (dependiendo del criterio de aceptación), la cadena es aceptada.
+
+
+\subsection{Gramáticas Matriciales}
+
+Una gramática matricial de grado $n$ \textit{$n$-MG} es una 4-tupla:
+
+\[
+      G_n = (V, P, S,\Sigma)
+\]
+
+donde:
+\begin{itemize}
+      \item \( V \) es un conjunto finito de \textbf{símbolos no terminales}.
+      \item \( \Sigma \) es un conjunto finito de \textbf{símbolos terminales}, con \( V \cap \Sigma = \emptyset \).
+      \item \( P \) es un conjunto finito de matrices. Cada matriz es una secuencia ordenada de \textbf{producciones} de la forma:
+            \[
+                  [P_1, P_2, \dots, P_k]
+            \]
+            donde cada \( P_i \) es una regla \( A \to \alpha \), con $1\leq k\leq n$, \( A \in N \) y \( \alpha \in (N \cup T)^* \).
+      \item \( S \in V \) es el \textbf{símbolo inicial}.
+\end{itemize}
+
+Observe que das CFG son gramáticas matriciales de grado 1, es decir $1-MG$.
+
+\subsubsection{Proceso de derivación}
+
+El proceso de derivación en una gramática matricial se realiza de la siguiente manera:
 \begin{enumerate}
-    \item \textbf{Lenguajes regulares:}
-          Son los lenguajes más simples dentro de la jerarquía y son reconocidos por autómatas finitos. Se definen mediante gramáticas de tipo 3, en las cuales las reglas de producción tienen una forma estrictamente restringida, como \( A \to aB \) o \( A \to a \), donde \( A \) y \( B \) son no terminales y \( a \) es un símbolo terminal. Estos lenguajes tienen aplicaciones prácticas en el análisis léxico y el diseño de patrones.
-
-    \item \textbf{Lenguajes libres de contexto \textit{CFL}:}
-          Reconocidos por autómatas con pila, los lenguajes libres de contexto son definidos por gramáticas de tipo 2. En estas gramáticas, las reglas de producción tienen la forma \( A \to \alpha \), donde \( \alpha \) es una cadena de terminales y no terminales. Los lenguajes CFL son fundamentales para analizar la sintaxis de los lenguajes de programación y para modelar estructuras jerárquicas.
-
-    \item \textbf{Lenguajes sensibles al contexto:}
-          Estos lenguajes son más expresivos y están definidos por gramáticas de tipo 1, que permiten reglas de producción de la forma \( \alpha A \beta \to \alpha \gamma \beta \), donde \( A \) es un no terminal, \( \alpha \) y \( \beta \) son cadenas de símbolos, y \( \gamma \) no es una cadena vacía. Los lenguajes sensibles al contexto son reconocidos por máquinas de Turing linealmente acotadas.
-
-    \item \textbf{Lenguajes recursivamente enumerables:}
-          Estos lenguajes corresponden a los más generales y son definidos por gramáticas de tipo 0, que no tienen restricciones en las reglas de producción. Son reconocidos por máquinas de Turing y representan la clase completa de problemas que pueden ser computados.
-
+      \item Se selecciona una matriz \( [P_1, P_2, \dots, P_k] \in P \).
+      \item Las reglas \( P_1, P_2, \dots, P_k \) se aplican de manera secuencial a la cadena actual.
+      \item La derivación continúa hasta que la cadena derivada contenga solo símbolos terminales, es decir, pertenezca a \( T^* \).
 \end{enumerate}
 
+\subsubsection{Gramáticas Matriciales Simples}
 
-El \textbf{problema de la palabra} es una cuestión fundamental en la teoría de lenguajes y las ciencias de la computación. Formulado inicialmente en el contexto de la teoría de grupos, el problema plantea:
+Una gramática matricial simple de grado $n$ \textit{$n$-SMG} es una ($n$+3)-tupla:
+$$
+      G_n=(V_1,V_2,\ldots,V_n,P,S,\Sigma)
+$$
+donde:
+\begin{itemize}
+      \item \( V_1, V_2, \ldots, V_n \) son conjuntos finitos de \textbf{símbolos no terminales} disjuntos 2 a 2.
+      \item \( \Sigma \) es un conjunto finito de \textbf{símbolos terminales}, con \( V_i \cap \Sigma = \emptyset\,\forall\,1\leq i\leq n \).
+      \item \( P \) es un conjunto finito de matrices. Cada matriz es una secuencia ordenada \textbf{producciones} que cumplan con una de las siguientes reglas:
+            \begin{itemize}
+                  \item $[S\to w]$, donde $w\in \Sigma ^*$.
+                  \item $[S\to a_{11}A_{11}\ldots A_{1k}a_{21}A_{21}\ldots A_{2k}\ldots A_{n1}a_{n1}\ldots A_{nk}b]$,
+                        donde $\forall i,j$ con $1\leq i\leq n\wedge 1\leq j\leq k$ se cumple que
+                        $A_{ij}\in V_i$, $a_{ij}\in \Sigma ^*$ y $b\in \Sigma ^*$.
+                  \item $[A_1\to w_1,\ldots, A_n\to w_n]$, donde $A_i\in V_i\wedge w_i\in \Sigma ^*$ $\forall i\, 1\leq i\leq n$.
+                  \item $[A_1 \to a_{11}A_{11}\ldots a_{1k}A_{1k}b_1,\ldots,A_n \to a_{n1}A_{n1}\ldots a_{nk}A_{nk}b_n]$, donde $\forall i,j$
+                        con $1\leq i\leq n\wedge 1\leq j\leq k$ se cumple que
+                        $A_{ij}\in V_i$, $a_{ij}\in \Sigma ^*$ y $b_{i}\in \Sigma ^*$.
+            \end{itemize}
+      \item \( S \in V \) es el \textbf{símbolo inicial}.
+\end{itemize}
 
-\begin{quote}
-    Dada una representación finita de un lenguaje formal y una cadena de símbolos, ¿es posible determinar si esta cadena pertenece al lenguaje?
-\end{quote}
 
-En términos de computación, el problema de la palabra está estrechamente relacionado con la decidibilidad y la complejidad computacional. La solución a este problema depende del modelo computacional que se utilice
-para definir el lenguaje.
+Observe que la restricción impuesta sobre las $n$-MG es cada matriz de producciones debe contener exactamente $n$ reglas de producción
+donde cada regla de producción utiliza no terminales de conjuntos distintos o puede contener una única producción cuya secuencia de no terminales
+esta compuesta por una secuencia de subsecuentes de terminales de conjuntos distintos.
 
-Todo problema en Ciencias de la Computación puede ser reducido a un problema de la palabra, ya que cualquier problema
-puede ser codificado como un lenguaje formal. Por lo tanto, el estudio del problema de la palabra es fundamental para
-comprender la computabilidad y la complejidad de los problemas computacionales. De ahí que en el presente trabajo se le preste especial atención a este problema
-enfocado en el contexto del SAT.
+\subsection{Gramáticas de Índice Global}
+
+\section{Gramáticas de Concatenación de Rango}
+
+Las gramáticas de concatenación de rango (\textit{RCG}) son un formalismo de gramáticas desarrollado para describir lenguajes más generales que los generados por gramáticas libres del contexto.
+Este formalismo extiende las capacidades descriptivas al incluir relaciones entre rangos de la cadena de una manera más flexible,
+permitiendo la generación de lenguajes sensibles al contexto.
+
+\subsection{Definiciones}
+
+\paragraph{Rango:} un rango es una tupla $(i, j)$ que representa un intervalo de posiciones en la cadena, donde $i$ y $j$ son enteros no negativos tales que $i \leq j$.
+
+\paragraph{Gramática de Concatenación de Rango Positiva:} una gramática de concatenación de rango positiva (\textit{PRCG}) se define como una 5-tupla:
+
+\[
+      G = (N, T, V, P, S),
+\]
+donde:
+
+\begin{itemize}
+      \item $N$: Es un conjunto finito de \textbf{predicados o símbolos no terminales}: Cada predicado tiene una \textbf{aridad}, que indica el número de argumentos que toma.
+      \item $T$: Es un conjunto finito de \textbf{símbolos terminales}.
+      \item $V$: Es un conjunto finito de \textbf{variables}.
+      \item $P$: Es un conjunto finito de \textbf{cláusulas}, de la forma:
+            \[
+                  A(x_1, x_2, \ldots, x_k) \to B_1(y_{1,1}, y_{1,2}, \ldots, y_{1,m_1}) \ldots B_n(y_{n,1}, y_{n,2}, \ldots, y_{n,m_n}),
+            \]
+            donde $A, B_i \in N$, $x_i, y_{i,j} \in (V \cup T)^*$, y $k$ es la aridad de $A$.
+      \item $S \in N$: Es el \textbf{predicado inicial} de la gramática.
+\end{itemize}
+
+\paragraph{Gramática de Concatenación de Rango Negativa:} una gramática de concatenación de rango negativa (\textit{NRCG}) es similar a una PRCG, pero predicados o no terminales negativos que se denotan de la siguiente manera: $\overline{A}$.
+
+\paragraph{Gramática de Concatenación de Rango Simple:} las gramáticas de concatenación de rango simple (\textit{SRCG}) son un subconjunto de las RCG que restringen la forma de las cláusulas de producción.
+Una RCG $G$ es \textbf{simple} si los argumentos en el lado derecho de una cláusula son variables distintas, y todas estas variables (y no otras) aparecen una sola vez en los argumentos del lado izquierdo.
+Un resultado interesante es que para cada CFL existe una SRCG equivalente que genera el mismo lenguaje.
+
+\paragraph{Sustiución de rango:} una sustitución de rango es un mecanismo que reemplaza una variable por un rango de la cadena.
+Por ejemplo dado el predicado $A(Xa)$ donde $X \in V \wedge a \in T$, si se instancia la cadena $baa$ en $A$, $X$ puede
+ser asociada con el rango $ba$ de la cadena original.
+
+\subsection{Funcionamiento}
+
+La principal idea detrás de las RCG, para realizar una derivación, se basa en encontrar para cada argumento del predicado izquierdo de una cláusula todas las
+posibles sustituciones en rango de la cadena, asociar los valores de las variables a los argumentos de los predicados derechos y continuar
+el proceso de derivación en los predicados derechos.
+
+Por ejemplo, dada la cláusula $A(X,aYb)\to B(aXb,Y)$ , donde $X$ y $Y$ son símbolos variables y $a$ y $b$
+son símbolos terminales, la cadena predicado $A(a,abb)$ deriva como $B(aab,b)$, porque $A(a,abb)$
+coincide con $A(X,aYb)$ cuando $ X=a \wedge Y=b$. De forma similar, si existiera una regla
+
+Una secuencia de argumentos son reconocidos por un predicado si existe una secuencia de derivaciones que comienza
+en dicho predicado y termina en la cadena vacía, si el predicado es negativo en el caso de las NRCG ocurre lo contrario
+la secuencia de argumentos no es reconocida por el predicado. Una RCG reconoce una cadena si dicha cadena es reconocida
+por el predicado inicial.
+
+Ejemplo dada la siguiente RCG:
+
+\[
+      G = (N, T, V, P, S),
+\]
+donde:
+
+\begin{itemize}
+      \item  N=$\{A,S\}$.
+      \item T=$\{a,b,c\}$.
+      \item V=$\{X,Y,Z\}$.
+      \item El conjunto de cláusulas $P$ es el siguiente:
+            $$S(XYZ)\to A(X,Y,Z)$$
+            $$A(aX,aY,aZ)\to A(X,Y,Z)$$
+            $$A(bX,bY,bZ)\to A(X,Y,Z)$$
+            $$A(cX,cY,cZ)\to A(X,Y,Z)$$
+            $$A(\varepsilon,\varepsilon,\varepsilon)\to \varepsilon$$
+      \item El símbolo inicial es $S$.
+\end{itemize}
+La cadena $aaabbbccc$ es reconocida por la RCG anterior, ya que se puede derivar de la siguiente manera:
+$$S(abcabcabc)\to A(abc,abc,abc)\to A(bc,bc,bc)\to A(c,c,c)\to A(\varepsilon,\varepsilon,\varepsilon)\to \varepsilon$$
+
+De manera general el lenguaje reconocido por la RCG anterior es $L=\{www\,|\,w\in \{a,b,c\}^*\}$.
+
+\subsection{Propiedades de las RCG}
+
+A continuación se describen las principales propiedades de las RCG:
+\begin{itemize}
+      \item \textbf{Cerradura bajo unión:} Dadas dos RCG $G_1$ y $G_2$, la unión de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una RCG
+            $$G=(N_1\cup N_2\cup \{S\},T_1\cup T_2,V_1\cup V_2,P_1\cup P_2\cup \{S(X)\to S_1(X)|S_2(X)\},S)$$
+      \item \textbf{Cerradas bajo intersección:} Dadas dos RCG $G_1$ y $G_2$, la intersección de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una RCG
+            $$G=(N_1\cup N_2\cup \{S\},T_1\cup T_2,V_1\cup V_2,P_1\cup P_2\cup \{S(X)\to S_1(X)S_2(X)\},S)$$
+      \item \textbf{Cerradas bajo complemento:} Dada una RCG $G$, el complemento del lenguaje reconocido por $G$ es reconocido por una RCG
+            $$G'=(N\cup \{\overline{S}\},T,V,P\cup \{S'(X)\to \overline{S}(X)\},S')$$
+      \item \textbf{Cerradas bajo concatenación:} Dadas dos RCG $G_1$ y $G_2$, la concatenación de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una RCG
+            $$G=(N_1\cup N_2\cup \{S\},T_1\cup T_2,V_1\cup V_2,P_1\cup P_2\cup \{S(XY)\to S_1(X)S_2(Y)\},S)$$
+      \item \textbf{Cerradas bajo estrella de Kleene:} Dada una RCG $G$, la estrella de Kleene del lenguaje reconocido por $G$ es reconocida por una RCG
+            $$G'=(N\cup \{S'\},T,V,P\cup \{S'(XY)\to S(X)S'(Y)|\varepsilon\},S')$$
+\end{itemize}
 
 
-\section{SAT y la teoría de lenguajes}
+\subsection{Problema de la palabra, problema del vacío y equivalencia de 2 RCG}
 
-Como parte del estudió del problema SAT, se ha desarrollado una línea de investigación en la facultad utilizando un enfoque
-novedoso basado en formalismos de la teoría de lenguajes, buscando resolver instancias específicas del problema.
+\paragraph{Problema de la palabra:} En general en la mayoría de los casos este problema es polinomial y pasa por
+un algoritmo de memorización sobre las cadenas que son instanciadas en los rangos de los predicados de la RCG (como la cantidad
+máxima de rangos de la cadena es $n^2$ y la máxima aridad de un predicado es constante, este proceso de memorización cuenta
+con cantidad polinomial de estados), en
+una complejidad de $O(|P|n^{2h(l+1)})$ donde $h$ es la máxima aridad en un predicado, $l$ es la máxima cantidad de predicados
+en el lado derecho de una cláusula y $n$ es la longitud de la cadena a ser reconocida.
 
-\subsection{Problema satisfacibilidad booleana libre del contexto}
+Pero existen casos en los que el problema de la palabra no
+es polinomial, por ejemplo puede pasar que se instancien argumentos de en los predicados con rangos que no pertenezcan
+a la propia cadena de entrada y sean generados durante el proceso de reconocimiento.
 
-El primer trabajo desarrollado como parte de esta línea de investigación [1] consiste en resolver el problema satisfacibilidad booleana
-libre del contexto (\textit{CF-SAT}), el cual es una instancia específica del SAT donde las variables donde la fórmula booleana es una fórmula booleana
-libre del contexto.
+\paragraph{Problema del vacío:} El problema del vacío para una RCG es indecidible, la razón principal para esto es que como se mencionó anteriormente
+para toda CFL existe una RCG equivalente y como las RCG son cerradas bajo intersección existen RCG que describen
+la intersección de 2 lenguajes libres del contexto y determinar si dicha intersección es vacía es un problema indecidible.
 
-Una fórmula booleana se considera libre del contexto si para cualquier par de instancias de una variable $x_i$ y $x_j$ con $i<j$ se
-cumple que si existe otra variable con instancia $x_k$ con $i<k<j$ entonces todas las instancias de esta nueva
-variable ocurren entre $x_i$ y $x_j$.
+En el caso de las SRCG este problema es polinomial.
 
-El CF-SAT consiste en transformar una fórmula booleana en una lista de instancias de variables,
-donde se asume que 2 instancias de una variable no tienen por qué tener el mismo valor de verdad. Luego
-se define un autómata que dada una cadena de 0 y 1 y una fórmula booleana, determina si se obtiene un valor
-de verdad para la fórmula booleana donde cada instancia de una variable toma el valor de verdad que se
-corresponde con la cadena de 0 y 1, dicho autómata se denomina autómata booleano.
+\paragraph{Problema de la equivalencia:} El problema de la equivalencia para 2 RCG es indecidible, la demostración es muy sencilla dadas 2 RCG $G_1$ y $G_2$ el problema
+de saber si $G_1$ es equivalente a $G_2$ es equivalente a saber si $G_1\cap \overline{G_2}=\emptyset$ y como se mencionó anteriormente el problema del vacío para una RCG
+es indecidible.
 
-Entonces para verificar que 2 instancias de una variable tengan el mismo valor de verdad se intersecta
-dicho autómata con una gramática libre del contexto \textit{CFG} obteniendo un autómata de pila (esto es posible por la estructura
-de la fórmula booleana libre del contexto planteada anteriormente).
-Después de esto se plantea un algoritmo para dado este autómata de pila, generar todas las posibles
-cadenas de 0 y 1 que se corresponden con una asignación de valores de verdad y como consecuencia se obtiene
-un generador de todas las posibles asignaciones de valores de verdad para una fórmula booleana.
-Luego para determinar si la fórmula es satisfacible solo queda verificar si este conjunto de soluciones es no vacío.
 
-\subsection{Problema de la satisfacibilidad para gramáticas de concatenación de rango simple}
 
-El próximo trabajo relacionado con este tema realizado en la facultad [2] consistió en definir y analizar el problema de la
-satisfacibilidad para gramáticas de concatenación de rango simple. En este trabajo se toma el mismo enfoque que el anterior,
-pero en vez de intersectar el autómata booleano con una gramática libre del contexto se intersecta con una gramática de
-concatenación de rango simple dando lugar a la resolución de un conjunto más amplio de problemas SAT que el problema anterior.
+% \section{SAT}
 
-\subsection{Problema de la satisfacibilidad para gramáticas matriciales}
+% La versión más básica de SAT es el 2-SAT, en este problema cada cláusula tiene a lo sumo 2 variables, dicho problema se puede
+% resolver mediante una modelación basada en grafos con un algoritmo polinomial. Pero si se aumenta la cantidad de variables
+% el problema se vuelve mucho más complejo, para el caso del 3-SAT (cada cláusula tiene a lo sumo 3 variables) no se conoce algoritmo
+% polinomial que permita resolverlo y está demostrado que cualquier instancia del SAT puede ser reducida a una instancia del 3-SAT.
 
-Continuando la línea del autómata booleano empleado en la resolución de instancias del SAT el próximo trabajo desarrollado [3]
-consistió en analizar las gramáticas matriciales. Nuevamente intersectando el autómata booleano con un formalismo que
-cuente con un algoritmo para comprobar el problema del vacío en tiempo polinomial en este caso se eligieron las
-gramáticas matriciales que nuevamente ofrecen un conjunto más amplio de problemas que el CF-SAT.
+% En 1971, Stephen Cook demostró que SAT es NP-completo en su célebre artículo \textit{The Complexity of Theorem-Proving Procedures},
+% estableciendo así el nacimiento de la teoría de NP-completitud. La demostración se basa en la construcción de una
+% reducción polinómica desde cualquier problema en NP al 3-SAT, mostrando que todos los problemas de NP son, en esencia,
+% tan difíciles como SAT.
+
+% Posteriormente, Leonid Levin, de manera independiente, llegó a conclusiones similares en el contexto de la
+% Unión Soviética. Esta coincidencia histórica resalta la importancia de SAT en la computación teórica y su rol como
+% punto de partida en el estudio de problemas intratables.
+
+% \subsection{Problemas NP y la importancia de SAT}
+
+% Después de la demostración de que SAT es NP-completo, surgió una cascada de descubrimientos de otros problemas
+% NP-completos mediante reducciones polinómicas. Ejemplos emblemáticos incluyen el problema del \textit{clique},
+% el del cubrimiento mínimo de vértices (\textit{vertex cover}), el problema del viajante (\textit{TSP}) y el problema de mochila (\textit{backpack problem}),
+% estos 3 últimos en su versión del problema de decisión.
+
+% La existencia de estas reducciones polinómicas refuerza la importancia de SAT como núcleo de la clase NP.
+% Resolver SAT eficientemente tendría implicaciones revolucionarias para la informática, ya que permitiría resolver
+% cualquier problema en NP en tiempo polinómico.
+
+% \subsection{Problemas SAT solubles en tiempo polinomial}
+
+% Como se mencionó anteriormente no se conoce ningún algoritmo polinomial para resolver el problema SAT en general, pero
+% existen casos particulares del problema que sí pueden ser resueltos en tiempo polinomial. A continuación se presentan los
+% principales casos:
+
+% \begin{enumerate}
+%       \item \textbf{1-SAT:} El problema 1-SAT es una instancia particular de SAT donde cada cláusula tiene a lo sumo un literal.
+%             Este problema puede ser resuelto en tiempo polinomial mediante un algoritmo de asignación de valores de verdad.
+%       \item \textbf{2-SAT:} Como se mencionó anteriormente, el problema 2-SAT puede ser resuelto en tiempo polinomial mediante
+%             una modelación basada en grafos.
+%       \item \textbf{Horn-SAT:} El problema Horn-SAT es una generalización del problema 2-SAT, donde cada cláusula tiene a lo sumo
+%             un literal positivo. Este problema puede ser resuelto en tiempo polinomial mediante el algoritmo de resolución de Horn.
+% \end{enumerate}
+
+% \section{Teoría de lenguajes}
+
+% La teoría de lenguajes formales surgió como una rama de la computación teórica en la década de 1950, impulsada por los estudios de Noam Chomsky sobre gramáticas formales y su relación con los modelos de computación. En este contexto, Chomsky propuso en 1956 una jerarquía que clasifica los lenguajes formales en cuatro niveles de complejidad creciente, basándose en las restricciones impuestas a las gramáticas que los generan y a las máquinas que los reconocen.
+
+% \subsubsection{Jerarquía de Chomsky}
+% La jerarquía de Chomsky consta de los siguientes niveles:
+
+% \begin{enumerate}
+%       \item \textbf{Lenguajes regulares:}
+%             Son los lenguajes más simples dentro de la jerarquía y son reconocidos por autómatas finitos. Se definen mediante gramáticas de tipo 3, en las cuales las reglas de producción tienen una forma estrictamente restringida, como \( A \to aB \) o \( A \to a \), donde \( A \) y \( B \) son no terminales y \( a \) es un símbolo terminal. Estos lenguajes tienen aplicaciones prácticas en el análisis léxico y el diseño de patrones.
+
+%       \item \textbf{Lenguajes libres de contexto \textit{CFL}:}
+%             Reconocidos por autómatas con pila, los lenguajes libres de contexto son definidos por gramáticas de tipo 2. En estas gramáticas, las reglas de producción tienen la forma \( A \to \alpha \), donde \( \alpha \) es una cadena de terminales y no terminales. Los lenguajes CFL son fundamentales para analizar la sintaxis de los lenguajes de programación y para modelar estructuras jerárquicas.
+
+%       \item \textbf{Lenguajes sensibles al contexto:}
+%             Estos lenguajes son más expresivos y están definidos por gramáticas de tipo 1, que permiten reglas de producción de la forma \( \alpha A \beta \to \alpha \gamma \beta \), donde \( A \) es un no terminal, \( \alpha \) y \( \beta \) son cadenas de símbolos, y \( \gamma \) no es una cadena vacía. Los lenguajes sensibles al contexto son reconocidos por máquinas de Turing linealmente acotadas.
+
+%       \item \textbf{Lenguajes recursivamente enumerables:}
+%             Estos lenguajes corresponden a los más generales y son definidos por gramáticas de tipo 0, que no tienen restricciones en las reglas de producción. Son reconocidos por máquinas de Turing y representan la clase completa de problemas que pueden ser computados.
+
+% \end{enumerate}
+
+
+% El \textbf{problema de la palabra} es una cuestión fundamental en la teoría de lenguajes y las ciencias de la computación. Formulado inicialmente en el contexto de la teoría de grupos, el problema plantea:
+
+% \begin{quote}
+%       Dada una representación finita de un lenguaje formal y una cadena de símbolos, ¿es posible determinar si esta cadena pertenece al lenguaje?
+% \end{quote}
+
+% En términos de computación, el problema de la palabra está estrechamente relacionado con la decidibilidad y la complejidad computacional. La solución a este problema depende del modelo computacional que se utilice
+% para definir el lenguaje.
+
+% Todo problema en Ciencias de la Computación puede ser reducido a un problema de la palabra, ya que cualquier problema
+% puede ser codificado como un lenguaje formal. Por lo tanto, el estudio del problema de la palabra es fundamental para
+% comprender la computabilidad y la complejidad de los problemas computacionales. De ahí que en el presente trabajo se le preste especial atención a este problema
+% enfocado en el contexto del SAT.
+
+
+% \section{SAT y la teoría de lenguajes}
+
+% Como parte del estudió del problema SAT, se ha desarrollado una línea de investigación en la facultad utilizando un enfoque
+% novedoso basado en formalismos de la teoría de lenguajes, buscando resolver instancias específicas del problema.
+
+% \subsection{Problema satisfacibilidad booleana libre del contexto}
+
+% El primer trabajo desarrollado como parte de esta línea de investigación [1] consiste en resolver el problema satisfacibilidad booleana
+% libre del contexto (\textit{CF-SAT}), el cual es una instancia específica del SAT donde las variables donde la fórmula booleana es una fórmula booleana
+% libre del contexto.
+
+% Una fórmula booleana se considera libre del contexto si para cualquier par de instancias de una variable $x_i$ y $x_j$ con $i<j$ se
+% cumple que si existe otra variable con instancia $x_k$ con $i<k<j$ entonces todas las instancias de esta nueva
+% variable ocurren entre $x_i$ y $x_j$.
+
+% El CF-SAT consiste en transformar una fórmula booleana en una lista de instancias de variables,
+% donde se asume que 2 instancias de una variable no tienen por qué tener el mismo valor de verdad. Luego
+% se define un autómata que dada una cadena de 0 y 1 y una fórmula booleana, determina si se obtiene un valor
+% de verdad para la fórmula booleana donde cada instancia de una variable toma el valor de verdad que se
+% corresponde con la cadena de 0 y 1, dicho autómata se denomina autómata booleano.
+
+% Entonces para verificar que 2 instancias de una variable tengan el mismo valor de verdad se intersecta
+% dicho autómata con una gramática libre del contexto \textit{CFG} obteniendo un autómata de pila (esto es posible por la estructura
+% de la fórmula booleana libre del contexto planteada anteriormente).
+% Después de esto se plantea un algoritmo para dado este autómata de pila, generar todas las posibles
+% cadenas de 0 y 1 que se corresponden con una asignación de valores de verdad y como consecuencia se obtiene
+% un generador de todas las posibles asignaciones de valores de verdad para una fórmula booleana.
+% Luego para determinar si la fórmula es satisfacible solo queda verificar si este conjunto de soluciones es no vacío.
+
+% \subsection{Problema de la satisfacibilidad para gramáticas de concatenación de rango simple}
+
+% El próximo trabajo relacionado con este tema realizado en la facultad [2] consistió en definir y analizar el problema de la
+% satisfacibilidad para gramáticas de concatenación de rango simple. En este trabajo se toma el mismo enfoque que el anterior,
+% pero en vez de intersectar el autómata booleano con una gramática libre del contexto se intersecta con una gramática de
+% concatenación de rango simple dando lugar a la resolución de un conjunto más amplio de problemas SAT que el problema anterior.
+
+% \subsection{Problema de la satisfacibilidad para gramáticas matriciales}
+
+% Continuando la línea del autómata booleano empleado en la resolución de instancias del SAT el próximo trabajo desarrollado [3]
+% consistió en analizar las gramáticas matriciales. Nuevamente intersectando el autómata booleano con un formalismo que
+% cuente con un algoritmo para comprobar el problema del vacío en tiempo polinomial en este caso se eligieron las
+% gramáticas matriciales que nuevamente ofrecen un conjunto más amplio de problemas que el CF-SAT.
 
 
 \end{document}
