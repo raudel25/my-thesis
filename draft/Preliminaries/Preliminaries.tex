@@ -423,130 +423,103 @@ En el caso de las SRCG este problema es polinomial.
 de saber si $G_1$ es equivalente a $G_2$ es equivalente a saber si $G_1\cap \overline{G_2}=\emptyset$ y como se mencionó anteriormente el problema del vacío para una RCG
 es indecidible.
 
+\section{Problema de la satisfacibilidad booleana}
 
+El problema de la satisfacibilidad booleana (\textit{SAT}), es un problema fundamental en la teoría de la computación y la lógica matemática. El objetivo principal del problema es determinar si existe una asignación de valores a las variables de una expresión booleana tal que la expresión sea verdadera.
 
-% \section{SAT}
+\subsection{Variables booleanas}
 
-% La versión más básica de SAT es el 2-SAT, en este problema cada cláusula tiene a lo sumo 2 variables, dicho problema se puede
-% resolver mediante una modelación basada en grafos con un algoritmo polinomial. Pero si se aumenta la cantidad de variables
-% el problema se vuelve mucho más complejo, para el caso del 3-SAT (cada cláusula tiene a lo sumo 3 variables) no se conoce algoritmo
-% polinomial que permita resolverlo y está demostrado que cualquier instancia del SAT puede ser reducida a una instancia del 3-SAT.
+Una variable booleana es una variable que puede tomar uno de dos valores posibles: \textit{true} (verdadero) o \textit{false} (falso). Estas variables se utilizan para construir expresiones lógicas.
 
-% En 1971, Stephen Cook demostró que SAT es NP-completo en su célebre artículo \textit{The Complexity of Theorem-Proving Procedures},
-% estableciendo así el nacimiento de la teoría de NP-completitud. La demostración se basa en la construcción de una
-% reducción polinómica desde cualquier problema en NP al 3-SAT, mostrando que todos los problemas de NP son, en esencia,
-% tan difíciles como SAT.
+\subsection{Literales}
 
-% Posteriormente, Leonid Levin, de manera independiente, llegó a conclusiones similares en el contexto de la
-% Unión Soviética. Esta coincidencia histórica resalta la importancia de SAT en la computación teórica y su rol como
-% punto de partida en el estudio de problemas intratables.
+Un literal es una variable booleana o su negación. Formalmente, si \( x \) es una variable booleana, entonces \( x \) y \( \neg x \) (la negación de \( x \)) son literales. Un literal puede tomar los valores \( true \) o \( false \) dependiendo de la asignación de valores a las variables.
 
-% \subsection{Problemas NP y la importancia de SAT}
+\subsection{Cláusulas}
 
-% Después de la demostración de que SAT es NP-completo, surgió una cascada de descubrimientos de otros problemas
-% NP-completos mediante reducciones polinómicas. Ejemplos emblemáticos incluyen el problema del \textit{clique},
-% el del cubrimiento mínimo de vértices (\textit{vertex cover}), el problema del viajante (\textit{TSP}) y el problema de mochila (\textit{backpack problem}),
-% estos 3 últimos en su versión del problema de decisión.
+Una cláusula es una disyunción (operador \textbf{OR}) de uno o más literales. Por ejemplo, la cláusula \( (x \vee \neg y \vee z) \) es una disyunción de tres literales: \( x \), \( \neg y \) y \( z \). Una cláusula es verdadera si al menos uno de sus literales es verdadero. Si todos los literales son falsos, la cláusula será falsa.
 
-% La existencia de estas reducciones polinómicas refuerza la importancia de SAT como núcleo de la clase NP.
-% Resolver SAT eficientemente tendría implicaciones revolucionarias para la informática, ya que permitiría resolver
-% cualquier problema en NP en tiempo polinómico.
+\subsection{Fórmulas en forma normal conjuntiva}
 
-% \subsection{Problemas SAT solubles en tiempo polinomial}
+Una fórmula booleana en forma normal conjuntiva (\textit{CNF}) es una conjunción (operador \textbf{AND}) de cláusulas. En otras palabras, es una expresión booleana que se puede escribir como una serie de cláusulas unidas por el operador \textbf{AND}. Por ejemplo:
 
-% Como se mencionó anteriormente no se conoce ningún algoritmo polinomial para resolver el problema SAT en general, pero
-% existen casos particulares del problema que sí pueden ser resueltos en tiempo polinomial. A continuación se presentan los
-% principales casos:
+\[
+      (x \vee \neg y \vee z) \wedge (\neg x \vee y) \wedge (x \vee \neg z)
+\]
 
-% \begin{enumerate}
-%       \item \textbf{1-SAT:} El problema 1-SAT es una instancia particular de SAT donde cada cláusula tiene a lo sumo un literal.
-%             Este problema puede ser resuelto en tiempo polinomial mediante un algoritmo de asignación de valores de verdad.
-%       \item \textbf{2-SAT:} Como se mencionó anteriormente, el problema 2-SAT puede ser resuelto en tiempo polinomial mediante
-%             una modelación basada en grafos.
-%       \item \textbf{Horn-SAT:} El problema Horn-SAT es una generalización del problema 2-SAT, donde cada cláusula tiene a lo sumo
-%             un literal positivo. Este problema puede ser resuelto en tiempo polinomial mediante el algoritmo de resolución de Horn.
-% \end{enumerate}
+\subsection{Fórmulas booleanas equivalentes}
 
-% \section{Teoría de lenguajes}
+Dos fórmulas booleanas se consideran equivalentes si, para cualquier asignación de valores a sus variables, ambas producen el mismo resultado lógico. Por ejemplo, las fórmulas \( x \vee (y \wedge z) \) y \( (x \vee y) \wedge (x \vee z) \) son equivalentes, ya que para cualquier combinación de valores \( x, y, z \), ambas tienen el mismo valor lógico.
 
-% La teoría de lenguajes formales surgió como una rama de la computación teórica en la década de 1950, impulsada por los estudios de Noam Chomsky sobre gramáticas formales y su relación con los modelos de computación. En este contexto, Chomsky propuso en 1956 una jerarquía que clasifica los lenguajes formales en cuatro niveles de complejidad creciente, basándose en las restricciones impuestas a las gramáticas que los generan y a las máquinas que los reconocen.
+Para cualquier fórmula booleana existe una fórmula booleana equivalente en CNF y el algoritmo para encontrarla es polinomial, por lo tanto
+de aquí se puede asumir que toda fórmula booleana está en CNF.
 
-% \subsubsection{Jerarquía de Chomsky}
-% La jerarquía de Chomsky consta de los siguientes niveles:
+\subsection{Definición del problema de la satisfacibilidad booleana}
 
-% \begin{enumerate}
-%       \item \textbf{Lenguajes regulares:}
-%             Son los lenguajes más simples dentro de la jerarquía y son reconocidos por autómatas finitos. Se definen mediante gramáticas de tipo 3, en las cuales las reglas de producción tienen una forma estrictamente restringida, como \( A \to aB \) o \( A \to a \), donde \( A \) y \( B \) son no terminales y \( a \) es un símbolo terminal. Estos lenguajes tienen aplicaciones prácticas en el análisis léxico y el diseño de patrones.
+El problema de la satisfacibilidad booleana, o SAT, consiste en determinar si existe una asignación de valores \( true \) o \( false \) a las variables de una fórmula booleana tal que la fórmula completa sea verdadera. En términos formales, dado un conjunto de cláusulas en CNF, el problema es encontrar una asignación de valores a las variables que haga que la conjunción de las cláusulas sea verdadera.
 
-%       \item \textbf{Lenguajes libres de contexto \textit{CFL}:}
-%             Reconocidos por autómatas con pila, los lenguajes libres de contexto son definidos por gramáticas de tipo 2. En estas gramáticas, las reglas de producción tienen la forma \( A \to \alpha \), donde \( \alpha \) es una cadena de terminales y no terminales. Los lenguajes CFL son fundamentales para analizar la sintaxis de los lenguajes de programación y para modelar estructuras jerárquicas.
+Formalmente, se dice que una fórmula booleana en CNF es satisfacible si existe una asignación de valores a las variables tal que todas las cláusulas de la fórmula sean verdaderas simultáneamente.
 
-%       \item \textbf{Lenguajes sensibles al contexto:}
-%             Estos lenguajes son más expresivos y están definidos por gramáticas de tipo 1, que permiten reglas de producción de la forma \( \alpha A \beta \to \alpha \gamma \beta \), donde \( A \) es un no terminal, \( \alpha \) y \( \beta \) son cadenas de símbolos, y \( \gamma \) no es una cadena vacía. Los lenguajes sensibles al contexto son reconocidos por máquinas de Turing linealmente acotadas.
+\begin{itemize}
+      \item Si existe tal asignación, la fórmula es \textit{satisfacible}.
+      \item Si no existe tal asignación, la fórmula es \textit{insatisfacible}.
+\end{itemize}
 
-%       \item \textbf{Lenguajes recursivamente enumerables:}
-%             Estos lenguajes corresponden a los más generales y son definidos por gramáticas de tipo 0, que no tienen restricciones en las reglas de producción. Son reconocidos por máquinas de Turing y representan la clase completa de problemas que pueden ser computados.
+Un SAT con exactamente $n$ variables distintas se denomina $n$-SAT.
 
-% \end{enumerate}
+\subsection{Problemas NP-Completos}
 
+Un problema se clasifica como $\mathsf{NP-completo}$ si satisface dos condiciones esenciales:
 
-% El \textbf{problema de la palabra} es una cuestión fundamental en la teoría de lenguajes y las ciencias de la computación. Formulado inicialmente en el contexto de la teoría de grupos, el problema plantea:
+\begin{enumerate}
+      \item \textbf{Pertenencia a $\mathsf{NP}$:} El problema está en la clase $\mathsf{NP}$, lo que significa que, dada una solución candidata, es posible verificar su corrección en tiempo polinómico con respecto al tamaño de la entrada.
 
-% \begin{quote}
-%       Dada una representación finita de un lenguaje formal y una cadena de símbolos, ¿es posible determinar si esta cadena pertenece al lenguaje?
-% \end{quote}
+      \item \textbf{NP-dureza:} El problema es tan difícil como cualquier otro problema en $\mathsf{NP}$. Esto significa que cualquier problema en $\mathsf{NP}$ puede reducirse a este problema en tiempo polinómico.
+\end{enumerate}
 
-% En términos de computación, el problema de la palabra está estrechamente relacionado con la decidibilidad y la complejidad computacional. La solución a este problema depende del modelo computacional que se utilice
-% para definir el lenguaje.
+\subsection{SAT como Problema NP}
 
-% Todo problema en Ciencias de la Computación puede ser reducido a un problema de la palabra, ya que cualquier problema
-% puede ser codificado como un lenguaje formal. Por lo tanto, el estudio del problema de la palabra es fundamental para
-% comprender la computabilidad y la complejidad de los problemas computacionales. De ahí que en el presente trabajo se le preste especial atención a este problema
-% enfocado en el contexto del SAT.
+El SAT es el primer problema demostrado como $\mathsf{NP-completo}$ y juega un rol central en la teoría de la complejidad computacional. Se define en la clase NP porque, dada una asignación de valores a las variables de la fórmula booleana, se puede verificar en tiempo polinómico si dicha asignación satisface la fórmula.
 
+Además, la prueba de que SAT es $\mathsf{NP-completo}$ fue una de las contribuciones principales de Stephen Cook en 1971, marcando el inicio de la teoría de la NP-completitud.
 
-% \section{SAT y la teoría de lenguajes}
+\subsection{Equivalencia entre SAT y 3-SAT}
 
-% Como parte del estudió del problema SAT, se ha desarrollado una línea de investigación en la facultad utilizando un enfoque
-% novedoso basado en formalismos de la teoría de lenguajes, buscando resolver instancias específicas del problema.
+Para el problema 2-SAT existe una solución polinomial que determina si la fórmula booleana es satisfacible o no, pero para el problema 3-SAT no se conoce ningún algoritmo que permita
+determinar si una fórmula booleana es satisfacible o no.
 
-% \subsection{Problema satisfacibilidad booleana libre del contexto}
+Cualquier fórmula booleana del problema $n$-SAT puede ser reducida a una fórmula booleana equivalente del problema 3-SAT, por lo tanto, SAT es equivalente a 3-SAT en términos de complejidad computacional.
 
-% El primer trabajo desarrollado como parte de esta línea de investigación [1] consiste en resolver el problema satisfacibilidad booleana
-% libre del contexto (\textit{CF-SAT}), el cual es una instancia específica del SAT donde las variables donde la fórmula booleana es una fórmula booleana
-% libre del contexto.
+\paragraph{Transformación de SAT a 3-SAT:}
 
-% Una fórmula booleana se considera libre del contexto si para cualquier par de instancias de una variable $x_i$ y $x_j$ con $i<j$ se
-% cumple que si existe otra variable con instancia $x_k$ con $i<k<j$ entonces todas las instancias de esta nueva
-% variable ocurren entre $x_i$ y $x_j$.
+Dada una fórmula en CNF con cláusulas de \( k > 3 \) literales, se puede convertir a 3-CNF introduciendo variables adicionales. Por ejemplo, considere una cláusula de cuatro literales:
 
-% El CF-SAT consiste en transformar una fórmula booleana en una lista de instancias de variables,
-% donde se asume que 2 instancias de una variable no tienen por qué tener el mismo valor de verdad. Luego
-% se define un autómata que dada una cadena de 0 y 1 y una fórmula booleana, determina si se obtiene un valor
-% de verdad para la fórmula booleana donde cada instancia de una variable toma el valor de verdad que se
-% corresponde con la cadena de 0 y 1, dicho autómata se denomina autómata booleano.
+\[
+      (a \vee b \vee c \vee d)
+\]
 
-% Entonces para verificar que 2 instancias de una variable tengan el mismo valor de verdad se intersecta
-% dicho autómata con una gramática libre del contexto \textit{CFG} obteniendo un autómata de pila (esto es posible por la estructura
-% de la fórmula booleana libre del contexto planteada anteriormente).
-% Después de esto se plantea un algoritmo para dado este autómata de pila, generar todas las posibles
-% cadenas de 0 y 1 que se corresponden con una asignación de valores de verdad y como consecuencia se obtiene
-% un generador de todas las posibles asignaciones de valores de verdad para una fórmula booleana.
-% Luego para determinar si la fórmula es satisfacible solo queda verificar si este conjunto de soluciones es no vacío.
+Esta cláusula puede reescribirse como un conjunto de cláusulas en 3-CNF introduciendo una nueva variable \( x \):
 
-% \subsection{Problema de la satisfacibilidad para gramáticas de concatenación de rango simple}
+\[
+      (a \vee b \vee x) \wedge (\neg x \vee c \vee d)
+\]
 
-% El próximo trabajo relacionado con este tema realizado en la facultad [2] consistió en definir y analizar el problema de la
-% satisfacibilidad para gramáticas de concatenación de rango simple. En este trabajo se toma el mismo enfoque que el anterior,
-% pero en vez de intersectar el autómata booleano con una gramática libre del contexto se intersecta con una gramática de
-% concatenación de rango simple dando lugar a la resolución de un conjunto más amplio de problemas SAT que el problema anterior.
+Este proceso se puede aplicar iterativamente para todas las cláusulas con más de tres literales, asegurando que la nueva fórmula sea satisfacible si y solo si la fórmula original también lo es.
 
-% \subsection{Problema de la satisfacibilidad para gramáticas matriciales}
+\subsection{Problemas SAT solubles en tiempo polinomial}
 
-% Continuando la línea del autómata booleano empleado en la resolución de instancias del SAT el próximo trabajo desarrollado [3]
-% consistió en analizar las gramáticas matriciales. Nuevamente intersectando el autómata booleano con un formalismo que
-% cuente con un algoritmo para comprobar el problema del vacío en tiempo polinomial en este caso se eligieron las
-% gramáticas matriciales que nuevamente ofrecen un conjunto más amplio de problemas que el CF-SAT.
+Como se mencionó anteriormente no se conoce ningún algoritmo polinomial para resolver el problema SAT en general, pero
+existen casos particulares del problema que sí pueden ser resueltos en tiempo polinomial. A continuación se presentan los
+principales casos:
+
+\begin{enumerate}
+      \item \textbf{1-SAT:} El problema 1-SAT es una instancia particular de SAT donde cada cláusula tiene a lo sumo un literal.
+            Este problema puede ser resuelto en tiempo polinomial mediante un algoritmo de asignación de valores de verdad.
+      \item \textbf{2-SAT:} Como se mencionó anteriormente, el problema 2-SAT puede ser resuelto en tiempo polinomial mediante
+            una modelación basada en grafos.
+      \item \textbf{Horn-SAT:} El problema Horn-SAT es una generalización del problema 2-SAT, donde cada cláusula tiene a lo sumo
+            un literal positivo. Este problema puede ser resuelto en tiempo polinomial mediante el algoritmo de resolución de Horn.
+\end{enumerate}
 
 
 \end{document}

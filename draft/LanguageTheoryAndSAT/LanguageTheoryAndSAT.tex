@@ -7,4 +7,48 @@
 
 \maketitle
 
+% \section{SAT y la teoría de lenguajes}
+
+% Como parte del estudió del problema SAT, se ha desarrollado una línea de investigación en la facultad utilizando un enfoque
+% novedoso basado en formalismos de la teoría de lenguajes, buscando resolver instancias específicas del problema.
+
+% \subsection{Problema satisfacibilidad booleana libre del contexto}
+
+% El primer trabajo desarrollado como parte de esta línea de investigación [1] consiste en resolver el problema satisfacibilidad booleana
+% libre del contexto (\textit{CF-SAT}), el cual es una instancia específica del SAT donde las variables donde la fórmula booleana es una fórmula booleana
+% libre del contexto.
+
+% Una fórmula booleana se considera libre del contexto si para cualquier par de instancias de una variable $x_i$ y $x_j$ con $i<j$ se
+% cumple que si existe otra variable con instancia $x_k$ con $i<k<j$ entonces todas las instancias de esta nueva
+% variable ocurren entre $x_i$ y $x_j$.
+
+% El CF-SAT consiste en transformar una fórmula booleana en una lista de instancias de variables,
+% donde se asume que 2 instancias de una variable no tienen por qué tener el mismo valor de verdad. Luego
+% se define un autómata que dada una cadena de 0 y 1 y una fórmula booleana, determina si se obtiene un valor
+% de verdad para la fórmula booleana donde cada instancia de una variable toma el valor de verdad que se
+% corresponde con la cadena de 0 y 1, dicho autómata se denomina autómata booleano.
+
+% Entonces para verificar que 2 instancias de una variable tengan el mismo valor de verdad se intersecta
+% dicho autómata con una gramática libre del contexto \textit{CFG} obteniendo un autómata de pila (esto es posible por la estructura
+% de la fórmula booleana libre del contexto planteada anteriormente).
+% Después de esto se plantea un algoritmo para dado este autómata de pila, generar todas las posibles
+% cadenas de 0 y 1 que se corresponden con una asignación de valores de verdad y como consecuencia se obtiene
+% un generador de todas las posibles asignaciones de valores de verdad para una fórmula booleana.
+% Luego para determinar si la fórmula es satisfacible solo queda verificar si este conjunto de soluciones es no vacío.
+
+% \subsection{Problema de la satisfacibilidad para gramáticas de concatenación de rango simple}
+
+% El próximo trabajo relacionado con este tema realizado en la facultad [2] consistió en definir y analizar el problema de la
+% satisfacibilidad para gramáticas de concatenación de rango simple. En este trabajo se toma el mismo enfoque que el anterior,
+% pero en vez de intersectar el autómata booleano con una gramática libre del contexto se intersecta con una gramática de
+% concatenación de rango simple dando lugar a la resolución de un conjunto más amplio de problemas SAT que el problema anterior.
+
+% \subsection{Problema de la satisfacibilidad para gramáticas matriciales}
+
+% Continuando la línea del autómata booleano empleado en la resolución de instancias del SAT el próximo trabajo desarrollado [3]
+% consistió en analizar las gramáticas matriciales. Nuevamente intersectando el autómata booleano con un formalismo que
+% cuente con un algoritmo para comprobar el problema del vacío en tiempo polinomial en este caso se eligieron las
+% gramáticas matriciales que nuevamente ofrecen un conjunto más amplio de problemas que el CF-SAT.
+
+
 \end{document}
