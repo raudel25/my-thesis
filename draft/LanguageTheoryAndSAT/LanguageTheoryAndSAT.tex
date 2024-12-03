@@ -1,5 +1,8 @@
 \documentclass{article}
 
+\usepackage[utf8]{inputenc} % Permite escribir caracteres especiales directamente
+\usepackage[spanish]{babel} % Configura el idioma a español
+
 \title{Solución polinomial de instancias del SAT usando Teoría de Lenguajes}
 \author{Raudel Alejandro Gómez Molina}
 
@@ -7,48 +10,218 @@
 
 \maketitle
 
-% \section{SAT y la teoría de lenguajes}
+\section{Antecedentes}
 
-% Como parte del estudió del problema SAT, se ha desarrollado una línea de investigación en la facultad utilizando un enfoque
-% novedoso basado en formalismos de la teoría de lenguajes, buscando resolver instancias específicas del problema.
+Como parte del estudió del problema SAT, se ha desarrollado una serie de trabajos utilizando un enfoque
+novedoso basado en formalismos de la teoría de lenguajes, buscando resolver instancias específicas del SAT.
 
-% \subsection{Problema satisfacibilidad booleana libre del contexto}
+AL idea principal abordada en \cite{aCFSAT} es transformar el SAT en una transformar una fórmula booleana en una lista de instancias de variables,
+donde se asume que 2 instancias de una variable no tienen por qué tener el mismo valor de verdad. Luego
+se define un autómata cuya construcción depende de la fórmula booleana, el funcionamiento
+de dicho autómata se basa en dada una cadena de 0 y 1 determinar si se obtiene un valor
+de verdad para la fórmula booleana donde cada instancia de una variable toma el valor de verdad que se
+corresponde con la cadena de 0 y 1, dicho autómata se denomina \textbf{autómata booleano}.
 
-% El primer trabajo desarrollado como parte de esta línea de investigación [1] consiste en resolver el problema satisfacibilidad booleana
-% libre del contexto (\textit{CF-SAT}), el cual es una instancia específica del SAT donde las variables donde la fórmula booleana es una fórmula booleana
-% libre del contexto.
+\subsection{Autómata booleano}
 
-% Una fórmula booleana se considera libre del contexto si para cualquier par de instancias de una variable $x_i$ y $x_j$ con $i<j$ se
-% cumple que si existe otra variable con instancia $x_k$ con $i<k<j$ entonces todas las instancias de esta nueva
-% variable ocurren entre $x_i$ y $x_j$.
+Un autómata booleano \cite{aCFSAT} es un 6-tuplo $B=(Q,\Sigma,\delta,q_0,V,F)$ donde:
 
-% El CF-SAT consiste en transformar una fórmula booleana en una lista de instancias de variables,
-% donde se asume que 2 instancias de una variable no tienen por qué tener el mismo valor de verdad. Luego
-% se define un autómata que dada una cadena de 0 y 1 y una fórmula booleana, determina si se obtiene un valor
-% de verdad para la fórmula booleana donde cada instancia de una variable toma el valor de verdad que se
-% corresponde con la cadena de 0 y 1, dicho autómata se denomina autómata booleano.
+\begin{itemize}
+      \item $Q$: Es un conjunto finito de \textbf{estados} (depende de la fórmula booleano asociada).
+      \item $\Sigma$: Es el \textbf{alfabeto} finito de entrada, $\Sigma =\{0,1\}$.
+      \item $\delta$: Es la \textbf{función de transición}, $\delta: Q \times \Sigma \to Q$, que define cómo el autómata cambia de estado en función del símbolo leído.
+      \item $q_0 \in Q$: Es el \textbf{estado inicial} desde donde comienza la computación.
+      \item  $V$: Estado final del autómata. Representa que la cadena de entrada es una
+            cadena verdadera.
+      \item  $F$: Es un estado distinguido del autómata, no es considerado estado final.
+            Representa que la cadena de entrada es una cadena falsa.
 
-% Entonces para verificar que 2 instancias de una variable tengan el mismo valor de verdad se intersecta
-% dicho autómata con una gramática libre del contexto \textit{CFG} obteniendo un autómata de pila (esto es posible por la estructura
-% de la fórmula booleana libre del contexto planteada anteriormente).
-% Después de esto se plantea un algoritmo para dado este autómata de pila, generar todas las posibles
-% cadenas de 0 y 1 que se corresponden con una asignación de valores de verdad y como consecuencia se obtiene
-% un generador de todas las posibles asignaciones de valores de verdad para una fórmula booleana.
-% Luego para determinar si la fórmula es satisfacible solo queda verificar si este conjunto de soluciones es no vacío.
+\end{itemize}
 
-% \subsection{Problema de la satisfacibilidad para gramáticas de concatenación de rango simple}
+\paragraph{Autómata booleano asociado a una variable:} el autómata booleano asociado a la instancia de una variable
+se define como:
 
-% El próximo trabajo relacionado con este tema realizado en la facultad [2] consistió en definir y analizar el problema de la
-% satisfacibilidad para gramáticas de concatenación de rango simple. En este trabajo se toma el mismo enfoque que el anterior,
-% pero en vez de intersectar el autómata booleano con una gramática libre del contexto se intersecta con una gramática de
-% concatenación de rango simple dando lugar a la resolución de un conjunto más amplio de problemas SAT que el problema anterior.
+$$B=(\{q_0,V,F\},\{0,1\},\delta,q_0,V,F)$$
 
-% \subsection{Problema de la satisfacibilidad para gramáticas matriciales}
+$$\delta(q_0,1)=V$$
+$$\delta(q_0,0)=F$$
 
-% Continuando la línea del autómata booleano empleado en la resolución de instancias del SAT el próximo trabajo desarrollado [3]
-% consistió en analizar las gramáticas matriciales. Nuevamente intersectando el autómata booleano con un formalismo que
-% cuente con un algoritmo para comprobar el problema del vacío en tiempo polinomial en este caso se eligieron las
-% gramáticas matriciales que nuevamente ofrecen un conjunto más amplio de problemas que el CF-SAT.
+\paragraph{Autómata booleano asociado a la negación de una fórmula:} sea $A$ una fórmula booleana y $B$ el autómata booleano asociado a $A$ definido
+como $B=(Q,\Sigma,\delta,q_0,V,F)$. Entonces el autómata booleano asociado $\not A$ se define como:
+
+$$B=(Q,\Sigma,\delta,q_0,F,V)$$
+
+\paragraph{Autómata booleano asociado a la disyunción de 2 fórmulas:} sean $A_1$ y $A_2$ fórmulas booleanas y
+$B_1=(Q_1,\Sigma,\delta_1,q_1,V_1,F_1)$ y $B_2=(Q_2,\Sigma,\delta_2,q_2,V_2,F_2)$ los autómatas booleanos asociados a dicha fórmula. Entonces el autómata booleano asociado a
+$A_1 \vee A_2$ se define como:
+
+$$
+      D=(Q_1\cup (Q_2-q_2),\Sigma,\delta,V_2, F_2)
+$$
+Ahora durante el reconocimiento de la cadena se tienen 2 casos:
+
+\begin{enumerate}
+      \item $B_1$ se evalúa positivo en este caso no es necesario que el autómata $B_2$ se evalué positivo, por lo
+            que se añade una función $\overline{\delta}$ que consume una cantidad de caracteres igual a la cantidad
+            de instancias de $A_2$ y termina en el estado $V_2$.
+      \item $B_2$ se evalúa negativo en este caso es necesario que $B_2$ se evalué positivo, para ello se fusionan
+            los estados $F_1$ y $q_2$ con el mismo estado y entonces el resultado de la evaluación de la cadena dependerá
+            del estado final de $B_2$.
+\end{enumerate}
+
+\paragraph{Autómata booleano asociado a la conjunción de 2 fórmulas:} sean $A_1$ y $A_2$ fórmulas booleanas y
+$B_1=(Q_1,\Sigma,\delta_1,q_1,V_1,F_1)$ y $B_2=(Q_2,\Sigma,\delta_2,q_2,V_2,F_2)$ los autómatas booleanos asociados a dicha fórmula. Entonces el autómata booleano asociado a
+$A_1 \wedge A_2$ se define como:
+
+$$
+      D=(Q_1\cup (Q_2-q_2),\Sigma,\delta,V_2, F_2)
+$$
+Para que $A_1 \wedge A_2$ sea satisfacible por una cadena es necesario que tanto $B_1$ como $B_2$ se evaluen positivo, para
+ello se fusionan los estados $V_1$ y $q_2$ como el mismo estado y entonces el resultado de la evaluación de la cadena dependerá
+de los estados finales de $B_1$ y $B_2$ respectivamente.
+
+\subsection{Construcción del autómata booleano asociado a una fórmula booleana}
+
+Ahora dadas las definiciones anteriores es posible determinar el autómata booleano asociado a una fórmula booleana $A$ \cite{aCFSAT},
+para ello primero se construyen los autómatas asociados a cada una de las instancias de variable que
+aparecen en la secuencia. Una vez finalizada esta etapa se pasa a la concatenación de los
+mismos teniendo en cuenta el siguiente orden.
+
+\begin{enumerate}
+      \item Efectuar las operaciones entre paréntesis.
+      \item  Efectuar el operador negación.
+      \item  Efectuar el operador conjunción.
+      \item  Efectuar el operador disyunción.
+\end{enumerate}
+
+En \cite{aCFSAT} se demuestra que la cantidad de estados del autómata resultante es $O(n^2)$ donde $n$ es la cantidad de instancias
+de variables de las fórmula $A$.
+
+\subsubsection{Intersección con formalismos de escritura regulada}
+
+Ahora el siguiente paso para determinar si la fórmula booleana es satisfacible es verificar
+que la cadena de 0 y 1 que reconoce el autómata booleano asociado a dicha fórmula cumple que los caracteres
+asociados a instancias de las mismas variables son iguales.
+
+Para ello en \cite{aCFSAT} se propone imponer una restricción a la fórmula booleana en el orden en que aparecen sus
+instancias de variables, dicho orden esta regido por un formalismo de escritura regulada. Luego para completar
+el algoritmo se intersecta el autómata booleano con el formalismo seleccionado (dicho formalismo debe cumplir 2 propiedades:
+ser cerrado bajo la intersección con lenguajes regulares y poder resolver el problema del vacío en tiempo polinomial), entonces
+solo resta comprobar si el lenguaje generado por el formalismo es vacío o no.
+
+Otro resultado interesante es encontrar un algoritmo que permita generar todas las posibles cadenas que pertenecen al lenguaje
+generado por la intersección del autómata booleano y el formalismo de escritura regulada.
+
+En las próximas secciones se presentarán los problemas SAT asociados a los trabajos que siguen el enfoque descrito anteriormente.
+
+\section{Problema de la satisfacibilidad booleana libre del contexto}
+
+El problema satisfacibilidad booleana libre del contexto (\textit{CF-SAT}) \cite{aCFSAT}, es una instancia específica
+del SAT donde las variables donde la fórmula booleana es una fórmula booleana libre del contexto.
+
+\paragraph{Fórmula booleana se considera libre del contexto:} una fórmula booleana se considera libre del contexto
+\textit{CF-BF} si para cualquier par de instancias de una variable $x_i$ y $x_j$ con $i<j$ se
+cumple que si existe otra variable con instancia $x_k$ con $i<k<j$ entonces todas las instancias de esta nueva
+variable ocurren entre $x_i$ y $x_j$.
+
+Dada la definición anterior posible clasificar las instancias de cada variable en una fórmula booleana:
+
+\begin{enumerate}
+      \item \textbf{Clase libre:} a esta clase pertenecen todas las instancias de las variables que ocurren
+            una única vez en la fórmula booleana.
+      \item \textbf{Clase primera:} a esta clase pertenecen todas las instancias que representan la primera
+            ocurrencia de una variable en la fórmula booleana (la variable debe ocurrir más de una vez).
+      \item \textbf{Clase intermedia:} a esta clase pertenecen todas las instancias que no representan ni la primera, ni la última
+            ocurrencia de una variable en la fórmula booleana (la variable debe ocurrir más de una vez).
+      \item \textbf{Clase última:} a esta clase pertenecen todas las instancias que representan la última
+            ocurrencia de una variable en la fórmula booleana (la variable debe ocurrir más de una vez).
+\end{enumerate}
+
+\subsection{Solución al CF-SAT}
+
+El orden que siguen las instancias de las variables en una CF-BF puede ser reconocido por una CFG que a su vez trae asociado
+un autómata de pila, al cual de le denomina autómata de pila booleano \cite{aCFSAT}.
+
+Ahora para la construcción del autómata de pila booleano correspondiente a una CF-BF se toma el autómata booleano definido en
+la sección anterior y se le añade un mecanismo de memoria. Dicho mecanismo de memoria funciona de la siguiente manera:
+
+\begin{itemize}
+      \item Si el caracter analizado corresponde a una instancia de clase libre, dicho caracter no se almacena en la pila.
+      \item Si el caracter analizado corresponde a una instancia de clase primera, dicho caracter se almacena en la pila.
+      \item Si el caracter analizado corresponde a una instancia de clase intermedia, dicho caracter no se almacena en la
+            pila y se comprueba que su valor sea igual al del tope de la pila.
+      \item Si el caracter analizado corresponde a una instancia de clase última, dicho caracter no se almacena en la
+            pila, se comprueba que su valor sea igual al del tope de la pila y se retira el valor del tope de la pila.
+\end{itemize}
+Luego el autómata de pila booleano reconoce una cadena si termina en un estado final con la pila vacía.
+
+En \cite{aCFSAT} se describe como dado un autómata de pila encontrar la CFL correspondiente y luego enuncia un
+algoritmo que permite determinar si el lenguaje generado con por la gramática es vacío o no y un algoritmo para
+generar todas las cadenas que pertenecen a dicha gramática. Este algoritmo tiene una complejidad de $O(n^3)$, donde $n$
+es la cantidad de instancias de variables en la CF-BF.
+
+\section{Problema de la satisfacibilidad booleana de concatenación de rango simple}
+
+Una secuencia de instancias de variables de longitud $n$ tiene un orden de concatenación de rango simple \cite{aSRCSAT},
+si es posible construir una SRCG, con un tamaño polinomial en $n$, que genere el lenguaje de todas las cadenas
+$w_1w_2 \ldots w_n$, de longitud $n$ sobre el alfabeto {0,1}, tal que para todo par de instancias de variables
+($x_i$, $x+j$) que pertenezcan a la misma variable se cumple que $w_i = w_j$.
+
+El problema de la satisfacibilidad booleana de concatenación de rango simple (\textit{SRC-SAT}) es una instancia de
+SAT donde la secuencia de instancias de sus variables posee un orden de concatenación de rango simple.
+
+\subsection{Solución al SRC-SAT}
+
+Para la solución del SRC-SAT en \cite{aSRCSAT} se procede de manera similar a \cite{aCFSAT}, pero esta vez el autómata
+booleano se intersecta con una SRCG que describe el orden de la fórmula booleana.
+
+Luego solo queda resolver el problema del vacío para el formalismo resultante, para esto se obtiene una CFG
+que representa el lenguaje de todas las posibles formas de generar la menor cadena en la intersección de la SRCG
+con autómata booleano y solo queda verificar que dicha CFG sea no vacía como se muestra en \cite{aCFSAT}. La complejidad
+de todo este proceso es $O(n^k)$ donde $n$ es el número de instancias de variables en la fórmula booleana y $k$ es
+la aridad de la SRCG.
+
+El SRC-SAT constituye un paso de avance en cuanto al CF-SAT ya que describe un espacio mucho más amplio de instancias de SAT
+que pueden ser resueltas en un tiempo polinomial.
+
+\begin{thebibliography}{9}
+
+      \bibitem{authomataTheory}
+      John E. Hopcroft, Rajeev Motwani, Jeffrey D. Ullman.
+      \textit{Introduction to Automata Theory, Languages, and Computation}.
+      Addison-Wesley,
+
+      \bibitem{simpleMatrixLanguages}
+      Oscar H. Ibarra.
+      \textit{Simple Matrix Languages}
+
+      \bibitem{mainRCGBib}
+      Pierre Boullier.
+      \textit{Proposal for a Natural Language Processing Syntactic Backbone},
+      1998.
+
+      \bibitem{propertiesRCGBib}
+      Pierre Boullier.
+      \textit{A Cubic Time Extension of Context-Free Grammars},
+      1999.
+
+      \bibitem{aCFSAT}
+      Alina Fernández Arias.
+      \textit{El problema de la satisfacibilidad booleana libre del contexto},
+      2007
+
+      \bibitem{aSRCSAT}
+      Manuel Aguilera López.
+      \textit{Problema de la Satisfacibilidad Booleana de Concatenación de Rango Simple},
+      2016
+
+      \bibitem{aSMSAT}
+      José Jorge Rodríguez Salgado.
+      \textit{Gramáticas Matriciales Simples. Primera aproximación para una solución al problema SAT},
+      2019
+
+\end{thebibliography}
+
 
 
 \end{document}
