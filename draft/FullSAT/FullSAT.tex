@@ -1,26 +1,29 @@
 \documentclass{article}
 
+% \usepackage[utf8]{inputenc} % Permite escribir caracteres especiales directamente
+% \usepackage[spanish]{babel} % Configura el idioma a español
+
 \usepackage{multicol}
 \usepackage{tikz}
 \usetikzlibrary{automata, positioning}
 
-\title{Full SAT}
+\title{FULL SAT}
 \author{Raudel Alejandro Gómez Molina}
 
 \begin{document}
 
 \maketitle
 
+\section{Lenguaje FULL-SAT}
+
 En esta sección se presentará un nuevo enfoque distinto a los anteriores, el cual se basa en definir un lenguaje al cual
-pertenecen todos los problemas SAT que son satisfacible y al cual se le denominará \textit{Full SAT}.
+pertenecen todos los problemas SAT que son satisfacible y al cual se le denominará \textit{FULL-SAT}.
 
 \section{Transformación de una fórmula booleana a una cadena}
 
-Primeramente para definir Full-SAT se debe definir una transformación de una fórmula booleana a una cadena de símbolos.
-Para ello se utilizará una fórmula en fornma normal conjuntiva (\textit{CNF}), esto es extensible a cualquier fórmula booleana, ya que existe un
-algoritmo polinomial que transforma cualquier fórmula booleana a una fórmula en \textit{CNF}.
+Primeramente para definir FULL-SAT se debe definir una transformación de una fórmula booleana a una cadena de símbolos.
 
-Entonces  dada una fórmula en \textit{CNF}:
+Dada una fórmula booleana en CNF:
 $$F=X_1 \wedge X_2 \wedge \ldots \wedge X_n$$
 donde cada cláusula $X_i$ es una disyunción de literales:
 $$X_i=L_{i1} \vee L_{i2} \vee \ldots \vee L_{im}$$
@@ -50,36 +53,23 @@ puede ser expresada como la cadena de símbolos:
 $$w=aacdbaadabad$$
 tomando como secuencia de variables $x_1, x_2, x_3$ como se describió anteriormente.
 
-\section{Transductor finito}
+\subsection{Definición del lenguaje FULL-SAT}
 
-Un transductor finito es un modelo computacional que extiende los autómatas finitos al incluir tanto entradas como salidas.
-Formalmente, un transductor finito es un autómata finito determinista o no determinista con una función de transición extendida
-que asocia una salida a cada transición.
+El lenguaje FULL-SAT se define como $L_{FULL_SAT}=\{w\,|\,w \in L_{CNF} \wedge f_{SAT}(w)\}$, donde $L_{CNF}$ representa el lenguaje
+de todas las fórmulas booleanas en CNF y $f_{SAT}(w)$ es una función que determinista si $w$ es satisfacible.
 
-Un transductor finito puede representarse como una tupla:
-\[
-    T = (Q, \Sigma, \Gamma, \delta, q_0, F),
-\]
-donde:
-\begin{itemize}
-    \item \(Q\) es el conjunto finito de estados.
-    \item \(\Sigma\) es el alfabeto de entrada.
-    \item \(\Gamma\) es el alfabeto de salida.
-    \item \(\delta: Q \times \Sigma \to Q \times \Gamma^*\) es la función de transición, que mapea una combinación de estado actual y símbolo de entrada a un nuevo estado y una salida.
-    \item \(q_0 \in Q\) es el estado inicial.
-    \item \(F \subseteq Q\) es el conjunto de estados finales.
-\end{itemize}
+En las próximas secciones se presentarán varios enfoques para definir $f_{SAT}$.
 
-\subsection{Transductor Full-SAT}
+\section{Transductor FULL-SAT}
 
-Ahora la idea para definir Full-SAT es construir un transductor finito que acepte como entrada cadenas del lenguaje $L_{0,1}=\{wd\}^*$ donde $w\in \{0,1\}^*$
+En esta sección la idea para definir $f_{SAT}$ es construir un transductor finito que acepte como entrada cadenas del lenguaje $L_{0,1}=\{wd\}^*$ donde $w\in \{0,1\}^*$
 y tenga como salida cadenas, donde cada cadena $e$ representa una fórmula booleana en \textit{CNF} y que acepte si y solo si la fórmula es satisfacible. Detrás
 de esta construcción se busca asociar cada carácter 0 ó 1 en la cadena de entrada al valor de la variable booleana correspondiente en la cadena de salida y verificar que para dichos
 valores al evaluar la fórmula booleana se obtenga un valor de verdad. Observe que mediante esta construcción se mantiene la invariante fundamental del SAT que a dos instancias
 de la misma variable se les asocia el mismo valor de verdad, esto es posible por como está definido el formato de la cadena de entrada.
 
-A continuación se define el transductor finito $T_{Full-SAT}$ que sigue la construcción definida anteriormente, para ello se define
-el transductor $T_{SAT}$ que hace el proceso de transducción para los valores de verdad de una cláusula $w$, donde $w\in {0,1}$:
+A continuación se define el transductor finito $T_{FULL-SAT}$ que sigue la construcción definida anteriormente, para ello se define
+el transductor $T_{SAT}$ (Figura \ref{fig:transducer}) que hace el proceso de transducción para los valores de verdad de una cláusula $w$, donde $w\in {0,1}$:
 
 \[
     T_{SAT} = (Q_{SAT}, {\Sigma}_{SAT}, \Gamma_{SAT}, \delta_{SAT}, q_{0_{SAT}}, F_{SAT}),
@@ -134,7 +124,7 @@ se define la función de transición $\delta$ de la siguiente manera:
 \end{itemize}
 
 \begin{figure}[h]
-    \centering        \begin{tikzpicture}[shorten >=1pt, node distance=3cm, on grid, auto]
+    \centering \begin{tikzpicture}[shorten >=1pt, node distance=3cm, on grid, auto]
         
         % Nodos
         \node[state, initial] (q0)   {$q_0$};
@@ -157,23 +147,23 @@ se define la función de transición $\delta$ de la siguiente manera:
     \label{fig:transducer} % Esto es para referenciar la figura en el texto
 \end{figure}
 
-Ahora para definir el transductor $T_{Full-SAT}$ se toman dos instancias del transductor $T_{SAT}$ ($T_1$ y $T_2$ respectivamente) y se concatenan
+Ahora para definir el transductor $T_{FULL-SAT}$ se toman dos instancias del transductor $T_{SAT}$ ($T_1$ y $T_2$ respectivamente) y se concatenan
 añadiendo una transición del estado $q_{p_1}$ (estado positivo de $T_1$) al estado $q_{0_2}$ (estado inicial de $T_2$) con el símbolo $d$ (tanto de
 lectura como de escritura) y además se lenguaje agrega una cláusura a $T_2$ con una transición del estado $q_{p_2}$
 (estado positivo de $T_2$) al estado $q_{0_2}$ con el símbolo $d$ (tanto de lectura como de escritura). Entonces solo resta definir
-el estado inicial y el estado final de $T_{Full-SAT}$, los cuales serían $q_{0_1}$ (estado inicial de $T_1$) y $q_{0_2}$ (estado inicial de $T_2$),
+el estado inicial y el estado final de $T_{FULL-SAT}$, los cuales serían $q_{0_1}$ (estado inicial de $T_1$) y $q_{0_2}$ (estado inicial de $T_2$),
 respectivamente.
 
-\section{Definición del lenguaje Full-SAT}
+\subsection{Definición del lenguaje FULL-SAT usando transducción finita}
 
-Finalmente se define el lenguaje Full-SAT (\textit{$L_{Full-SAT}$}) como el lenguaje de todas las cadenas $e$ que son aceptadas por el transductor $T_{Full-SAT}$, a partir del lenguaje
+Finalmente se define el lenguaje FULL-SAT como el lenguaje de todas las cadenas $e$ que son aceptadas por el transductor $T_{FULL-SAT}$, a partir del lenguaje
 de cadenas de entrada $L_{0,1}=\{wd\}^*$ donde $w\in \{0,1\}^*$. 
 
-$$L_{Full-SAT} = \{e\,|\,e \in T_{Full-SAT}(w) \wedge e \in L_{0,1}\}$$
+$$L_{FULL-SAT} = \{e\,|\,\exists w \in L_{0,1} \wedge e \in T_{FULL-SAT}(w) \}$$
 
-Luego $L_{Full-SAT}$ contiene todas las fórmulas booleanas satisfacibles, pero este conjunto por si solo no sirve de mucho sin un formalismo
+Luego $L_{FULL-SAT}$ contiene todas las fórmulas booleanas satisfacibles, pero este conjunto por si solo no sirve de mucho sin un formalismo
 que permita conocer si una cadena que representa una fórmula booleana pertenece al lenguaje o no, para ello se necesita encontrar un formalismo que sea capaz
-de generar el lenguaje $L_{0,1}$ y al aplicarle el transductor $T_{Full-SAT}$ a dicho formalismo se obtenga un formalismo que cuente con un algoritmo de parsing
+de generar el lenguaje $L_{0,1}$ y al aplicarle el transductor $T_{FULL-SAT}$ a dicho formalismo se obtenga un formalismo que cuente con un algoritmo de parsing
 para reconocer si una cadena pertenece a dicho formalismo o no.
 
 \end{document}

@@ -12,17 +12,17 @@
 
 \section{Antecedentes}
 
-Como parte del estudió del problema SAT, se ha desarrollado una serie de trabajos utilizando un enfoque
+Como parte del estudió del problema SAT, se han desarrollado una serie de trabajos utilizando un enfoque
 novedoso basado en formalismos de la teoría de lenguajes, buscando resolver instancias específicas del SAT.
 
-AL idea principal abordada en \cite{aCFSAT} es transformar el SAT en una transformar una fórmula booleana en una lista de instancias de variables,
+La idea principal abordada en \cite{aCFSAT} es transformar el SAT en una transformar una fórmula booleana en una lista de instancias de variables,
 donde se asume que 2 instancias de una variable no tienen por qué tener el mismo valor de verdad. Luego
 se define un autómata cuya construcción depende de la fórmula booleana, el funcionamiento
 de dicho autómata se basa en dada una cadena de 0 y 1 determinar si se obtiene un valor
 de verdad para la fórmula booleana donde cada instancia de una variable toma el valor de verdad que se
 corresponde con la cadena de 0 y 1, dicho autómata se denomina \textbf{autómata booleano}.
 
-\subsection{Autómata booleano}
+\section{Autómata booleano}
 
 Un autómata booleano \cite{aCFSAT} es un 6-tuplo $B=(Q,\Sigma,\delta,q_0,V,F)$ donde:
 
@@ -183,6 +183,50 @@ la aridad de la SRCG.
 
 El SRC-SAT constituye un paso de avance en cuanto al CF-SAT ya que describe un espacio mucho más amplio de instancias de SAT
 que pueden ser resueltas en un tiempo polinomial.
+
+\section{Primera aproximación a la solución del SAT usando gramáticas matriciales simples}
+
+En \cite{aSMSAT} se propone un nuevo enfoque a los 2 problemas anteriores, el cual se basa en eliminar la restricción
+de la estructura de la fórmula booleana y en su lugar se trabaja con una representación diferente de la misma.
+
+Dada un fórmula booleana en CNF con $n$ variables distintas y $m$ cláusulas en \cite{aSMSAT} se propone una representación de la misma
+en una secuencia de cláusulas (definiendo una misma secuencia de variables para cada cláusula) donde cada variable tiene
+3 posibles estados $a$, $b$ y $c$ que representan si la variable esta positiva, negada o no pertenece a la cláusula
+respectivamente. Con esta nueva estructura se modifica el autómata booleano correspondiente a dicha fórmula para que trabaje con
+cadenas que pertenezcan al lenguaje $L^n_m=\{w^m\,|\,w\in\{0,1\} \wedge |w|=n\}$, observe que $w$ se puede interpretar como una
+asignación de valores para cada una de las variables.
+
+\subsection{Lenguaje $L^n_m$}
+
+En \cite{aSMSAT} se define una gramática matricial simple que describe el lenguaje $L^n_m$:
+
+$$
+      G_n=(\{A_1,A_{11},\ldots A_{1m}\},\ldots,\{A_n,A_{n1},\ldots A_{nm}\},\Sigma,P,S,\Sigma)
+$$
+donde:
+\begin{itemize}
+      \item \( \Sigma \) =$\{0,1\}$.
+      \item \( P \) es un conjunto finito de matrices de producciones:
+            \begin{itemize}
+                  \item  $[S \to A_1A_2\ldots A_n]$
+                  \item  $[A_1 \to 1A_{12}, \ldots, A_n \to 1A_{n2}]$
+                  \item  $[A_1 \to 0A_{12}, \ldots, A_n \to 0A_{n2}]$
+                  \item  Para $2 \leq i < m$, $[A_{1i} \to 1A_{1(i+1)}, \ldots, A_{ni} \to 1A_{n(i + 1)}]$
+                  \item  Para $2 \leq i < m$, $[A_{1i} \to 0A_{1(i+1)}, \ldots, A_{ni} \to 0A_{n(i + 1)}]$
+                  \item  $[A_{1m} \to 1, ldots, A_{nm} \to 1]$
+                  \item  $[A_{1m} \to 0, ldots, A_{nm} \to 0]$
+            \end{itemize}
+      \item \( S \) es el \textbf{símbolo inicial}.
+\end{itemize}
+
+\subsection{Intersección con el autómata booleano}
+
+En \cite{aSMSAT} se menciona que las $n-SMG$ son cerradas bajo la intersección con lenguajes regulares, pero sin embargo
+cuando se analiza la intersección del autómata con la $n-SMG$ que describe el lenguaje $L^n_m$ se obtiene una gramática
+con una cantidad de producciones exponencial en relación a la cantidad de variables de la fórmula booleana, lo cual impide
+analizar si el lenguaje resultante es vacío en un tiempo polinomial.
+
+
 
 \begin{thebibliography}{9}
 
