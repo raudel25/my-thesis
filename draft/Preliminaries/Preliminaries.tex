@@ -206,7 +206,49 @@ definición cualquier problema perteneciente a este conjunto que sea soluble en 
 implica que todos los problemas en NP lo son. Además, existen problemas que no están en P ni en NP, como
 los problemas indecidibles.
 
-\section{Mecanismos de escritura regulada}
+\section{Transformaciones en Lenguajes Formales}
+
+\subsection{Homorfismo}
+
+Dado un alfabeto \( \Sigma \) y un alfabeto \( \Gamma \), un homomorfismo es una función:
+\[
+      h: \Sigma^* \to \Gamma^*
+\]
+tal que:
+\begin{enumerate}
+      \item Para cada \( a \in \Sigma \), \( h(a) \) es una cadena en \( \Gamma^* \).
+      \item Para cualquier par de cadenas \( u, v \in \Sigma^* \), se cumple que:
+            \[
+                  h(uv) = h(u) h(v),
+            \]
+            es decir, el homomorfismo preserva la concatenación.
+\end{enumerate}
+
+\subsection{Transductor finito}
+
+Un transductor finito es un modelo computacional que extiende los autómatas finitos al incluir tanto entradas como salidas.
+Formalmente, un transductor finito es un autómata finito determinista o no determinista con una función de transición extendida
+que asocia una salida a cada transición.
+
+Un transductor finito puede representarse como una 6-tupla:
+\[
+      T = (Q, \Sigma, \Gamma, \delta, q_0, F),
+\]
+donde:
+\begin{itemize}
+      \item \(Q\) es el conjunto finito de estados.
+      \item \(\Sigma\) es el alfabeto de entrada.
+      \item \(\Gamma\) es el alfabeto de salida.
+      \item \(\delta: Q \times \Sigma \to Q \times \Gamma^*\) es la función de transición, que mapea una combinación de estado actual y símbolo de entrada a un nuevo estado y una salida.
+      \item \(q_0 \in Q\) es el estado inicial.
+      \item \(F \subseteq Q\) es el conjunto de estados finales.
+\end{itemize}
+
+Observe que un homorfismo es un transductor finito de un solo estado y tantas transiciones hacia el mismo estado como transformaciones
+de símbolos en el homomorfismo.
+
+
+\section{Formalismos de escritura regulada}
 
 \subsection{Autómata regular}
 
@@ -268,7 +310,7 @@ donde:
                   [P_1, P_2, \dots, P_k]
             \]
             donde cada \( P_i \) es una regla \( A \to \alpha \), con $1\leq k\leq n$, \( A \in N \) y \( \alpha \in (N \cup T)^* \).
-      \item \( S \in V \) es el \textbf{símbolo inicial}.
+      \item \( S  \) es el \textbf{símbolo inicial}.
 \end{itemize}
 
 Observe que das CFG son gramáticas matriciales de grado 1, es decir $1-MG$.
@@ -303,7 +345,7 @@ donde:
                         con $1\leq i\leq n\wedge 1\leq j\leq k$ se cumple que
                         $A_{ij}\in V_i$, $a_{ij}\in \Sigma ^*$ y $b_{i}\in \Sigma ^*$.
             \end{itemize}
-      \item \( S \in V \) es el \textbf{símbolo inicial}.
+      \item \( S \) es el \textbf{símbolo inicial}.
 \end{itemize}
 
 
@@ -313,13 +355,13 @@ esta compuesta por una secuencia de subsecuentes de terminales de conjuntos dist
 
 \subsection{Gramáticas de Índice Global}
 
-\section{Gramáticas de Concatenación de Rango}
+\subsection{Gramáticas de Concatenación de Rango}
 
 Las gramáticas de concatenación de rango (\textit{RCG}) \cite{mainRCGBib} son un formalismo de gramáticas desarrollado para describir lenguajes más generales que los generados por gramáticas libres del contexto.
 Este formalismo extiende las capacidades descriptivas al incluir relaciones entre rangos de la cadena de una manera más flexible,
 permitiendo la generación de lenguajes sensibles al contexto.
 
-\subsection{Definiciones}
+\subsubsection{Definiciones}
 
 \paragraph{Rango:} un rango es una tupla $(i, j)$ que representa un intervalo de posiciones en la cadena, donde $i$ y $j$ son enteros no negativos tales que $i \leq j$.
 
@@ -352,7 +394,7 @@ Un resultado interesante es que para cada CFL existe una SRCG equivalente que ge
 Por ejemplo dado el predicado $A(Xa)$ donde $X \in V \wedge a \in T$, si se instancia la cadena $baa$ en $A$, $X$ puede
 ser asociada con el rango $ba$ de la cadena original.
 
-\subsection{Funcionamiento}
+\subsubsection{Proceso de derivación}
 
 La principal idea detrás de las RCG, para realizar una derivación, se basa en encontrar para cada argumento del predicado izquierdo de una cláusula todas las
 posibles sustituciones en rango de la cadena, asociar los valores de las variables a los argumentos de los predicados derechos y continuar
@@ -391,9 +433,9 @@ $$S(abcabcabc)\to A(abc,abc,abc)\to A(bc,bc,bc)\to A(c,c,c)\to A(\varepsilon,\va
 
 De manera general el lenguaje reconocido por la RCG anterior es $L=\{www\,|\,w\in \{a,b,c\}^*\}$.
 
-\subsection{Propiedades de las RCG}
+\subsubsection{Propiedades de las RCG}
 
-A continuación se describen las principales propiedades de las RCG:
+A continuación se describen las principales propiedades de las RCG \cite{mainRCGBib}:
 \begin{itemize}
       \item \textbf{Cerradura bajo unión:} Dadas dos RCG $G_1$ y $G_2$, la unión de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una RCG
             $$G=(N_1\cup N_2\cup \{S\},T_1\cup T_2,V_1\cup V_2,P_1\cup P_2\cup \{S(X)\to S_1(X)|S_2(X)\},S)$$
@@ -405,10 +447,13 @@ A continuación se describen las principales propiedades de las RCG:
             $$G=(N_1\cup N_2\cup \{S\},T_1\cup T_2,V_1\cup V_2,P_1\cup P_2\cup \{S(XY)\to S_1(X)S_2(Y)\},S)$$
       \item \textbf{Cerradas bajo estrella de Kleene:} Dada una RCG $G$, la estrella de Kleene del lenguaje reconocido por $G$ es reconocida por una RCG
             $$G'=(N\cup \{S'\},T,V,P\cup \{S'(XY)\to S(X)S'(Y)|\varepsilon\},S')$$
+      \item  \textbf{No cerradas bajo homomorphism:} Dada una RCG $G$, el homomorfismo de un lenguaje reconocido por $G$ no es necesariamente reconocido por una RCG \cite{propertiesRCGBib}.
+      \item  \textbf{No cerradas bajo transducción finita:} Dada una RCG $G$, la transducción finita de un lenguaje reconocido por $G$ no es necesariamente reconocida por una RCG.
+            Esto es una consecuencia de la no cerradura bajo homomorfismo.
 \end{itemize}
 
 
-\subsection{Problema de la palabra, problema del vacío y equivalencia de 2 RCG}
+\subsubsection{Problema de la palabra, problema del vacío y equivalencia de 2 RCG}
 
 \paragraph{Problema de la palabra:} En general en la mayoría de los casos este problema es polinomial y pasa por
 un algoritmo de memorización sobre las cadenas que son instanciadas en los rangos de los predicados de la RCG \cite{mainRCGBib} (como la cantidad
@@ -425,7 +470,7 @@ a la propia cadena de entrada y sean generados durante el proceso de reconocimie
 para toda CFL existe una RCG equivalente y como las RCG son cerradas bajo intersección existen RCG que describen
 la intersección de 2 lenguajes libres del contexto y determinar si dicha intersección es vacía es un problema indecidible.
 
-En el caso de las SRCG este problema es polinomial.
+En el caso de las SRCG este problema es polinomial \cite{mainRCGBib}.
 
 \paragraph{Problema de la equivalencia:} El problema de la equivalencia para 2 RCG es indecidible, la demostración es muy sencilla dadas 2 RCG $G_1$ y $G_2$ el problema
 de saber si $G_1$ es equivalente a $G_2$ es equivalente a saber si $G_1\cap \overline{G_2}=\emptyset$ y como se mencionó anteriormente el problema del vacío para una RCG
