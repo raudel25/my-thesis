@@ -1,18 +1,5 @@
-\documentclass{article}
+\chapter{FULL SAT}
 
-% \usepackage[utf8]{inputenc} % Permite escribir caracteres especiales directamente
-% \usepackage[spanish]{babel} % Configura el idioma a español
-
-\usepackage{multicol}
-\usepackage{tikz}
-\usetikzlibrary{automata, positioning}
-
-\title{FULL SAT}
-\author{Raudel Alejandro Gómez Molina}
-
-\begin{document}
-
-\maketitle
 
 \section{Lenguaje FULL-SAT}
 
@@ -123,30 +110,30 @@ se define la función de transición $\delta$ de la siguiente manera:
           \end{multicols}
 \end{itemize}
 
-\begin{figure}[h]
-    \centering \begin{tikzpicture}[shorten >=1pt, node distance=3cm, on grid, auto]
+% \begin{figure}[h]
+%     \centering \begin{tikzpicture}[node distance=3cm, on grid, auto]
         
-        % Nodos
-        \node[state, initial] (q0)   {$q_0$};
-        \node[state] (qn) [above right=of q0] {$q_n$};
-        \node[state, accepting] (qp) [below right=of q0] {$q_p$};
+%         % Nodos
+%         \node[state, initial] (q0)   {$q_0$};
+%         \node[state] (qn) [above right=of q0] {$q_n$};
+%         \node[state, accepting] (qp) [below right=of q0] {$q_p$};
         
-        % Transiciones
-        \path[->]
-        (q0) edge [bend left] node {0/a,1/b} (qn)
-        (q0) edge [bend right] node {1/a,0/b} (qp)
-        (q0) edge [loop right] node {0/c,1/c} (q0)
+%         % Transiciones
+%         \path[->]
+%         (q0) edge [bend left] node {0/a,1/b} (qn)
+%         (q0) edge [bend right] node {1/a,0/b} (qp)
+%         (q0) edge [loop right] node {0/c,1/c} (q0)
         
-        (qn) edge [bend left] node {1/a,0/b} (qp)
-        (qn) edge [loop above] node {0/a,1/b,0/c,1/c} (qn)
+%         (qn) edge [bend left] node {1/a,0/b} (qp)
+%         (qn) edge [loop above] node {0/a,1/b,0/c,1/c} (qn)
         
-        (qp) edge [loop below] node {1/a,0/b,0/a,1/b,0/c,1/c} (qp);
+%         (qp) edge [loop below] node {1/a,0/b,0/a,1/b,0/c,1/c} (qp);
         
-    \end{tikzpicture}
-    \caption{Transductor $T_{SAT}$.}
-    \label{fig:transducer} % Esto es para referenciar la figura en el texto
-\end{figure}
-
+%     \end{tikzpicture}
+%     \caption{Transductor $T_{SAT}$.}
+%     \label{fig:transducer} % Esto es para referenciar la figura en el texto
+% \end{figure}
+s
 Ahora para definir el transductor $T_{FULL-SAT}$ se toman dos instancias del transductor $T_{SAT}$ ($T_1$ y $T_2$ respectivamente) y se concatenan
 añadiendo una transición del estado $q_{p_1}$ (estado positivo de $T_1$) al estado $q_{0_2}$ (estado inicial de $T_2$) con el símbolo $d$ (tanto de
 lectura como de escritura) y además se lenguaje agrega una cláusura a $T_2$ con una transición del estado $q_{p_2}$
@@ -165,6 +152,3 @@ Luego $L_{FULL-SAT}$ contiene todas las fórmulas booleanas satisfacibles, pero 
 que permita conocer si una cadena que representa una fórmula booleana pertenece al lenguaje o no, para ello se necesita encontrar un formalismo que sea capaz
 de generar el lenguaje $L_{0,1}$ y al aplicarle el transductor $T_{FULL-SAT}$ a dicho formalismo se obtenga un formalismo que cuente con un algoritmo de parsing
 para reconocer si una cadena pertenece a dicho formalismo o no.
-
-
-\end{document}

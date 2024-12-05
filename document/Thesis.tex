@@ -1,4 +1,5 @@
 \documentclass[12pt,oneside]{uhthesis}
+
 \usepackage{subfigure}
 \usepackage[ruled,lined,linesnumbered,titlenumbered,algochapter,spanish,onelanguage]{algorithm2e}
 \usepackage{amsmath}
@@ -22,6 +23,9 @@
 \renewcommand{\listalgorithmcfname}{Índice de Algoritmos}
 %\dontprintsemicolon
 \SetAlgoNoEnd
+
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -50,11 +54,11 @@
 \lstset{style=mystyle}
 
 \title{Título de la tesis}
-\author{\\\vspace{0.25cm}Nombre del autor}
-\advisor{\\\vspace{0.25cm}Nombre del primer tutor\\\vspace{0.2cm}Nombre del segundo tutor}
-\degree{Licenciado en (Matemática o Ciencia de la Computación)}
+\author{\\\vspace{0.25cm}Raudel Alejandro Gómez Molina}
+\advisor{\\\vspace{0.25cm}Fernando Rodríguez Flores}
+\degree{Licenciado en Ciencia de la Computación}
 \faculty{Facultad de Matemática y Computación}
-\date{Fecha\\\vspace{0.25cm}\href{https://github.com/username/repo}{github.com/username/repo}}
+\date{Fecha\\\vspace{0.25cm}\href{https://github.com/raudel25/my-thesis}{https://github.com/raudel25/my-thesis}}
 \logo{Graphics/uhlogo}
 \makenomenclature
 
@@ -89,9 +93,12 @@
 \mainmatter
 
 \include{MainMatter/Introduction}
-\include{MainMatter/Background}
-\include{MainMatter/Proposal}
-\include{MainMatter/Implementation}
+\include{MainMatter/Preliminaries}
+\include{MainMatter/LanguageTheoryAndSAT}
+\include{MainMatter/FullSAT}
+% \include{MainMatter/Background}
+% \include{MainMatter/Proposal}
+% \include{MainMatter/Implementation}
 
 \backmatter
 

@@ -25,7 +25,8 @@
   style=apa,
   citestyle=authoryear,
   hyperref=true,
-  backref=true
+  backref=true,
+  style=numeric
 ]{biblatex}
 \RequirePackage[linktocpage,breaklinks,colorlinks,%
   linkcolor=black,anchorcolor=black,citecolor=black,%
@@ -53,6 +54,7 @@
   \renewcommand{\chaptermark}[1]{\markboth{\small \ \chaptername\ \thechapter. \ #1}{}}
   \fancyhead[L]{\slshape \leftmark}
   \fancyhead[R]{\thepage}
+
 \fi
 \renewcommand{\headheight}{28pt}
 
@@ -74,19 +76,19 @@
 \renewcommand{\textfraction}{0.07}
 
 % Whole biblatex hyperref to bibliography
-\DeclareCiteCommand{\cite}
-{\usebibmacro{prenote}}
-{\usebibmacro{citeindex}%
-  \printtext[bibhyperref]{\usebibmacro{cite}}}
-{\multicitedelim}
-{\usebibmacro{postnote}}
+% \DeclareCiteCommand{\cite}
+% {\usebibmacro{prenote}}
+% {\usebibmacro{citeindex}%
+%   \printtext[bibhyperref]{\usebibmacro{cite}}}
+% {\multicitedelim}
+% {\usebibmacro{postnote}}
 
-\DeclareCiteCommand*{\cite}
-{\usebibmacro{prenote}}
-{\usebibmacro{citeindex}%
-  \printtext[bibhyperref]{\usebibmacro{citeyear}}}
-{\multicitedelim}
-{\usebibmacro{postnote}}
+% \DeclareCiteCommand*{\cite}
+% {\usebibmacro{prenote}}
+% {\usebibmacro{citeindex}%
+%   \printtext[bibhyperref]{\usebibmacro{citeyear}}}
+% {\multicitedelim}
+% {\usebibmacro{postnote}}
 
 \DeclareCiteCommand{\parencite}[\mkbibparens]
 {\usebibmacro{prenote}}
