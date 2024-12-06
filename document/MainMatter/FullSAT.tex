@@ -1,6 +1,5 @@
 \chapter{FULL SAT}
 
-
 \section{Lenguaje FULL-SAT}
 
 En esta sección se presentará un nuevo enfoque distinto a los anteriores, el cual se basa en definir un lenguaje al cual
@@ -49,14 +48,14 @@ En las próximas secciones se presentarán varios enfoques para definir $f_{SAT}
 
 \section{Transductor FULL-SAT}
 
-En esta sección la idea para definir $f_{SAT}$ es construir un transductor finito que acepte como entrada cadenas del lenguaje $L_{0,1}=\{wd\}^*$ donde $w\in \{0,1\}^*$
+En esta sección la idea para definir $f_{SAT}$ es construir un transductor finito que acepte como entrada cadenas del lenguaje $L_{0,1}=\{wd\}^+$ donde $w\in \{0,1\}^*$
 y tenga como salida cadenas, donde cada cadena $e$ representa una fórmula booleana en \textit{CNF} y que acepte si y solo si la fórmula es satisfacible. Detrás
 de esta construcción se busca asociar cada carácter 0 ó 1 en la cadena de entrada al valor de la variable booleana correspondiente en la cadena de salida y verificar que para dichos
 valores al evaluar la fórmula booleana se obtenga un valor de verdad. Observe que mediante esta construcción se mantiene la invariante fundamental del SAT que a dos instancias
 de la misma variable se les asocia el mismo valor de verdad, esto es posible por como está definido el formato de la cadena de entrada.
 
 A continuación se define el transductor finito $T_{FULL-SAT}$ que sigue la construcción definida anteriormente, para ello se define
-el transductor $T_{SAT}$ (Figura \ref{fig:transducer}) que hace el proceso de transducción para los valores de verdad de una cláusula $w$, donde $w\in {0,1}$:
+el transductor $T_{SAT}$ (Figura \ref{fig:transducer}) que hace el proceso de transducción para los valores de verdad de una cláusula $w$, donde $w\in \{0,1\}$:
 
 \[
     T_{SAT} = (Q_{SAT}, {\Sigma}_{SAT}, \Gamma_{SAT}, \delta_{SAT}, q_{0_{SAT}}, F_{SAT}),
@@ -111,29 +110,29 @@ se define la función de transición $\delta$ de la siguiente manera:
 \end{itemize}
 
 % \begin{figure}[h]
-%     \centering \begin{tikzpicture}[node distance=3cm, on grid, auto]
-        
+%     \centering \begin{tikzpicture}[shorten >=1pt, node distance=3cm, on grid, auto]
+
 %         % Nodos
 %         \node[state, initial] (q0)   {$q_0$};
 %         \node[state] (qn) [above right=of q0] {$q_n$};
 %         \node[state, accepting] (qp) [below right=of q0] {$q_p$};
-        
+
 %         % Transiciones
 %         \path[->]
 %         (q0) edge [bend left] node {0/a,1/b} (qn)
 %         (q0) edge [bend right] node {1/a,0/b} (qp)
 %         (q0) edge [loop right] node {0/c,1/c} (q0)
-        
+
 %         (qn) edge [bend left] node {1/a,0/b} (qp)
 %         (qn) edge [loop above] node {0/a,1/b,0/c,1/c} (qn)
-        
+
 %         (qp) edge [loop below] node {1/a,0/b,0/a,1/b,0/c,1/c} (qp);
-        
+
 %     \end{tikzpicture}
 %     \caption{Transductor $T_{SAT}$.}
 %     \label{fig:transducer} % Esto es para referenciar la figura en el texto
 % \end{figure}
-s
+
 Ahora para definir el transductor $T_{FULL-SAT}$ se toman dos instancias del transductor $T_{SAT}$ ($T_1$ y $T_2$ respectivamente) y se concatenan
 añadiendo una transición del estado $q_{p_1}$ (estado positivo de $T_1$) al estado $q_{0_2}$ (estado inicial de $T_2$) con el símbolo $d$ (tanto de
 lectura como de escritura) y además se lenguaje agrega una cláusura a $T_2$ con una transición del estado $q_{p_2}$
@@ -144,7 +143,7 @@ respectivamente.
 \subsection{Definición del lenguaje FULL-SAT usando transducción finita}
 
 Finalmente se define el lenguaje FULL-SAT como el lenguaje de todas las cadenas $e$ que son aceptadas por el transductor $T_{FULL-SAT}$, a partir del lenguaje
-de cadenas de entrada $L_{0,1}=\{wd\}^*$ donde $w\in \{0,1\}^*$. 
+de cadenas de entrada $L_{0,1}=\{wd\}^+$ donde $w\in \{0,1\}^*$. 
 
 $$L_{FULL-SAT} = \{e\,|\,\exists w \in L_{0,1} \wedge e \in T_{FULL-SAT}(w) \}$$
 
@@ -152,3 +151,88 @@ Luego $L_{FULL-SAT}$ contiene todas las fórmulas booleanas satisfacibles, pero 
 que permita conocer si una cadena que representa una fórmula booleana pertenece al lenguaje o no, para ello se necesita encontrar un formalismo que sea capaz
 de generar el lenguaje $L_{0,1}$ y al aplicarle el transductor $T_{FULL-SAT}$ a dicho formalismo se obtenga un formalismo que cuente con un algoritmo de parsing
 para reconocer si una cadena pertenece a dicho formalismo o no.
+
+Como se evidenció en esta sección encontrar un formalismo que genere el lenguaje $L_{0,1}$, el cual sea cerrado bajo transducción finita
+es suficiente para generar el lenguaje $L_{FULL-SAT}$. Una pregunta interesante sería saber si la existencia de dicho formalismo
+es una condición necesaria para definir el lenguaje $L_{FULL-SAT}$ otra pregunta interesante sería saber si existe un formalismo
+que sea capaz de describir el lenguaje $L_{FULL-SAT}$ y el problema de la palabra en dicho formalismo sea polinomial (observe que de esta manera
+se estaría resolviendo el problema \textbf{P vs NP}).
+
+\section{FULL-SAT como lenguaje de índice global}
+
+En esta sección se presentará una una forma de generar el lenguaje $L_{0,1}$ empleando una GIG. En \cite{globalIndexLanguages} se presenta
+una GIG, $G_{ww^+}$ que genera el lenguaje $L(G_{ww^*})=\{ww^+\,|\,w\in\{a,b\}\}$: 
+$$
+    G_{ww^+} = (N, \Sigma, I, S, \#, P) 
+$$
+donde:
+
+\begin{itemize}
+    \item $N= \{S,R,A,B,C\}$.
+    \item \( \Sigma=\{a,b\} \) .
+    \item $I=\{i,j\}$.
+    \item $S$ es el \textbf{símbolo inicial}.
+    \item $\#$ es el \textbf{símbolo inicial de la pila}.
+    \item $P$ es un conjunto finito de \textbf{producciones}:
+          \begin{multicols}{2}
+              \begin{itemize}
+                  \item $S\to AS\,|\,BS\,|\,C$
+                  \item $C\to RC\,|\,L$
+                  \item $R\underset{\overline{i}}{\to} RA$
+                  \item $R\underset{\overline{j}}{\to} RB$
+                  \item $R\underset{[\#]}{\to} \varepsilon$
+                  \item $A\underset{i}{\to} a$
+                  \item $B\underset{j}{\to} b$
+                  \item $L\underset{\overline{i}}{\to} La\,|\,a$
+                  \item $L\underset{\overline{j}}{\to} Lb\,|\,b$
+              \end{itemize}
+          \end{multicols}
+\end{itemize}
+
+Observe que la pila en esta gramática es un mecanismo de memoria suficiente para generar el lenguaje \textit{Copy} como se
+define en \cite{globalIndexLanguages}, a cada caracter de $\Sigma$ le corresponde un no terminal y un símbolo de la pila 
+por el que se puede producir dicho caracter almacenando el caracter el símbolo de la pila correspondiente, el funcionamiento 
+de la gramática lo compone además un mecanismo de recursión por el que se puede producir un no terminal asociado a un caracter
+solo eliminando el símbolo de la pila asociado a dicho caracter por último el mecanismo de recursión produce la cadena vacía
+solo si el símbolo inicial de la pila se encuentra en el tope.
+
+Entonces dada esta gramática es relativamente realizar una modificación para generar el lenguaje $L_{0,1}$,
+a esta nueva gramática se denominará $G_{0,1}$. Luego $G_{0,1}$ se define como:
+
+$$
+    G_{0,1} = (N, \Sigma, I, S, \#, P) 
+$$
+donde:
+
+\begin{itemize}
+    \item $N= \{S,R,A,B,C,D\}$.
+    \item \( \Sigma=\{0,1,d\} \) .
+    \item $I=\{i,j,k\}$.
+    \item $S$ es el \textbf{símbolo inicial}.
+    \item $\#$ es el \textbf{símbolo inicial de la pila}.
+    \item $P$ es un conjunto finito de \textbf{producciones}:
+          \begin{multicols}{2}
+              \begin{itemize}
+                  \item $S\to AS\,|\,BS\,|\,DC$
+                  \item $C\to RC\,|\,L$
+                  \item $R\underset{\overline{i}}{\to} RA$
+                  \item $R\underset{\overline{j}}{\to} RB$
+                  \item $R\underset{\overline{k}}{\to} RD$
+                        
+                  \item $R\underset{[\#]}{\to} \varepsilon$
+                  \item $A\underset{i}{\to} a$
+                  \item $B\underset{j}{\to} b$
+                  \item $D\underset{k}{\to} d$
+                  \item $L\underset{\overline{i}}{\to} L$
+                  \item $L\underset{\overline{j}}{\to} L$
+                  \item $L\underset{\overline{k}}{\to} L$
+                  \item $L\underset{[\#]}{\to} \varepsilon$
+              \end{itemize}
+          \end{multicols}
+\end{itemize}
+
+Como modificaciones a la gramática anterior se ha introducido un nuevo terminal, un no terminal y un símbolo de la pila 
+manteniendo la invariante de correspondencia que se mencionó anteriormente entre los elementos de estos 3 conjuntos. Por
+otro se modificaron las producciones del no terminal $L$ para que unicamente produzca la cadena vacía eliminando todos Los
+elementos de la pila, con ello se puede generar el lenguaje $L_{0,1}$.
+\section{FULL-SAT como lenguaje de concatenación de rango}
