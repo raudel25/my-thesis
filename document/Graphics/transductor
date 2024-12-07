@@ -1,0 +1,17 @@
+digraph {
+	nodesep=1 rankdir=LR ranksep=1.5
+	node [shape=circle]
+	q0 [label="q₀" shape=circle]
+	qn [label="qₙ"]
+	qp [label="qₚ" shape=doublecircle]
+	node [shape=none]
+	"" [label=""]
+	"" -> q0
+	node [shape=circle]
+	q0 -> qn [label="0/a, 1/b" arrowhead=normal]
+	q0 -> qp [label="1/a, 0/b" arrowhead=normal]
+	q0 -> q0 [label="0/c, 1/c" arrowhead=normal]
+	qn -> qp [label="1/a, 0/b" arrowhead=normal]
+	qn -> qn [label="0/a, 1/b, 0/c, 1/c" arrowhead=normal]
+	qp -> qp [label="1/a, 0/b, 0/a, 1/b, 0/c, 1/c" arrowhead=normal]
+}

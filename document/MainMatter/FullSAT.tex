@@ -54,11 +54,11 @@ de esta construcción se busca asociar cada carácter 0 ó 1 en la cadena de ent
 valores al evaluar la fórmula booleana se obtenga un valor de verdad. Observe que mediante esta construcción se mantiene la invariante fundamental del SAT que a dos instancias
 de la misma variable se les asocia el mismo valor de verdad, esto es posible por como está definido el formato de la cadena de entrada.
 
-A continuación se define el transductor finito $T_{FULL-SAT}$ que sigue la construcción definida anteriormente, para ello se define
-el transductor $T_{SAT}$ (Figura \ref{fig:transducer}) que hace el proceso de transducción para los valores de verdad de una cláusula $w$, donde $w\in \{0,1\}$:
+A continuación se define el transductor finito $T_{SAT}$ que sigue la construcción definida anteriormente, para ello se define
+el transductor $T_{CLAUSE}$ (Figura \ref{fig:transducer}) que hace el proceso de transducción para los valores de verdad de una cláusula $w$, donde $w\in \{0,1\}$:
 
 \[
-    T_{SAT} = (Q_{SAT}, {\Sigma}_{SAT}, \Gamma_{SAT}, \delta_{SAT}, q_{0_{SAT}}, F_{SAT}),
+    T_{CLAUSE} = (Q_{SAT}, {\Sigma}_{SAT}, \Gamma_{SAT}, \delta_{SAT}, q_{0_{SAT}}, F_{SAT}),
 \]
 donde:
 \begin{itemize}
@@ -84,7 +84,7 @@ se define la función de transición $\delta$ de la siguiente manera:
               \end{itemize}
           \end{multicols}
           
-    \item  transiciones para el estado $q_p$ (estado positivo de $T_{SAT}$): representa que para los valores de verdad de la cláusula obtiene un valor de verdad positivo.
+    \item  transiciones para el estado $q_p$ (estado positivo de $T_{CLAUSE}$): representa que para los valores de verdad de la cláusula obtiene un valor de verdad positivo.
           \begin{multicols}{2}
               \begin{itemize}
                   \item $\delta_{SAT}(q_{p},1)=(q_{p},a)$
@@ -96,7 +96,7 @@ se define la función de transición $\delta$ de la siguiente manera:
               \end{itemize}
           \end{multicols}
           
-    \item  transiciones para el estado $q_n$ (estado negativo de $T_{SAT}$): representa que para los valores de verdad la cláusula obtiene un valor de verdad negativo.
+    \item  transiciones para el estado $q_n$ (estado negativo de $T_{CLAUSE}$): representa que para los valores de verdad la cláusula obtiene un valor de verdad negativo.
           \begin{multicols}{2}
               \begin{itemize}
                   \item $\delta_{SAT}(q_{n},1)=(q_{p},a)$
@@ -109,47 +109,29 @@ se define la función de transición $\delta$ de la siguiente manera:
           \end{multicols}
 \end{itemize}
 
-% \begin{figure}[h]
-%     \centering \begin{tikzpicture}[shorten >=1pt, node distance=3cm, on grid, auto]
+\begin{figure}[h]
+    \includegraphics[width=0.8\textwidth]{Graphics/transductor.png}
+    \caption{Transductor $T_{CLAUSE}$.}
+    \label{fig:transducer} % Esto es para referenciar la figura en el texto
+\end{figure}
 
-%         % Nodos
-%         \node[state, initial] (q0)   {$q_0$};
-%         \node[state] (qn) [above right=of q0] {$q_n$};
-%         \node[state, accepting] (qp) [below right=of q0] {$q_p$};
-
-%         % Transiciones
-%         \path[->]
-%         (q0) edge [bend left] node {0/a,1/b} (qn)
-%         (q0) edge [bend right] node {1/a,0/b} (qp)
-%         (q0) edge [loop right] node {0/c,1/c} (q0)
-
-%         (qn) edge [bend left] node {1/a,0/b} (qp)
-%         (qn) edge [loop above] node {0/a,1/b,0/c,1/c} (qn)
-
-%         (qp) edge [loop below] node {1/a,0/b,0/a,1/b,0/c,1/c} (qp);
-
-%     \end{tikzpicture}
-%     \caption{Transductor $T_{SAT}$.}
-%     \label{fig:transducer} % Esto es para referenciar la figura en el texto
-% \end{figure}
-
-Ahora para definir el transductor $T_{FULL-SAT}$ se toman dos instancias del transductor $T_{SAT}$ ($T_1$ y $T_2$ respectivamente) y se concatenan
+Ahora para definir el transductor $T_{SAT}$ se toman dos instancias del transductor $T_{CLAUSE}$ ($T_1$ y $T_2$ respectivamente) y se concatenan
 añadiendo una transición del estado $q_{p_1}$ (estado positivo de $T_1$) al estado $q_{0_2}$ (estado inicial de $T_2$) con el símbolo $d$ (tanto de
-lectura como de escritura) y además se lenguaje agrega una cláusura a $T_2$ con una transición del estado $q_{p_2}$
+lectura como de escritura) y además se lenguaje agrega una clausura a $T_2$ con una transición del estado $q_{p_2}$
 (estado positivo de $T_2$) al estado $q_{0_2}$ con el símbolo $d$ (tanto de lectura como de escritura). Entonces solo resta definir
-el estado inicial y el estado final de $T_{FULL-SAT}$, los cuales serían $q_{0_1}$ (estado inicial de $T_1$) y $q_{0_2}$ (estado inicial de $T_2$),
+el estado inicial y el estado final de $T_{SAT}$, los cuales serían $q_{0_1}$ (estado inicial de $T_1$) y $q_{0_2}$ (estado inicial de $T_2$),
 respectivamente.
 
 \subsection{Definición del lenguaje FULL-SAT usando transducción finita}
 
-Finalmente se define el lenguaje FULL-SAT como el lenguaje de todas las cadenas $e$ que son aceptadas por el transductor $T_{FULL-SAT}$, a partir del lenguaje
+Finalmente se define el lenguaje FULL-SAT como el lenguaje de todas las cadenas $e$ que son aceptadas por el transductor $T_{SAT}$, a partir del lenguaje
 de cadenas de entrada $L_{0,1}=\{wd\}^+$ donde $w\in \{0,1\}^*$. 
 
-$$L_{FULL-SAT} = \{e\,|\,\exists w \in L_{0,1} \wedge e \in T_{FULL-SAT}(w) \}$$
+$$L_{FULL-SAT} = \{e\,|\,\exists w \in L_{0,1} \wedge e \in T_{SAT}(w) \}$$
 
 Luego $L_{FULL-SAT}$ contiene todas las fórmulas booleanas satisfacibles, pero este conjunto por si solo no sirve de mucho sin un formalismo
 que permita conocer si una cadena que representa una fórmula booleana pertenece al lenguaje o no, para ello se necesita encontrar un formalismo que sea capaz
-de generar el lenguaje $L_{0,1}$ y al aplicarle el transductor $T_{FULL-SAT}$ a dicho formalismo se obtenga un formalismo que cuente con un algoritmo de parsing
+de generar el lenguaje $L_{0,1}$ y al aplicarle el transductor $T_{SAT}$ a dicho formalismo se obtenga un formalismo que cuente con un algoritmo de parsing
 para reconocer si una cadena pertenece a dicho formalismo o no.
 
 Como se evidenció en esta sección encontrar un formalismo que genere el lenguaje $L_{0,1}$, el cual sea cerrado bajo transducción finita
@@ -236,3 +218,155 @@ manteniendo la invariante de correspondencia que se mencionó anteriormente entr
 otro se modificaron las producciones del no terminal $L$ para que unicamente produzca la cadena vacía eliminando todos Los
 elementos de la pila, con ello se puede generar el lenguaje $L_{0,1}$.
 \section{FULL-SAT como lenguaje de concatenación de rango}
+
+En esta sección se presentará un enfoque para generar el lenguaje $L_{0,1}$ primeramente y luego para generar el lenguaje $L_{FULL-SAT}$.
+Ambos enfoques usando gramáticas de concatenación de rango.
+
+\subsection{$L_{0,1}$ como lenguaje de concatenación de rango}
+
+Se define la gramática $G_{0,1}$ como sigue:
+\[
+    G_{0,1} = (N, T, V, P, S),
+\]
+donde:
+
+\begin{itemize}
+    \item $N=\{S,A,B,C,Eq\}$
+    \item $=\{0,1,d\}$.
+    \item $V=\{X,Y,P\}$.
+    \item El conjunto de cláusulas $P$ es el siguiente:
+          \begin{itemize}
+              \item  $S(X)\to A(X)$
+              \item $A(YdX)\to B(X,Y)C(X)$
+              \item $B(XdY,P)\to B(Y,P) C(X) Eq(X,P)$
+              \item $B(\varepsilon,Y)\to \varepsilon$
+              \item $C(0X)\to C(X)$
+              \item $C(1X)\to C(X)$
+              \item $C(\varepsilon)\to \varepsilon$
+          \end{itemize}
+    \item El \textbf{símbolo inicial} es $S$.
+\end{itemize}
+
+El predicado $Eq$ se define en \cite{mainRCGBib} y comprueba que dos cadenas sobre un alfabeto sean iguales, por otro lado 
+le predicado $B$ se encarga de definir la sustitución en rango de la próxima cadena de 0 y 1 y comprobar que este sea igual
+al patrón inicial. De esta manera se pueden reconocer cadenas que pertenezcan al lenguaje $L_{0,1}$.
+
+Como se mencionó anteriormente las RCG no son cerradas bajo transducción finita, por tanto no se puede realizar el mismo 
+análisis que en las 2 secciones anteriores, esto no necesariamente impide que el lenguaje generado por la transducción finita del lenguaje que 
+representa la gramática anterior no pueda cumplir ciertas características que permitan generar lenguaje $L_{FULL-SAT}$. 
+
+\subsection{Otro enfoque para generar el lenguaje FULL-SAT}
+
+A continuación se presentará una estrategia distinta para generar el lenguaje $L_{FULL-SAT}$, que no emplea el transductor $T_{SAT}$,
+para ello se define la siguiente RCG:
+\[
+    G_{FULL-SAT} = (N, T, V, P, S),
+\]
+donde:
+
+\begin{itemize}
+    \item $N=\{S,A,B,C,P,N,Cp,Cn\}$
+    \item $=\{a,b,c,d\}$.
+    \item $V=\{X,Y\}$.
+    \item El \textbf{símbolo inicial} es $S$.
+\end{itemize}
+
+A continuación se desglosa el conjunto de \textbf{cláusulas} $P$ en varias fases agrupando las cláusulas
+por funcionalidad:
+
+\begin{itemize}
+    \item $S(X)\to A(X)$
+    \item \textbf{Primera fase:} El siguiente conjunto de cláusulas genera la cadena de 0 y 1 que que da valores a las variables de la
+          fórmula booleana:
+          \begin{multicols}{2}
+              \begin{itemize}
+                  \item $A(aX)\to P(X,1)$
+                  \item $A(aX)\to N(X,0)$
+                  \item $A(bX)\to N(X,1)$
+                  \item $A(bX)\to P(X,0)$
+                  \item $A(cX)\to N(X,1)$
+                  \item $A(cX)\to N(X,0)$
+                        
+                  \item $P(aX,Y)\to P(X,1Y)$
+                  \item $P(aX,Y)\to P(X,0Y)$
+                  \item $P(bX,Y)\to P(X,1Y)$
+                  \item $P(bX,Y)\to P(X,0Y)$
+                  \item $P(cX,Y)\to P(X,1Y)$
+                  \item $P(cX,Y)\to P(X,0Y)$
+                  \item $P(dX,Y)\to B(X,Y)$
+                        
+                  \item $N(aX,Y)\to P(X,1Y)$
+                  \item $N(aX,Y)\to N(X,0Y)$
+                  \item $N(bX,Y)\to N(X,1Y)$
+                  \item $N(bX,Y)\to P(X,0Y)$
+                  \item $N(cX,Y)\to N(X,1Y)$
+                  \item $N(cX,Y)\to N(X,0Y)$
+              \end{itemize}
+          \end{multicols}
+          
+          El predicado $A$ representa el primer predicado reconocimiento de este se deriva a los predicados $P$
+          (representa que la cláusula de la fórmula booleana se encuentra en un estado de verdad positivo) 
+          y $N$ (representa que la cláusula de la fórmula booleana se encuentra en un estado de verdad negativo)
+          en dependencia del valor de la instancia de la variable correspondiente. El predicado $P$ deriva hacia
+          sí mismo independientemente del símbolo, exceptuando el símbolo $d$, caso en el que se procede a la siguiente
+          fase.
+          El funcionamiento de esta face es prácticamente el mismo de descrito en el transductor $T_{SAT}$.
+          
+    \item \textbf{Segunda fase:} El siguiente conjunto de cláusulas se encarga de un mecanismo de clausura que le permite a la gramática
+          reconocer si la asignación realiza en la fase anterior es válida para las restantes cláusulas de la fórmula
+          booleana.
+          \begin{itemize}
+              \item $B(X_1dX_2,Y)\to C(X_1,Y) B(X_2,Y)$
+              \item $B(\varepsilon,Y)\to\varepsilon$
+          \end{itemize}
+          
+          El predicado $B$ permite realizar la clausura mientras que le predicado $C$ comprueba que la cláusula de la fórmula
+          booleana actual sea satisfacible.
+          
+    \item \textbf{Tercera fase:} Solo resta definir el comportamiento de $C$:
+          \begin{itemize}
+              \begin{multicols}{2}
+                  \item $C(X,Y)\to Cn(X,Y)$
+                  
+                  \item $Cn(aX,1Y) \to Cp(X,Y)$
+                  \item $Cn(aX,0Y) \to Cn(X,Y)$
+                  \item $Cn(bX,1Y) \to Cn(X,Y)$
+                  \item $Cn(bX,0Y) \to Cp(X,Y)$
+                  \item $Cn(cX,1Y) \to Cn(X,Y)$
+                  \item $Cn(cX,0Y) \to Cn(X,Y)$
+                  
+                  \item $Cp(aX,1Y) \to Cp(X,Y)$
+                  \item $Cp(aX,0Y) \to Cp(X,Y)$
+                  \item $Cp(bX,1Y) \to Cp(X,Y)$
+                  \item $Cp(bX,0Y) \to Cp(X,Y)$
+                  \item $Cp(cX,1Y) \to Cp(X,Y)$
+                  \item $Cp(cX,0Y) \to Cp(X,Y)$
+                  \item $Cp(\varepsilon,\varepsilon)\to \varepsilon$
+              \end{multicols}
+          \end{itemize}
+          
+          Observe que este funcionamiento es exactamente igual al de la primera fase con un predicado que representa un estado
+          positivo ($Cp$) y un predicado que representa un estado
+          positivo ($Cn$) pero esta vez no se genera la cadena sino que se comprueba con un patrón predefinido en la primera
+          fase.
+          
+          Ahora como $G_{FULL-SAT}$ reconoce las fórmulas booleanas satisfacibles solo se debe analizar el problema de la
+          palabra para determinar si una fórmula es satisfacible.
+          
+          \subsubsection{Análisis de la complejidad computacional}
+          
+          Como se mencionó anteriormente no todas las RCG tienen un algoritmo de parsing lineal y $G_{FULL-SAT}$ es un ejemplo de 
+          ello, observe que en la primera fase se genera la cadena binaria que representa la asignación de valores a las variables
+          booleanas y dicha cadena participa en los predicados de fases posteriores. Si se analiza el algoritmo de parsing descrito en 
+          \cite{mainRCGBib} un factor en la complejidad del algoritmo de parsing es la cantidad de rangos posibles para una cadena 
+          que debe ser reconocida por un predicado y en este caso la cadena que estamos analizando puede tomar $2^n$ valores distintos, donde
+          $n$ es la cantidad de variables en la fórmula booleana por lo que la cantidad de rangos sería $n^22^n$, pero esta es una cota
+          burda ya que una vez generada la cadena de asignación por la forma de la gramática solo se utiliza un solo rango que se va construyendo
+          bajo demanda. El resto de las fases de la gramática tienen una complejidad de $m^2$ donde $m$ es la cantidad de caracteres
+          en la cadena de entrada, por lo que la complejidad total sería $O(2^nm^2)$.
+          
+          Este es un resultado interesante ya que demuestra que no es necesario usar el transductor $T_{SAT}$ para definir el 
+          lenguaje $L_{FULL-SAT}$.
+          
+          
+\end{itemize}

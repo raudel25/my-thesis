@@ -73,9 +73,9 @@ donde:
 
 El lenguaje generado por una gramática \(G\) se denota como:
 \[
-      L(G) = \{ w \in \Sigma^* \mid S \overset{*}{\Rightarrow} w \},
+      L(G) = \{ w \in \Sigma^* \mid S \overset{*}{\to} w \},
 \]
-donde \(\overset{*}{\Rightarrow}\) indica una derivación en cero o más pasos.
+donde \(\overset{*}{\to}\) indica una derivación en cero o más pasos.
 
 \subsection{Jerarquía de Chomsky}
 
@@ -355,8 +355,8 @@ esta compuesta por una secuencia de subsecuentes de terminales de conjuntos dist
 
 \subsection{Gramáticas de Índice Global}
 
-Una gramática de índice global \textit{GIG} \cite{globalIndexLanguages}, es una extensión de las CFL, que añaden un mecanismo 
-de memoria al proceso de derivación, esta característica permite la generación de lenguajes más generales que los generados por las CFL.
+Una gramática de índice global \textit{GIG} \cite{globalIndexLanguages}, es una extensión de las CFG, que añaden un mecanismo 
+de memoria al proceso de derivación, esta característica permite la generación de lenguajes más generales que los generados por las CFG.
 El mecanismo de memorización consiste en una pila en la cual se pueden almacenar símbolos que pertenecen a un conjunto predeterminado,
 en cada producción se puede realizar una operación de push o pop en la pila o dejarla en su estado actual.
 
@@ -443,7 +443,7 @@ donde:
 
 \paragraph{Gramática de Concatenación de Rango Simple:} las gramáticas de concatenación de rango simple (\textit{SRCG}) son un subconjunto de las RCG que restringen la forma de las cláusulas de producción.
 Una RCG $G$ es \textbf{simple} si los argumentos en el lado derecho de una cláusula son variables distintas, y todas estas variables (y no otras) aparecen una sola vez en los argumentos del lado izquierdo.
-Un resultado interesante es que para cada CFL existe una SRCG equivalente que genera el mismo lenguaje.
+Un resultado interesante es que para cada CFG existe una SRCG equivalente que genera el mismo lenguaje.
 
 \paragraph{Sustiución de rango:} una sustitución de rango es un mecanismo que reemplaza una variable por un rango de la cadena.
 Por ejemplo dado el predicado $A(Xa)$ donde $X \in V \wedge a \in T$, si se instancia la cadena $baa$ en $A$, $X$ puede
@@ -522,7 +522,7 @@ es polinomial, por ejemplo puede pasar que se instancien argumentos de en los pr
 a la propia cadena de entrada y sean generados durante el proceso de reconocimiento.
 
 \paragraph{Problema del vacío:} El problema del vacío para una RCG es indecidible \cite{propertiesRCGBib}, la razón principal para esto es que como se mencionó anteriormente
-para toda CFL existe una RCG equivalente y como las RCG son cerradas bajo intersección existen RCG que describen
+para toda CFG existe una RCG equivalente y como las RCG son cerradas bajo intersección existen RCG que describen
 la intersección de 2 lenguajes libres del contexto y determinar si dicha intersección es vacía es un problema indecidible.
 
 En el caso de las SRCG este problema es polinomial \cite{mainRCGBib}.
@@ -583,7 +583,7 @@ Además, la prueba de que SAT es NP-Completo fue una de las contribuciones princ
 
 \subsection{Equivalencia entre SAT y 3-SAT}
 
-Para el problema 2-SAT existe una solución polinomial que determina si la fórmula booleana es satisfacible o no, pero para el problema 3-SAT no se conoce ningún algoritmo que permita
+Para el problema 2-SAT existe una solución polinomial que determina si la fórmula booleana es satisfacible o no, pero para el problema 3-SAT no se conoce ningún algoritmo polinomial que permita
 determinar si una fórmula booleana es satisfacible o no.
 
 Cualquier fórmula booleana del problema $n$-SAT puede ser reducida a una fórmula booleana equivalente del problema 3-SAT, por lo tanto, SAT es equivalente a 3-SAT en términos de complejidad computacional.
