@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[12pt]{article}
 
 \usepackage[utf8]{inputenc} % Permite escribir caracteres especiales directamente
 \usepackage[spanish]{babel} % Configura el idioma a español
@@ -6,6 +6,10 @@
 \usepackage{amsmath}
 \usepackage{tikz}
 \usepackage{xcolor}
+\usepackage[lmargin=2cm,rmargin=5cm]{geometry}
+
+\input{word-comments.tex}
+
 
 \title{Preliminares}
 \author{Raudel Alejandro Gómez Molina}
@@ -15,6 +19,8 @@
 \maketitle
 
 \section{Teoría de Lenguajes}
+
+En esta sección se definirán los principales conceptos de teoría de lenguajes que sirven de base al contenido de las secciones posteriores.
 
 \subsection{Conceptos básicos}
 
@@ -27,7 +33,12 @@ definido.
 representación binaria de todos los números pares $L=\{w\,|\,\text{last}(w)=0\}$, $\text{last}(w)$
 representa el último caracter de la cadena $w$.
 
+Dados los conceptos básicos, ahora es necesario definir las operaciones básicas entre los elementos de la teoría de lenguajes.
+
 \subsection{Operaciones con Lenguajes}
+
+Las principales operaciones con lenguajes tienen su origen en la teoría de conjuntos ya que un lenguaje no es más que
+un conjunto de cadenas.
 
 \paragraph{Unión:} La unión de dos lenguajes $L_1$ y $L_2$ se define como el conjunto de cadenas que
 pertenecen a $L_1$ o a $L_2$:
@@ -45,18 +56,31 @@ $$\overline{L}=\{w\,|\,w\notin L\}$$
 cadenas que resultan de concatenar cero o más cadenas de $L$:
 $$L^*=\{w_1w_2\ldots w_n\,|\,n\geq 0\,\text{y}\,w_i\in L\}$$
 
+Todos los conceptos anteriormente planteados definen la base de la teoría de lenguajes y de estos se derivan algunas 
+preguntas como la siguiente: ¿es posible determinar si una cadena pertenece a un lenguaje?
+
 \subsection{Problemas relacionados con Lenguajes}
 
+Los problemas relacionados con la teoría de lenguajes permiten vincular los problemas de otra naturaleza 
+con su representación en la teoría de lenguajes formales. Por ejemplo como se puede determinar si un lápiz 
+pertenece al conjunto de los lápices negros.
+
 \paragraph{Problema de la palabra:} Consiste en determinar si una cadena pertenece a un lenguaje dado. Todo problema en Ciencias de la Computación puede ser reducido a un problema de la palabra, ya que cualquier problema
-puede ser codificado como un lenguaje formal.
-\paragraph{Problema del vacío:} Consiste en determinar si un lenguaje es vacío.
-\paragraph{Problema de la finitud:} Consiste en determinar si un lenguaje es finito.
+puede ser codificado como un lenguaje formal \cite{authomataTheory}.
+\paragraph{Problema del vacío:} Consiste en determinar si un lenguaje es vacío. Ejemplo se define el lenguaje de la
+representación binaria de todos los números pares tales que su último símbolo es 1, $L=\{w\,|\,\text{last}(w)=1 \wedge \text{is\_even(w)}\}$, $\text{last}(w)$ y $\text{is\_even}(w)$
+determinan el último símbolo del número y si el número es par o no, respectivamente.
+\paragraph{Problema de la finitud:} Consiste en determinar si un lenguaje es finito. Ejemplo se define el lenguaje de todos los números primos en su representación binaria
+$L=\{w\,|\,w\in \{0,1\}^+ \wedge \text{is\_prime}(w) \}$, $\text{is\_prime}(w)$ determina si el número que representa $w$ es primo, el problema de la finitud sobre $L$ sería 
+determinar si el Conjunto de cadenas el finito o no.
 \paragraph{Problema de la equivalencia:} Consiste en determinar si dos $L_1$ y $L_2$ lenguajes son iguales (es decir si se cumple que
 $L_1\subseteq L_2 \wedge L_2\subseteq L_1$).
 
+En la próxima sección se presenta una mecanismo formal para definir un lenguaje.
+
 \subsection{Gramáticas}
 
-Una \textbf{gramática} es un sistema matemático utilizado para describir lenguajes formales. Se define como una 4-tupla:
+Una \textbf{gramática} es un formalismo utilizado para describir lenguajes formales. Se define como una 4-tupla:
 \[
       G = (N, \Sigma, P, S),
 \]
@@ -71,11 +95,19 @@ donde:
       \item \(S\): Es el \textbf{símbolo inicial}, \(S \in N\), que define el punto de partida para derivar cadenas del lenguaje.
 \end{itemize}
 
+Una derivación en la gramática consiste en seleccionar una \textbf{regla de producción} $\alpha \to \beta$ y sustituir una ocurrencia de 
+$\alpha$ en una cadena $w$ por $\beta$.
+
+Una cadena $w$, $w\in\Sigma^*$,  es reconocida por la gramática si existe una secuencia de derivaciones que comienza con $S$ y termina generando la cadena $w$.
+
 El lenguaje generado por una gramática \(G\) se denota como:
 \[
       L(G) = \{ w \in \Sigma^* \mid S \overset{*}{\to} w \},
 \]
 donde \(\overset{*}{\to}\) indica una derivación en cero o más pasos.
+
+Ahora es necesario conocer la relación de la estructura de las reglas de producción de una gramática con su poder 
+para describir lenguajes.
 
 \subsection{Jerarquía de Chomsky}
 
@@ -86,19 +118,19 @@ La \textbf{Jerarquía de Chomsky} (Figura~\ref{fig:ChomskySchema}) clasifica las
             \begin{itemize}
                   \item No tienen restricciones en las reglas de producción.
                   \item Cada regla tiene la forma: \(\alpha \to \beta\), donde \(\alpha, \beta \in (N \cup \Sigma)^*\) y \(\alpha \neq \varepsilon\).
-                  \item Generan los \textbf{lenguajes recursivamente enumerables}.
+                  \item Todo lenguaje generado por una gramática irrestricta se denomina \textbf{lenguaje recursivamente enumerable}.
             \end{itemize}
             
-      \item \textbf{Tipo 1: Gramáticas sensibles al contexto}
+      \item \textbf{Tipo 1: Gramáticas dependientes del contexto}
             \begin{itemize}
                   \item Cada regla tiene la forma: \(\alpha A \gamma \to \alpha \beta \gamma\), donde \(A \in N\), \(\alpha, \beta, \gamma \in (N \cup \Sigma)^*\), y \(|\beta| \geq 1\).
-                  \item Generan los \textbf{lenguajes sensibles al contexto}.
+                  \item Todo lenguaje generado por una gramática dependiente del contexto se denomina \textbf{lenguaje dependiente del contexto}.
             \end{itemize}
             
-      \item \textbf{Tipo 2: Gramáticas libres de contexto}
+      \item \textbf{Tipo 2: Gramáticas libres del contexto}
             \begin{itemize}
                   \item Cada regla tiene la forma: \(A \to \beta\), donde \(A \in N\) y \(\beta \in (N \cup \Sigma)^*\).
-                  \item Generan los \textbf{lenguajes libres de contexto}.
+                  \item Todo lenguaje generado por una gramática libre del contexto se denomina \textbf{lenguaje libre del contexto}.
             \end{itemize}
             
       \item \textbf{Tipo 3: Gramáticas regulares}
@@ -108,7 +140,7 @@ La \textbf{Jerarquía de Chomsky} (Figura~\ref{fig:ChomskySchema}) clasifica las
                               A \to aB \quad \text{o} \quad A \to a,
                         \]
                         donde \(A, B \in N\) y \(a \in \Sigma\).
-                  \item Generan los \textbf{lenguajes regulares}.
+                  \item Todo lenguaje generado por una gramática regular se denomina \textbf{lenguaje regular}.
             \end{itemize}
 \end{enumerate}
 
@@ -132,81 +164,65 @@ La \textbf{Jerarquía de Chomsky} (Figura~\ref{fig:ChomskySchema}) clasifica las
       \label{fig:ChomskySchema} %
 \end{figure}
 
-\section{Complejidad computacional}
+En la próxima sección se presentan los principales conceptos relacionados con las gramáticas libres del contexto y las 
+gramáticas regulares.
 
-\subsection{Máquina de Turing}
+\section{Autómatas}
+Un autómata es el modelo de cómputo más básico en la teoría de lenguajes, pero estos son capaces de describir
+una gran variedad de lenguajes. En esta sección se abordarán los principales conceptos sobre los autómatas.
+\subsection{Autómata regular}
 
-Una Máquina de Turing \cite{authomataTheory} es un modelo abstracto de computación universal introducido por Alan Turing en 1936. Este modelo consiste en los siguientes componentes:
+Un autómata regular \cite{authomataTheory}, también conocido como autómata finito, es un modelo matemático para reconocer lenguajes regulares. Este tipo de autómata se define como una máquina abstracta que procesa cadenas de símbolos de un alfabeto finito y determina si una cadena pertenece a un lenguaje regular.
 
-\begin{itemize}
-      \item \textbf{Cinta}: Un medio de almacenamiento infinito dividido en celdas, donde cada celda contiene un símbolo de un alfabeto finito.
-      \item \textbf{Cabezal de lectura/escritura}: Un dispositivo que puede leer el contenido de una celda, escribir un nuevo símbolo y moverse a la izquierda o derecha.
-      \item \textbf{Conjunto de estados}: Una colección finita de estados internos que describen la configuración actual de la máquina.
-      \item \textbf{Función de transición}: Un conjunto de reglas que determinan cómo la máquina cambia de estado, escribe en la cinta y mueve el cabezal en función del estado actual y el símbolo leído.
-\end{itemize}
-
-\paragraph{Máquina de Turing determinista (\textit{DTM}):}
-En una Máquina de Turing determinista, para cada estado y cada símbolo leído, existe como máximo una transición
-definida.
-\paragraph{Máquina de Turing no determinista (\textit{NTM}):}
-En una Máquina de Turing no determinista, para cada estado y símbolo leído, pueden existir múltiples
-transiciones posibles.
-
-Una máquina de Turing consiste la definición formal de algoritmo en Ciencias de la Computación y es el eje central para la resolución de problemas.
-
-\subsection{Notación asintótica}
-
-La notación asintótica se utiliza para describir el comportamiento de una función $f(n)$ a medida que $n$ crece hacia el infinito. A continuación se definen las notaciones más comunes:
+Un autómata regular se puede representar como una 5-tupla $$\mathcal{A} = (Q, \Sigma, \delta, q_0, F),$$ donde:
 
 \begin{itemize}
-      \item \textbf{Notación $O(f(n))$}: Una función $g(n)$ pertenece a $O(f(n))$ si existen constantes positivas $c$ y $n_0$ tales que:
-            \[
-                  g(n) \leq c \cdot f(n) \quad \text{para todo } n \geq n_0.
-            \]
-            Esta notación proporciona un límite superior asintótico para $g(n)$.
-            
-      \item \textbf{Notación $\Omega(f(n))$}: Una función $g(n)$ pertenece a $\Omega(f(n))$ si existen constantes positivas $c$ y $n_0$ tales que:
-            \[
-                  g(n) \geq c \cdot f(n) \quad \text{para todo } n \geq n_0.
-            \]
-            Esta notación proporciona un límite inferior asintótico para $g(n)$.
-            
-      \item \textbf{Notación $\Theta(f(n))$}: Una función $g(n)$ pertenece a $\Theta(f(n))$ si:
-            \[
-                  g(n) \in O(f(n)) \quad \text{y} \quad g(n) \in \Omega(f(n)).
-            \]
-            Es decir, $f(n)$ acota $g(n)$ tanto superior como inferiormente.
+      \item $Q$: Es un conjunto finito de \textbf{estados}.
+      \item $\Sigma$: Es el \textbf{alfabeto} finito de entrada.
+      \item $\delta$: Es la \textbf{función de transición}, $\delta: Q \times \Sigma \to Q$, que define cómo el autómata cambia de estado en función del símbolo leído.
+      \item $q_0 \in Q$: Es el \textbf{estado inicial} desde donde comienza la computación.
+      \item $F \subseteq Q$: Es el conjunto de \textbf{estados de aceptación o estados finales}.
 \end{itemize}
 
-La notación asintótica permite describir el tiempo de ejecución un algoritmo en cuanto al número de operaciones básicos realizadas
-por un modelo formal de cómputo (por ejemplo una máquina de Turing). Algoritmos como determinar el mínimo y el máximo de
-un array son $\Theta(n)$, ya que necesitan realizar una cantidad de operaciones de orden $n$ en relación con el tamaño de la entrada.
+El autómata comienza en el estado inicial $q_0$ y procesa una cadena de entrada símbolo por símbolo. En cada paso, la función de transición $\delta$ determina el siguiente estado del autómata. Si, después de procesar toda la cadena, el autómata termina en un estado de aceptación $q \in F$, entonces la cadena es aceptada; de lo contrario, es rechazada.
 
-\subsection{Clases de problemas}
+Se puede extender el concepto de autómata finito añadiendo un nuevo tipo de transición que no consume ningún caracter, la cual recibe el nombre de transición $\varepsilon$.
+Se puede demostrar que el conjunto de lenguajes reconocido por un autómata finito sin transiciones $\varepsilon$ (\textit{autómata finito determinista}) es equivalente al conjunto de lenguajes reconocidos por un autómata finito con transiciones $\varepsilon$ (\textit{autómata finito no determinista}).
 
-Los problemas computacionales \cite{authomataTheory} se agrupan en diferentes clases según los recursos necesarios para resolverlos.
+Ahora se presentará el concepto de autómata relacionado a los lenguajes libres del contexto.
+\subsection{Autómata de pila y Gramáticas libres del contexto}
 
-\paragraph{Problemas en la clase P:}
-Un problema pertenece a la clase P si puede resolverse en tiempo polinomial mediante una Máquina de Turing determinista. Es decir, existe un algoritmo determinista que, para una entrada de tamaño $n$, produce la solución en tiempo $O(n^k)$ para alguna constante $k$.
+Un autómata de pila \cite{authomataTheory} es un modelo matemático de computación que extiende los autómatas finitos al incluir una estructura de datos adicional: una pila. Este modelo es capaz de reconocer lenguajes libres de contexto,
+proporcionando una conexión directa con las gramáticas libres de contexto \textit{CFG}, es decir dada una gramática libre del contexto se puede construir un autómata de pila que reconozca el lenguaje generado por la gramática y viceversa.
 
-\paragraph{Problemas en la clase NP:}
-Un problema pertenece a NP si su solución puede verificarse en tiempo polinomial mediante una Máquina de Turing determinista. Alternativamente, un problema está en NP si puede resolverse en tiempo polinomial mediante una Máquina de Turing no determinista.
+Formalmente, un autómata de pila se define como una 7-tupla
+\[
+      \mathcal{A} = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, F),
+\]
+donde:
 
-\paragraph{Problemas en la clase NP-Completo:}
-Un problema pertenece a la clase NP-Completo, si pertenece a NP y además es tan difícil como cualquier otro problema en NP. Esto significa que cualquier problema en NP puede reducirse a este problema en tiempo polinómico.
+\begin{itemize}
+      \item $Q$: Es un conjunto finito de \textbf{estados}.
+      \item $\Sigma$: Es el \textbf{alfabeto} finito de entrada.
+      \item $\Gamma$: Es el \textbf{alfabeto} finito de la pila (conjunto de símbolos que se pueden almacenar en la pila).
+      \item $\delta$: Es la función de transición, $\delta: Q \times (\Sigma \cup \{\varepsilon\}) \times \Gamma \to \mathcal{P}(Q \times \Gamma^*)$, que describe cómo cambia el estado, el contenido de la pila y la posición en la entrada.
+      \item $q_0 \in Q$: Es el \textbf{estado inicial} desde donde comienza la computación.
+      \item $Z_0 \in \Gamma$: Es el símbolo inicial en la pila.
+      \item $F \subseteq Q$: Es el conjunto de \textbf{estados de aceptación o estados finales}.
+\end{itemize}
 
-\paragraph{Problemas no decidibles:}
-Un problema es no decidible si no existe una Máquina de Turing que pueda resolverlo correctamente para todas las entradas posibles. Esto significa que no hay algoritmo que garantice una respuesta en tiempo finito en todos los casos. Un ejemplo clásico de problema no decidible es el \textit{Problema de la Parada}, que consiste en determinar si una Máquina de Turing se detendrá para una entrada dada.
-\subsection{P vs NP}
+Un autómata de pila procesa una cadena de entrada desde el estado inicial $q_0$ y 
+puede utilizar transiciones $\varepsilon$ (sin consumir entrada). En cada paso, la función $\delta$
+determina el nuevo estado, los símbolos que se insertan o sacan de la pila, y el avance en la entrada, 
+tras procesar toda la cadena, el autómata termina en un estado de aceptación o con una pila vacía 
+(dependiendo del criterio de aceptación), la cadena es aceptada.
 
-La relación entre las clases P y NP es uno de los problemas abiertos más importantes en la teoría de la
-computación. Hasta la fecha, se desconoce si $\text{P} = \text{NP}$ o si $\text{P} \neq \text{NP}$. Por otro
-lado el conjunto de problemas NP-Completo brinda una base sólida para el problema anterior, ya que dada su
-definición cualquier problema perteneciente a este conjunto que sea soluble en tiempo polinomial
-implica que todos los problemas en NP lo son. Además, existen problemas que no están en P ni en NP, como
-los problemas indecidibles.
+A continuación se presentan las principales transformaciones entre lenguajes formales.
 
 \section{Transformaciones en Lenguajes Formales}
+
+Una transformación entre lenguajes no es más que una función que define una correspondencia una cadena
+de un lenguaje $L_1$ y una cadena de un lenguaje $L_2$.
 
 \subsection{Homorfismo}
 
@@ -223,6 +239,8 @@ tal que:
             \]
             es decir, el homomorfismo preserva la concatenación.
 \end{enumerate}
+
+En la siguiente sección se presentará un modelo que extiende el concepto de homomorfismo.
 
 \subsection{Transductor finito}
 
@@ -247,290 +265,99 @@ donde:
 Observe que un homorfismo es un transductor finito de un solo estado y tantas transiciones hacia el mismo estado como transformaciones
 de símbolos en el homomorfismo.
 
+En este punto se conoce la clasificación de las gramáticas según la Jerarquía de Chomsky 
+y a su vez la clasificación de los lenguajes que estas generan, puede parecer que existen lenguajes
+más difíciles de describir que otros y que a su vez traen consigo problemas más difíciles que otros, 
+por lo que se hace necesario definir que tan difícil o que tan sencillo puede resultar un problema en sí 
+o comparado con otro. 
 
-\section{Formalismos de escritura regulada}
+\section{Complejidad computacional}
 
-\subsection{Autómata regular}
+En esta sección se definen los principales conceptos de complejidad computacional y las clases de problemas.
 
-Un autómata regular \cite{authomataTheory}, también conocido como autómata finito, es un modelo matemático para reconocer lenguajes regulares. Este tipo de autómata se define como una máquina abstracta que procesa cadenas de símbolos de un alfabeto finito y determina si una cadena pertenece a un lenguaje regular.
+\subsection{Máquina de Turing}
 
-Un autómata regular se puede representar como una 5-tupla $$\mathcal{A} = (Q, \Sigma, \delta, q_0, F)$$ donde:
+Una Máquina de Turing \cite{authomataTheory} es un modelo abstracto de computación universal introducido por Alan Turing en 1936. Este modelo consiste en los siguientes componentes:
 
 \begin{itemize}
-      \item $Q$: Es un conjunto finito de \textbf{estados}.
-      \item $\Sigma$: Es el \textbf{alfabeto} finito de entrada.
-      \item $\delta$: Es la \textbf{función de transición}, $\delta: Q \times \Sigma \to Q$, que define cómo el autómata cambia de estado en función del símbolo leído.
-      \item $q_0 \in Q$: Es el \textbf{estado inicial} desde donde comienza la computación.
-      \item $F \subseteq Q$: Es el conjunto de \textbf{estados de aceptación o estados finales}.
+      \item \textbf{Cinta}: Un medio de almacenamiento infinito dividido en celdas, donde cada celda contiene un símbolo de un alfabeto finito.
+      \item \textbf{Cabezal de lectura/escritura}: Un dispositivo que puede leer el contenido de una celda, escribir un nuevo símbolo y moverse a la izquierda o derecha.
+      \item \textbf{Conjunto de estados}: Una colección finita de estados internos que describen la configuración actual de la máquina.
+      \item \textbf{Función de transición}: Un conjunto de reglas que determinan cómo la máquina cambia de estado, escribe en la cinta y mueve el cabezal en función del estado actual y el símbolo leído.
 \end{itemize}
 
-El autómata comienza en el estado inicial $q_0$ y procesa una cadena de entrada símbolo por símbolo. En cada paso, la función de transición $\delta$ determina el siguiente estado del autómata. Si, después de procesar toda la cadena, el autómata termina en un estado de aceptación $q \in F$, entonces la cadena es aceptada; de lo contrario, es rechazada.
+\paragraph{Máquina de Turing determinista (\textit{DTM}):}
+En una Máquina de Turing determinista, para cada estado y cada símbolo leído, existe como máximo una transición
+definida.
+\paragraph{Máquina de Turing no determinista (\textit{NTM}):}
+En una Máquina de Turing no determinista, para cada estado y símbolo leído, pueden existir múltiples
+transiciones posibles.
 
-Se puede extender el concepto de autómata finito añadiendo un nuevo tipo de transición que no consume ningún caracter, la cual recibe el nombre de transición $\varepsilon$.
-Se puede demostrar que el conjunto de lenguajes reconocido por un autómata finito sin transiciones $\varepsilon$ (\textit{autómata finito determinista}) es equivalente al conjunto de lenguajes reconocidos por un autómata finito con transiciones $\varepsilon$ (\textit{autómata finito no determinista}).
+Una Máquina de Turing define el límite entre lo computable y lo no computable, lo cual es la base para el concepto de 
+algoritmo en Ciencias de la Computación.
 
-\subsection{Autómata de pila y Gramáticas libres del contexto}
+A continuación se presenta una notación para describir el tiempo que demora un algoritmo en realizar determinado cómputo.
 
-Un autómata de pila \cite{authomataTheory} es un modelo matemático de computación que extiende los autómatas finitos al incluir una estructura de datos adicional: una pila. Este modelo es capaz de reconocer lenguajes libres de contexto,
-proporcionando una conexión directa con las gramáticas libres de contexto \textit{CFG}, es decir dada una gramática libre del contexto se puede construir un autómata de pila que reconozca el lenguaje generado por la gramática y viceversa.
+\subsection{Notación asintótica}
 
-Formalmente, un autómata de pila se define como una 7-tupla
-\[
-      \mathcal{A} = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, F),
-\]
-donde:
+La notación asintótica se utiliza para describir el comportamiento de una función $f(n)$ a medida que $n$ crece hacia el infinito. A continuación se definen las notaciones más comunes:
 
 \begin{itemize}
-      \item $Q$: Es un conjunto finito de \textbf{estados}.
-      \item $\Sigma$: Es el \textbf{alfabeto} finito de entrada.
-      \item $\Gamma$: Es el \textbf{alfabeto} finito de la pila (conjunto de símbolos que se pueden almacenar en la pila).
-      \item $\delta$: Es la función de transición, $\delta: Q \times (\Sigma \cup \{\varepsilon\}) \times \Gamma \to \mathcal{P}(Q \times \Gamma^*)$, que describe cómo cambia el estado, el contenido de la pila y la posición en la entrada.
-      \item $q_0 \in Q$: Es el \textbf{estado inicial} desde donde comienza la computación.
-      \item $Z_0 \in \Gamma$: Es el símbolo inicial en la pila.
-      \item $F \subseteq Q$: Es el conjunto de \textbf{estados de aceptación o estados finales}.
-\end{itemize}
-
-Un autómata de pila procesa una cadena de entrada desde el estado inicial $q_0$ y puede utilizar transiciones $\varepsilon$ (sin consumir entrada). En cada paso, la función $\delta$ determina el nuevo estado, los símbolos que se empujan o desapilan, y el avance en la entrada. Si, tras procesar toda la cadena, el autómata termina en un estado de aceptación o con una pila vacía (dependiendo del criterio de aceptación), la cadena es aceptada.
-
-
-\subsection{Gramáticas Matriciales}
-
-Una gramática matricial \cite{simpleMatrixLanguages} de grado $n$ \textit{$n$-MG} es una 4-tupla:
-
-\[
-      G_n = (V, P, S,\Sigma)
-\]
-
-donde:
-\begin{itemize}
-      \item \( V \) es un conjunto finito de \textbf{símbolos no terminales}.
-      \item \( \Sigma \) es un conjunto finito de \textbf{símbolos terminales}, con \( V \cap \Sigma = \emptyset \).
-      \item \( P \) es un conjunto finito de matrices. Cada matriz es una secuencia ordenada de \textbf{producciones} de la forma:
+      \item \textbf{Notación $O(f(n))$}: Una función $g(n)$ pertenece a $O(f(n))$ si existen constantes positivas $c$ y $n_0$ tales que:
             \[
-                  [P_1, P_2, \dots, P_k]
+                  g(n) \leq c \cdot f(n) \quad \text{para todo } n \geq n_0.
             \]
-            donde cada \( P_i \) es una regla \( A \to \alpha \), con $1\leq k\leq n$, \( A \in N \) y \( \alpha \in (N \cup T)^* \).
-      \item \( S  \) es el \textbf{símbolo inicial}.
-\end{itemize}
-
-Observe que das CFG son gramáticas matriciales de grado 1, es decir $1-MG$.
-
-\subsubsection{Proceso de derivación}
-
-El proceso de derivación en una gramática matricial se realiza de la siguiente manera:
-\begin{enumerate}
-      \item Se selecciona una matriz \( [P_1, P_2, \dots, P_k] \in P \).
-      \item Las reglas \( P_1, P_2, \dots, P_k \) se aplican de manera secuencial a la cadena actual.
-      \item La derivación continúa hasta que la cadena derivada contenga solo símbolos terminales, es decir, pertenezca a \( T^* \).
-\end{enumerate}
-
-\subsubsection{Gramáticas Matriciales Simples}
-
-Una gramática matricial simple de grado $n$ \textit{$n$-SMG} es una ($n$+3)-tupla:
-$$
-      G_n=(V_1,V_2,\ldots,V_n,P,S,\Sigma)
-$$
-donde:
-\begin{itemize}
-      \item \( V_1, V_2, \ldots, V_n \) son conjuntos finitos de \textbf{símbolos no terminales} disjuntos 2 a 2.
-      \item \( \Sigma \) es un conjunto finito de \textbf{símbolos terminales}, con \( V_i \cap \Sigma = \emptyset\,\forall\,1\leq i\leq n \).
-      \item \( P \) es un conjunto finito de matrices. Cada matriz es una secuencia ordenada \textbf{producciones} que cumplan con una de las siguientes reglas:
-            \begin{itemize}
-                  \item $[S\to w]$, donde $w\in \Sigma ^*$.
-                  \item $[S\to a_{11}A_{11}\ldots A_{1k}a_{21}A_{21}\ldots A_{2k}\ldots A_{n1}a_{n1}\ldots A_{nk}b]$,
-                        donde $\forall i,j$ con $1\leq i\leq n\wedge 1\leq j\leq k$ se cumple que
-                        $A_{ij}\in V_i$, $a_{ij}\in \Sigma ^*$ y $b\in \Sigma ^*$.
-                  \item $[A_1\to w_1,\ldots, A_n\to w_n]$, donde $A_i\in V_i\wedge w_i\in \Sigma ^*$ $\forall i\, 1\leq i\leq n$.
-                  \item $[A_1 \to a_{11}A_{11}\ldots a_{1k}A_{1k}b_1,\ldots,A_n \to a_{n1}A_{n1}\ldots a_{nk}A_{nk}b_n]$, donde $\forall i,j$
-                        con $1\leq i\leq n\wedge 1\leq j\leq k$ se cumple que
-                        $A_{ij}\in V_i$, $a_{ij}\in \Sigma ^*$ y $b_{i}\in \Sigma ^*$.
-            \end{itemize}
-      \item \( S \) es el \textbf{símbolo inicial}.
-\end{itemize}
-
-
-Observe que la restricción impuesta sobre las $n$-MG es cada matriz de producciones debe contener exactamente $n$ reglas de producción
-donde cada regla de producción utiliza no terminales de conjuntos distintos o puede contener una única producción cuya secuencia de no terminales
-esta compuesta por una secuencia de subsecuentes de terminales de conjuntos distintos.
-
-\subsection{Gramáticas de Índice Global}
-
-Una gramática de índice global \textit{GIG} \cite{globalIndexLanguages}, es una extensión de las CFG, que añaden un mecanismo 
-de memoria al proceso de derivación, esta característica permite la generación de lenguajes más generales que los generados por las CFG.
-El mecanismo de memorización consiste en una pila en la cual se pueden almacenar símbolos que pertenecen a un conjunto predeterminado,
-en cada producción se puede realizar una operación de push o pop en la pila o dejarla en su estado actual. Esta pila se maneja de forma global
-lo cual las diferencia de las gramáticas indexadas \cite{globalIndexLanguages} brindándoles una mayor expresividad. 
-
-Una GIG es una 6-tupla:
-$$
-      G = (N, \Sigma, I, S, \#, P) 
-$$
-donde:
-
-\begin{itemize}
-      \item $N$ es un conjunto finito de \textbf{símbolos no terminales}.
-      \item \( \Sigma \) es un conjunto finito de \textbf{símbolos terminales}, $\Sigma \cap N=\emptyset$.
-      \item $I$ es un conjunto finito de \textbf{índices de pila}, $\Sigma \cap I=\emptyset \wedge I \cap I=\emptyset$.
-      \item $S\in N$ es el \textbf{símbolo inicial}.
-      \item $\#$ es el \textbf{símbolo inicial de la pila}, $\# \notin \Sigma \cup N \cup I$.
-      \item $P$ es un conjunto finito de \textbf{producciones} que tienen la siguiente forma, donde $x\in I\cup N\cup \Sigma$ y $y\in I\cup N$:
-            \begin{itemize}
-                  \item $A \underset{\varepsilon}{\to} \alpha$ o $A \to \alpha$ (reglas epsilon o reglas libres del contexto).
-                  \item $A \underset{[y]}{\to}  \alpha$ o $[..]A \to [..]\alpha$ (reglas epsilon o reglas con restricciones).
-                  \item $A \underset{x}{\to} a \beta$ o $[..]A \to  [x..]a\beta$ (reglas de push o apertura de paréntesis).
-                  \item $A \underset{\overline{x}}{\to} \alpha$ o $[x..]A \to [..]\alpha$ (reglas de pop o cierre de paréntesis).
-            \end{itemize}
-\end{itemize}
-
-Como se puede observar la primera regla de producción consiste en dejar la pila intacta y puede ser interpretada como una regla de derivación
-libre del contexto, la segunda regla consiste en dejar la pila intacta pero solo se puede realizar si el caracter en el tope de la pila es el
-especificado, la tercera regla consiste en añadir un caracter a la pila y la cuarta regla consiste en eliminar un caracter de la pila.
-Una gramática GIG solo con producciones de la primera regla de producción es equivalente a una CFG.
-
-\subsubsection{Proceso de derivación}
-
-Como se mencionó anteriormente el proceso de derivación en las GIG es idéntico al proceso de derivación de las CFG, con la diferencia que
-en cada paso de la derivación se puede realizar una operación de push o pop en la pila, además de las operaciones de sustitución de símbolos.
-Otra restricción adicional es que el proceso de derivación en las GIG debe ser siempre de extrema izquierda.
-
-Entonces una cadena es reconocida por una GIG si existe una secuencia de derivaciones desde $S$ que genere la cadena y que además la pila
-termine vacía al final de la derivación (con el símbolo $\#$ en el tope de la pila). Luego se puede definir el lenguaje generado por una GIG, $G$
-como $L(G)=\{w\,|\,\#S\overset{*}{\to}\#w \wedge w\in \Sigma^* \}$.
-
-\subsection{Propiedades de las GIG}
-
-A continuación se describen las principales propiedades de las GIG:
-\begin{itemize}
-      \item \textbf{Cerradura bajo unión:} Dadas dos GIG $G_1$ y $G_2$, la unión de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una GIG
-            $$G=(N_1\cup N_2\cup \{S\},\Sigma_1\cup \Sigma_2,I_1\cup I_2,S,\#,P_1\cup P_2\cup \{S \underset{\varepsilon}{\to} S_1|S_2\})$$
-      \item \textbf{Cerradas bajo concatenación:} Dadas 2 GIG $G_1$ y $G_2$, la concatenación de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una GIG
-            $$G=(N_1\cup N_2\cup \{S\},\Sigma_1\cup \Sigma_2,I_1\cup I_2,S,\#,P_1\cup P_2\cup \{S \underset{\varepsilon}{\to} S_1S_2\})$$
-      \item \textbf{Cerradas bajo clausura de Kleene:} Dada una GIG $G$, el lenguaje reconocido por $G$ elevado a la clausura de Kleene es reconocido por una GIG
-            $$G=(N\cup \{S'\},\Sigma,I\cup \{S'\},S,\#,P\cup \{S'\underset{\varepsilon}{\to} S'S|\varepsilon\})$$
-      \item  \textbf{Cerradas bajo homomorfismo} Dada una GIG $G$, el homomorfismo de un lenguaje reconocido por $G$ es un lenguaje de índice global \cite{globalIndexLanguages}.
-      \item  \textbf{Cerradas bajo transducción finita:} Dada una GIG $G$, la transducción finita de un lenguaje reconocido por $G$ es un lenguaje de índice global \cite{globalIndexLanguages}.
-\end{itemize}
-
-\subsection{Gramáticas de Concatenación de Rango}
-
-Las gramáticas de concatenación de rango (\textit{RCG}) \cite{mainRCGBib} son un formalismo de gramáticas desarrollado para describir lenguajes más generales que los generados por gramáticas libres del contexto.
-Este formalismo extiende las capacidades descriptivas al incluir relaciones entre rangos de la cadena de una manera más flexible,
-permitiendo la generación de lenguajes sensibles al contexto.
-
-\subsubsection{Definiciones}
-
-\paragraph{Rango:} un rango es una tupla $(i, j)$ que representa un intervalo de posiciones en la cadena, donde $i$ y $j$ son enteros no negativos tales que $i \leq j$.
-
-\paragraph{Gramática de Concatenación de Rango Positiva:} una gramática de concatenación de rango positiva (\textit{PRCG}) se define como una 5-tupla:
-
-\[
-      G = (N, T, V, P, S),
-\]
-donde:
-
-\begin{itemize}
-      \item $N$: Es un conjunto finito de \textbf{predicados o símbolos no terminales}: Cada predicado tiene una \textbf{aridad}, que indica el número de argumentos que toma.
-      \item $T$: Es un conjunto finito de \textbf{símbolos terminales}.
-      \item $V$: Es un conjunto finito de \textbf{variables}.
-      \item $P$: Es un conjunto finito de \textbf{cláusulas}, de la forma:
+            Esta notación proporciona un límite superior asintótico para $g(n)$.
+            
+      \item \textbf{Notación $\Omega(f(n))$}: Una función $g(n)$ pertenece a $\Omega(f(n))$ si existen constantes positivas $c$ y $n_0$ tales que:
             \[
-                  A(x_1, x_2, \ldots, x_k) \to B_1(y_{1,1}, y_{1,2}, \ldots, y_{1,m_1}) \ldots B_n(y_{n,1}, y_{n,2}, \ldots, y_{n,m_n}),
+                  g(n) \geq c \cdot f(n) \quad \text{para todo } n \geq n_0.
             \]
-            donde $A, B_i \in N$, $x_i, y_{i,j} \in (V \cup T)^*$, y $k$ es la aridad de $A$.
-      \item $S \in N$: Es el \textbf{predicado inicial} de la gramática.
+            Esta notación proporciona un límite inferior asintótico para $g(n)$.
+            
+      \item \textbf{Notación $\Theta(f(n))$}: Una función $g(n)$ pertenece a $\Theta(f(n))$ si:
+            \[
+                  g(n) \in O(f(n)) \quad \text{y} \quad g(n) \in \Omega(f(n)).
+            \]
+            Es decir, $f(n)$ acota a $g(n)$ tanto superior como inferiormente.
 \end{itemize}
 
-\paragraph{Gramática de Concatenación de Rango Negativa:} una gramática de concatenación de rango negativa (\textit{NRCG}) es similar a una PRCG, pero predicados o no terminales negativos que se denotan de la siguiente manera: $\overline{A}$.
+La notación asintótica permite describir el tiempo de ejecución un algoritmo en cuanto al número de operaciones básicos realizadas
+por un modelo formal de cómputo (por ejemplo una máquina de Turing). Algoritmos como determinar el mínimo y el máximo de
+un array son $\Theta(n)$, ya que necesitan realizar una cantidad de operaciones de orden $n$ en relación con el tamaño de la entrada.
 
-\paragraph{Gramática de Concatenación de Rango Simple:} las gramáticas de concatenación de rango simple (\textit{SRCG}) son un subconjunto de las RCG que restringen la forma de las cláusulas de producción.
-Una RCG $G$ es \textbf{simple} si los argumentos en el lado derecho de una cláusula son variables distintas, y todas estas variables (y no otras) aparecen una sola vez en los argumentos del lado izquierdo.
-Un resultado interesante es que para cada CFG existe una SRCG equivalente que genera el mismo lenguaje.
+En la próxima sección se presenta la clasificación de los problemas de acuerdo a su complejidad computacional.
+\subsection{Clases de problemas}
 
-\paragraph{Sustiución de rango:} una sustitución de rango es un mecanismo que reemplaza una variable por un rango de la cadena.
-Por ejemplo dado el predicado $A(Xa)$ donde $X \in V \wedge a \in T$, si se instancia la cadena $baa$ en $A$, $X$ puede
-ser asociada con el rango $ba$ de la cadena original.
+Los problemas computacionales \cite{authomataTheory} se agrupan en diferentes clases según los recursos necesarios para resolverlos.
 
-\subsubsection{Proceso de derivación}
+\paragraph{Problemas en la clase P:}
+Un problema pertenece a la clase P si puede resolverse en tiempo polinomial mediante una Máquina de Turing determinista. Es decir, existe un algoritmo determinista que, para una entrada de tamaño $n$, produce la solución en tiempo $O(n^k)$ para alguna constante $k$.
 
-La principal idea detrás de las RCG, para realizar una derivación, se basa en encontrar para cada argumento del predicado izquierdo de una cláusula todas las
-posibles sustituciones en rango de la cadena, asociar los valores de las variables a los argumentos de los predicados derechos y continuar
-el proceso de derivación en los predicados derechos.
+\paragraph{Problemas en la clase NP:}
+Un problema pertenece a NP si su solución puede verificarse en tiempo polinomial mediante una Máquina de Turing determinista. Alternativamente, un problema está en NP si puede resolverse en tiempo polinomial mediante una Máquina de Turing no determinista.
 
-Por ejemplo, dada la cláusula $A(X,aYb)\to B(aXb,Y)$ , donde $X$ y $Y$ son símbolos variables y $a$ y $b$
-son símbolos terminales, la cadena predicado $A(a,abb)$ deriva como $B(aab,b)$, porque $A(a,abb)$
-coincide con $A(X,aYb)$ cuando $ X=a \wedge Y=b$. De forma similar, si existiera una regla
+\paragraph{Problemas en la clase NP-Completo:}
+Un problema pertenece a la clase NP-Completo, si pertenece a NP y además es tan difícil como cualquier otro problema en NP. Esto significa que cualquier problema en NP puede reducirse a este problema en tiempo polinómico.
 
-Una secuencia de argumentos son reconocidos por un predicado si existe una secuencia de derivaciones que comienza
-en dicho predicado y termina en la cadena vacía, si el predicado es negativo en el caso de las NRCG ocurre lo contrario
-la secuencia de argumentos no es reconocida por el predicado. Una RCG reconoce una cadena si dicha cadena es reconocida
-por el predicado inicial.
+\paragraph{Problemas no decidibles:}
+Un problema es no decidible si no existe una Máquina de Turing que pueda resolverlo correctamente para todas las entradas posibles. Esto significa que no hay algoritmo que garantice una respuesta en tiempo finito en todos los casos. Un ejemplo clásico de problema no decidible es el \textit{Problema de la Parada} \cite{authomataTheory},
+que consiste en determinar si una Máquina de Turing se detendrá para una entrada dada.
 
-Ejemplo dada la siguiente RCG:
+En este punto se puede formular la siguiente pregunta: ¿realmente existen problemas más difíciles que otros?
+\subsection{P vs NP}
 
-\[
-      G = (N, T, V, P, S),
-\]
-donde:
+La relación entre las clases P y NP es uno de los problemas abiertos más importantes en la teoría de la
+computación \cite{authomataTheory}. Hasta la fecha, se desconoce si $\text{P} = \text{NP}$ o si $\text{P} \neq \text{NP}$,
+es decir no se conoce si realmente los problemas en NP son más difíciles que los problemas en P. Por otro
+lado el conjunto de problemas NP-Completo brinda una base sólida para el problema anterior, ya que dada su
+definición, cualquier problema perteneciente a este conjunto que sea soluble en tiempo polinomial
+implica que todos los problemas en NP lo son. 
 
-\begin{itemize}
-      \item  N=$\{A,S\}$.
-      \item T=$\{a,b,c\}$.
-      \item V=$\{X,Y,Z\}$.
-      \item El conjunto de cláusulas $P$ es el siguiente:
-            $$S(XYZ)\to A(X,Y,Z)$$
-            $$A(aX,aY,aZ)\to A(X,Y,Z)$$
-            $$A(bX,bY,bZ)\to A(X,Y,Z)$$
-            $$A(cX,cY,cZ)\to A(X,Y,Z)$$
-            $$A(\varepsilon,\varepsilon,\varepsilon)\to \varepsilon$$
-      \item El símbolo inicial es $S$.
-\end{itemize}
-La cadena $aaabbbccc$ es reconocida por la RCG anterior, ya que se puede derivar de la siguiente manera:
-$$S(abcabcabc)\to A(abc,abc,abc)\to A(bc,bc,bc)\to A(c,c,c)\to A(\varepsilon,\varepsilon,\varepsilon)\to \varepsilon$$
+Por otra parte existen problemas para los cuales no existe ningún algoritmo, como los problemas indecidibles.
 
-De manera general el lenguaje reconocido por la RCG anterior es $L=\{www\,|\,w\in \{a,b,c\}^*\}$.
-
-\subsubsection{Propiedades de las RCG}
-
-A continuación se describen las principales propiedades de las RCG:
-\begin{itemize}
-      \item \textbf{Cerradura bajo unión:} Dadas dos RCG $G_1$ y $G_2$, la unión de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una RCG
-            $$G=(N_1\cup N_2\cup \{S\},T_1\cup T_2,V_1\cup V_2,P_1\cup P_2\cup \{S(X)\to S_1(X)|S_2(X)\},S)$$
-      \item \textbf{Cerradas bajo intersección:} Dadas dos RCG $G_1$ y $G_2$, la intersección de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una RCG
-            $$G=(N_1\cup N_2\cup \{S\},T_1\cup T_2,V_1\cup V_2,P_1\cup P_2\cup \{S(X)\to S_1(X)S_2(X)\},S)$$
-      \item \textbf{Cerradas bajo complemento:} Dada una RCG $G$, el complemento del lenguaje reconocido por $G$ es reconocido por una RCG
-            $$G'=(N\cup \{\overline{S}\},T,V,P\cup \{S'(X)\to \overline{S}(X)\},S')$$
-      \item \textbf{Cerradas bajo concatenación:} Dadas dos RCG $G_1$ y $G_2$, la concatenación de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una RCG
-            $$G=(N_1\cup N_2\cup \{S\},T_1\cup T_2,V_1\cup V_2,P_1\cup P_2\cup \{S(XY)\to S_1(X)S_2(Y)\},S)$$
-      \item \textbf{Cerradas bajo clausura de Kleene:} Dada una RCG $G$, la clausura de Kleene del lenguaje reconocido por $G$ es reconocida por una RCG
-            $$G'=(N\cup \{S'\},T,V,P\cup \{S'(XY)\to S(X)S'(Y)|\varepsilon\},S')$$
-      \item  \textbf{No cerradas bajo homomorfismo:} Dada una RCG $G$, el homomorfismo de un lenguaje reconocido por $G$ no es necesariamente reconocido por una RCG \cite{propertiesRCGBib}.
-      \item  \textbf{No cerradas bajo transducción finita:} Dada una RCG $G$, la transducción finita de un lenguaje reconocido por $G$ no es necesariamente reconocida por una RCG.
-            Esto es una consecuencia de la no cerradura bajo homomorfismo.
-\end{itemize}
-
-
-\subsubsection{Problema de la palabra, problema del vacío y equivalencia de 2 RCG}
-
-\paragraph{Problema de la palabra:} En general en la mayoría de los casos este problema es polinomial y pasa por
-un algoritmo de memorización sobre las cadenas que son instanciadas en los rangos de los predicados de la RCG \cite{mainRCGBib} (como la cantidad
-máxima de rangos de la cadena es $n^2$ y la máxima aridad de un predicado es constante, este proceso de memorización cuenta
-con cantidad polinomial de estados), en
-una complejidad de $O(|P|n^{2h(l+1)})$ donde $h$ es la máxima aridad en un predicado, $l$ es la máxima cantidad de predicados
-en el lado derecho de una cláusula y $n$ es la longitud de la cadena a ser reconocida.
-
-Pero existen casos en los que el problema de la palabra no
-es polinomial, por ejemplo puede pasar que se instancien argumentos de en los predicados con rangos que no pertenezcan
-a la propia cadena de entrada y sean generados durante el proceso de reconocimiento.
-
-\paragraph{Problema del vacío:} El problema del vacío para una RCG es indecidible \cite{propertiesRCGBib}, la razón principal para esto es que como se mencionó anteriormente
-para toda CFG existe una RCG equivalente y como las RCG son cerradas bajo intersección existen RCG que describen
-la intersección de 2 lenguajes libres del contexto y determinar si dicha intersección es vacía es un problema indecidible.
-
-En el caso de las SRCG este problema es polinomial \cite{mainRCGBib}.
-
-\paragraph{Problema de la equivalencia:} El problema de la equivalencia para 2 RCG es indecidible, la demostración es muy sencilla dadas 2 RCG $G_1$ y $G_2$ el problema
-de saber si $G_1$ es equivalente a $G_2$ es equivalente a saber si $G_1\cap \overline{G_2}=\emptyset$ y como se mencionó anteriormente el problema del vacío para una RCG
-es indecidible.
+A continuación se presenta el problema que sirve de base a los problemas de la clase NP-Completo y que a su
+vez, la relación de este con la teoría de lenguajes, es el foco de atención de este trabajo.
 
 \section{Problema de la satisfacibilidad booleana}
 
@@ -619,6 +446,7 @@ principales casos:
       \item \textbf{Horn-SAT:} El problema Horn-SAT es una generalización del problema 2-SAT, donde cada cláusula tiene a lo sumo
             un literal positivo. Este problema puede ser resuelto en tiempo polinomial mediante el algoritmo de resolución de Horn.
 \end{enumerate}
+
 
 \begin{thebibliography}{99}
       
