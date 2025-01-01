@@ -340,6 +340,10 @@ Un problema pertenece a NP si su solución puede verificarse en tiempo polinomia
 \paragraph{Problemas en la clase NP-Completo:}
 Un problema pertenece a la clase NP-Completo, si pertenece a NP y además es tan difícil como cualquier otro problema en NP. Esto significa que cualquier problema en NP puede reducirse a este problema en tiempo polinómico.
 
+\paragraph{Problemas en la clase NP-Duro:}
+Un problema pertenece a la clase NP-Duro, es tan difícil como cualquier otro problema en NP, pero no necesariamente 
+pertenece a NP.  
+
 \paragraph{Problemas no decidibles:}
 Un problema es no decidible si no existe una Máquina de Turing que pueda resolverlo correctamente para todas las entradas posibles. Esto significa que no hay algoritmo que garantice una respuesta en tiempo finito en todos los casos. Un ejemplo clásico de problema no decidible es el \textit{Problema de la Parada} \cite{authomataTheory},
 que consiste en determinar si una Máquina de Turing se detendrá para una entrada dada.
@@ -352,7 +356,9 @@ computación \cite{authomataTheory}. Hasta la fecha, se desconoce si $\text{P} =
 es decir no se conoce si realmente los problemas en NP son más difíciles que los problemas en P. Por otro
 lado el conjunto de problemas NP-Completo brinda una base sólida para el problema anterior, ya que dada su
 definición, cualquier problema perteneciente a este conjunto que sea soluble en tiempo polinomial
-implica que todos los problemas en NP lo son. 
+implica que todos los problemas en NP lo son. Mientras que los problemas en NP-Duro pueden resultar aún más
+difíciles, es decir aunque resultara que $\text{P} = \text{NP}$ no se puede asegurar que no existan problemas 
+en NP-Duro que no se puedan resolver en tiempo polinomial \cite{authomataTheory}.
 
 Por otra parte existen problemas para los cuales no existe ningún algoritmo, como los problemas indecidibles.
 

@@ -44,11 +44,11 @@ preguntas como la siguiente: ¿es posible determinar si una cadena pertenece a u
 \subsection{Problemas relacionados con Lenguajes}
 
 Los problemas relacionados con la teoría de lenguajes permiten vincular los problemas de otra naturaleza 
-con su representación en la teoría de lenguajes formales. Por ejemplo como puedo determinar si un lápiz 
+con su representación en la teoría de lenguajes formales. Por ejemplo como se puede determinar si un lápiz 
 pertenece al conjunto de los lápices negros.
 
 \paragraph{Problema de la palabra:} Consiste en determinar si una cadena pertenece a un lenguaje dado. Todo problema en Ciencias de la Computación puede ser reducido a un problema de la palabra, ya que cualquier problema
-puede ser codificado como un lenguaje formal.
+puede ser codificado como un lenguaje formal \cite{authomataTheory}.
 \paragraph{Problema del vacío:} Consiste en determinar si un lenguaje es vacío. Ejemplo se define el lenguaje de la
 representación binaria de todos los números pares tales que su último símbolo es 1, $L=\{w\,|\,\text{last}(w)=1 \wedge \text{is\_even(w)}\}$, $\text{last}(w)$ y $\text{is\_even}(w)$
 determinan el último símbolo del número y si el número es par o no, respectivamente.
@@ -171,6 +171,7 @@ El autómata comienza en el estado inicial $q_0$ y procesa una cadena de entrada
 Se puede extender el concepto de autómata finito añadiendo un nuevo tipo de transición que no consume ningún caracter, la cual recibe el nombre de transición $\varepsilon$.
 Se puede demostrar que el conjunto de lenguajes reconocido por un autómata finito sin transiciones $\varepsilon$ (\textit{autómata finito determinista}) es equivalente al conjunto de lenguajes reconocidos por un autómata finito con transiciones $\varepsilon$ (\textit{autómata finito no determinista}).
 
+Ahora se presentará el concepto de autómata relacionado a los lenguajes libres del contexto.
 \subsection{Autómata de pila y Gramáticas libres del contexto}
 
 Un autómata de pila \cite{authomataTheory} es un modelo matemático de computación que extiende los autómatas finitos al incluir una estructura de datos adicional: una pila. Este modelo es capaz de reconocer lenguajes libres de contexto,
@@ -220,6 +221,8 @@ tal que:
             \]
             es decir, el homomorfismo preserva la concatenación.
 \end{enumerate}
+
+En la siguiente sección se presentará un modelo que extiende el concepto de homomorfismo.
 
 \subsection{Transductor finito}
 

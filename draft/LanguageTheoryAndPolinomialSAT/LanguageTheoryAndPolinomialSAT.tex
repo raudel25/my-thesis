@@ -1,0 +1,326 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc} % Permite escribir caracteres especiales directamente
+\usepackage[spanish]{babel} % Configura el idioma a español
+
+\title{Solución polinomial de instancias del SAT usando Teoría de Lenguajes}
+\author{Raudel Alejandro Gómez Molina}
+
+\usepackage[lmargin=2cm,rmargin=5cm]{geometry}
+
+\input{word-comments.tex}
+
+\begin{document}
+
+\maketitle
+
+En el presente capítulo se presentan los trabajos realizados anteriormente que tratan sobre el tema desarrollado en esta investigación.
+
+\section{Antecedentes}
+
+Como parte del estudio del problema SAT, se han desarrollado una serie de trabajos utilizando un enfoque
+basado en formalismos de la teoría de lenguajes, buscando resolver instancias específicas del SAT.
+
+La idea principal abordada en \cite{aCFSAT} consta de tres partes: 
+asumir que todas las variables en la fórmula son distintas, construir un autómata finito que reconozca cadenas de 0 y 1 hagan 
+verdadera esa fórmula (asumiendo que todas las variables son distintas), y por último interesectar ese lenguaje con algún formalismo 
+que garantice que todas las instancias de la misma variable tenga el mismo valor. Luego de esos tres pasos, se obtiene un lenguaje 
+formal de las cadenas de 0 y 1 que satisfacen la fórmula y que además respeta los valores de las variables duplicadas. 
+Finalmente, para determinar si la fórmula es satisfacible o no, basta con determinar si el lenguaje es vacío. Si es vacío, no 
+es satisfacible, si lo es, pues no es satisfacible.
+
+En la siguiente sección se presenta un mecanismo para reconocer si una cadena de 0 y 1 satisface una fórmula booleana
+(asumiendo que todas las variables son distintas).
+
+\section{Autómata booleano}
+
+El primer paso para el proceso descrito anteriormente es construir un autómata finito que depende de la estructura de la fórmula booleana
+y verifica si una cadena de 0 y 1 satisface dicha fórmula (asumiendo que todas las variables son distintas), dicho autómata se denomina
+\textbf{autómata booleano}.
+
+La idea detrás del autómata booleano y es representar las reglas de la lógica proposicional en transiciones entre los estados de un autómata finito,
+cada estado del representa representa un valor de verdad positivo o negativo lo cual significa que hasta ese momento (solo tomando las instancias de 
+las variables asociadas a los caracteres reconocidos) la fórmula se evalúa positiva o negativa respectivamente.   
+
+Un autómata booleano \cite{aCFSAT} se define formalmente como un 6-tuplo $B=(Q,\Sigma,\delta,q_0,V,F)$ donde:
+
+\begin{itemize}
+      \item $Q$: Es un conjunto finito de \textbf{estados} (depende de la fórmula booleano asociada).
+      \item $\Sigma$: Es el \textbf{alfabeto} finito de entrada, $\Sigma =\{0,1\}$.
+      \item $\delta$: Es la \textbf{función de transición}, $\delta: Q \times \Sigma \to Q$, que define cómo el autómata cambia de estado en función del símbolo leído.
+      \item $q_0 \in Q$: Es el \textbf{estado inicial} desde donde comienza la computación.
+      \item  $V$: Conjunto de estados finales del autómata. Representa que la cadena de entrada es una cadena verdadera.
+      \item  $F$: Conjunto de estados distinguidos del autómata, ninguno de los estados que pertenecen a este conjunto es considerado final.
+            Representa que la cadena de entrada es una cadena falsa.
+            
+\end{itemize}
+
+En este punto es necesario definir el autómata booleano asociado cada una de las operaciones booleanas básicas: una instancia de 
+variable, la negación de una fórmula, la conjunción de 2 fórmulas y la disyunción de 2 fórmulas.
+
+El autómata booleano asociado a una variable es simplemente una autómata finito que consta de 3 estados: el estado inicial, un estado
+que representa un valor de verdad positivo y un estado que representa un valor de verdad negativo, con sus respectivas transiciones en
+dependencia del caracter leído.
+
+\paragraph{Autómata booleano asociado a una variable:} el autómata booleano asociado a la instancia de una variable
+se define como:
+
+$$B=(\{q_0,V,F\},\{0,1\},\delta,q_0,V,F)$$
+
+$$\delta(q_0,1)=V$$
+$$\delta(q_0,0)=F$$
+
+Para definir el autómata booleano asociado a la negación de una fórmula solo es necesario intercambiar los conjuntos $V$ y $F$ del
+autómata booleano asociado a la fórmula original, es decir tomar los estados que representan un valor de verdad positivo en el autómata
+original como estados que representan un valor de verdad negativo en el nuevo autómata y viceversa.  
+
+\paragraph{Autómata booleano asociado a la negación de una fórmula:} sea $A$ una fórmula booleana y $B$ el autómata booleano asociado a $A$ definido
+como $B=(Q,\Sigma,\delta,q_0,V,F)$. Entonces el autómata booleano asociado $\neg A$ se define como:
+
+$$B=(Q,\Sigma,\delta,q_0,F,V).$$
+
+Para definir el autómata booleano asociado a la disyunción de 2 fórmulas es necesario construir un nuevo autómata que contenga los
+autómatas asociados a cada una de las fórmulas y que además contenga nuevos estados y nuevas configuraciones para la función de transición,
+la idea del funcionamiento es la misma que usan las reglas de disyunción si la primera fórmula es positiva (en este caso el primer autómata)
+no es necesario consultar el valor de la segunda, en caso contrario el resultado de la evaluación depende de la segunda fórmula
+(en este caso el segundo autómata).
+
+
+\paragraph{Autómata booleano asociado a la disyunción de 2 fórmulas:} sean $A_1$ y $A_2$ fórmulas booleanas y
+$B_1=(Q_1,\Sigma,\delta_1,q_1,V_1,F_1)$ y $B_2=(Q_2,\Sigma,\delta_2,q_2,V_2,F_2)$ los autómatas booleanos asociados a dicha fórmula. Entonces el autómata booleano asociado a
+$A_1 \vee A_2$ se define como:
+
+$$
+      D=(Q_1\cup Q_2 \cup P,\Sigma,\delta,V_2, F_2)
+$$
+Ahora durante el reconocimiento de la cadena se tienen 2 casos:
+
+\begin{enumerate}
+      \item $B_1$ se evalúa positivo en este caso no es necesario que el autómata $B_2$ se evalué positivo, por lo
+            que se añade una función $\overline{\delta}$ y el conjunto de estados $P$ 
+            que consume una cantidad de caracteres igual a la cantidad de instancias de $A_2$ (utilizando los estados
+            de $P$) y termina en el estado $V_2$.
+      \item $B_2$ se evalúa negativo en este caso es necesario que $B_2$ se evalué positivo, para ello se agrega una epsilon
+      transición entre los estados $F_1$ y $q_2$, entonces el resultado de la evaluación de la cadena dependerá
+            del estado final de $B_2$.
+\end{enumerate}
+
+\notaparaelautor{Agregar imagen}
+
+\paragraph{Autómata booleano asociado a la conjunción de 2 fórmulas:} sean $A_1$ y $A_2$ fórmulas booleanas y
+$B_1=(Q_1,\Sigma,\delta_1,q_1,V_1,F_1)$ y $B_2=(Q_2,\Sigma,\delta_2,q_2,V_2,F_2)$ los autómatas booleanos asociados a dicha fórmula. Entonces el autómata booleano asociado a
+$A_1 \wedge A_2$ se define como:
+
+$$
+      D=(Q_1\cup Q_2,\Sigma,\delta,V_2, F_2)
+$$
+Para que $A_1 \wedge A_2$ sea satisfacible por una cadena es necesario que tanto $B_1$ como $B_2$ se evalúen positivo, 
+para ello se agrega una epsilon transición entre los estados $V_1$ y $q_2$, entonces el resultado de la evaluación de la 
+cadena dependerá de los estados finales de $B_1$ y $B_2$ respectivamente.
+
+Para definir el autómata booleano asociado a la conjunción de 2 fórmulas se procede de manera similar que el caso de la
+disyunción pero en este caso es necesario conocer el resultado de evaluar tanto la primera como la segunda fórmula (la evaluación
+del primer y del segundo autómata).
+
+\subsection{Construcción del autómata booleano asociado a una fórmula booleana}
+
+A partir de las definiciones anteriores es posible construir el autómata booleano asociado a una fórmula booleana $F$ \cite{aCFSAT},
+para ello primero se construyen los autómatas asociados a cada una de las instancias de variable que
+aparecen en la secuencia. Una vez finalizada esta etapa se pasa a la concatenación de los
+mismos teniendo en cuenta el siguiente orden.
+
+\begin{enumerate}
+      \item Efectuar las operaciones entre paréntesis.
+      \item Efectuar el operador negación.
+      \item Efectuar el operador conjunción.
+      \item Efectuar el operador disyunción.
+\end{enumerate}
+
+El resultado del procedimiento anterior es un autómata booleano que representa un árbol donde cada nodo representan las operaciones 
+con el nivel de prioridad requerido y las hojas representan las instancias de las variables.
+
+En \cite{aCFSAT} se demuestra que la cantidad de estados del autómata resultante es $O(n^2)$ donde $n$ es la cantidad de instancias
+de variables de las fórmula $F$.
+
+En la próxima sección se describe la instancia de SAT abordada en \cite{aCFSAT} que sigue la idea descrita anteriormente.
+
+\section{Problema de la satisfacibilidad booleana libre del contexto}
+
+El problema satisfacibilidad booleana libre del contexto (\textit{CF-SAT}) \cite{aCFSAT}, es una instancia específica
+del SAT donde las variables donde la fórmula booleana es una fórmula booleana libre del contexto.
+
+\paragraph{Fórmula booleana se considera libre del contexto:} una fórmula booleana se considera libre del contexto
+(\textit{CF-BF}) si para cualquier par de instancias de una variable $x_i$ y $x_j$ con $i<j$ se
+cumple que si existe otra variable con instancia $x_k$ con $i<k<j$ entonces todas las instancias de esta nueva
+variable ocurren entre $x_i$ y $x_j$.
+
+Dada la definición anterior posible clasificar las instancias de cada variable en una fórmula booleana:
+
+\begin{enumerate}
+      \item \textbf{Clase libre:} a esta clase pertenecen todas las instancias de las variables que ocurren
+            una única vez en la fórmula booleana.
+      \item \textbf{Clase primera:} a esta clase pertenecen todas las instancias que representan la primera
+            ocurrencia de una variable en la fórmula booleana (la variable debe ocurrir más de una vez).
+      \item \textbf{Clase intermedia:} a esta clase pertenecen todas las instancias que no representan ni la primera, ni la última
+            ocurrencia de una variable en la fórmula booleana (la variable debe ocurrir más de una vez).
+      \item \textbf{Clase última:} a esta clase pertenecen todas las instancias que representan la última
+            ocurrencia de una variable en la fórmula booleana (la variable debe ocurrir más de una vez).
+\end{enumerate}
+
+A continuación se describe la solución al CF-SAT.
+
+\subsection{Solución al CF-SAT}
+
+El orden que siguen las instancias de las variables en una CF-BF puede ser reconocido por una CFG que a su vez trae asociado
+un autómata de pila, al cual de le denomina autómata de pila booleano \cite{aCFSAT}.
+
+Para la construcción del autómata de pila booleano correspondiente a una CF-BF se toma el autómata booleano definido en
+la sección anterior y se le añade un mecanismo de memoria. Dicho mecanismo de memoria funciona de la siguiente manera:
+
+\begin{itemize}
+      \item Si el caracter analizado corresponde a una instancia de clase libre, dicho caracter no se almacena en la pila.
+      \item Si el caracter analizado corresponde a una instancia de clase primera, dicho caracter se almacena en la pila.
+      \item Si el caracter analizado corresponde a una instancia de clase intermedia, dicho caracter no se almacena en la
+            pila y se comprueba que su valor sea igual al del tope de la pila.
+      \item Si el caracter analizado corresponde a una instancia de clase última, dicho caracter no se almacena en la
+            pila, se comprueba que su valor sea igual al del tope de la pila y se retira el valor del tope de la pila.
+\end{itemize}
+El autómata de pila booleano reconoce una cadena si termina en un estado final con la pila vacía.
+
+En \cite{aCFSAT} se describe como dado un autómata de pila encontrar la CFG correspondiente y luego 
+se emplea un algoritmo que permite determinar si el lenguaje generado con por la gramática es vacío o no \cite{authomataTheory}. Posteriormente 
+se enuncia un algoritmo para generar todas las cadenas que pertenecen a dicha gramática. Todo el proceso anteriormente descrito tiene una complejidad de $O(n^3)$, donde $n$
+es la cantidad de instancias de variables en la CF-BF.
+
+
+\subsubsection{Generalización de la solución al CF-SAT}
+
+De manera general el algoritmo presentado en \cite{aCFSAT} puede ser generalizado a otras instancias de SAT. Al seguir
+la idea del autómata booleano (asumiendo que las instancias de las variables son distintas), solo es necesario emplear un
+formalismo que verifique que los valores de las mismas instancias de las variables sean iguales e interceptarlo con el autómata, 
+dicho formalismo debe cumplir 2 propiedades: cerrado bajo la intersección con lenguajes regulares y poder resolver el problema 
+del vacío en tiempo polinomial. Por tanto si se selecciona un formalismo más general que el empleado en \cite{aCFSAT}
+pueden resolverse instancias más generales de SAT. 
+
+Otro resultado interesante es encontrar un algoritmo que permita generar todas las posibles cadenas que pertenecen al lenguaje
+generado por la intersección del autómata booleano y el formalismo seleccionado, con estas cadenas se pueden obtener los valores de
+verdad para cada una de las variables que satisfacen la fórmula booleana.
+
+En las próximas secciones se presentarán los problemas SAT asociados a los trabajos que siguen el enfoque descrito anteriormente\agregaesto{, que han sido TANTOS: uno con noséqué, otro con estaotracosa y por último se utilizó estotro.}.
+
+\section{Problema de la satisfacibilidad booleana de concatenación de rango simple}
+
+Una secuencia de instancias de variables de longitud $n$ tiene un orden de concatenación de rango simple \cite{aSRCSAT}, 
+si es posible construir una SRCG, con un tamaño polinomial en $n$, que genere el lenguaje de todas las cadenas 
+$w_1w_2 \ldots w_n$, de longitud $n$ sobre el alfabeto {0,1}, tal que para todo par de instancias de variables 
+($x_i$, $x_j$) que pertenezcan a la misma variable se cumple que $w_i = w_j$.
+
+El problema de la satisfacibilidad booleana de concatenación de rango simple (\textit{SRC-SAT}) es una instancia de
+SAT donde la secuencia de instancias de sus variables posee un orden de concatenación de rango simple.
+
+\subsection{Solución al SRC-SAT}
+
+Para la solución del SRC-SAT en \cite{aSRCSAT} se procede de manera similar a \cite{aCFSAT}, pero esta vez el autómata
+booleano se intersecta con una SRCG que describe el orden de la fórmula booleana.
+
+Luego solo queda resolver el problema del vacío para el formalismo resultante, para esto se obtiene una CFG que representa 
+el lenguaje de todas las posibles formas de generar la menor cadena en la intersección de la SRCG con el autómata booleano 
+y solo queda verificar que dicha CFG sea no vacía como se muestra en \cite{aCFSAT}. La complejidad de todo este proceso es 
+$O(n^k)$ donde $n$ es el número de instancias de variables en la fórmula booleana y $k$ es la aridad de la SRCG, observe 
+que este algoritmo es polinomial siempre y cuando la aridad de la gramática sea constante.
+
+El SRC-SAT constituye un paso de avance en cuanto al CF-SAT ya que describe un espacio mucho más amplio de instancias de SAT
+que pueden ser resueltas en un tiempo polinomial.
+
+\agregaesto{TRANSICIÓN A LO QUE SIGUE.}
+
+\section{Primera aproximación a la solución del SAT usando gramáticas matriciales simples}
+
+En \cite{aSMSAT} se propone un nuevo enfoque a los 2 problemas anteriores, el cual se basa en eliminar la restricción de la estructura de la fórmula booleana y en su lugar se trabaja con una representación diferente de la misma.
+
+Dada un fórmula booleana en CNF con $n$ variables distintas y $m$ cláusulas en \cite{aSMSAT} se propone una representación de la misma en una secuencia de cláusulas (definiendo una misma secuencia de variables para cada cláusula) donde cada variable tiene 3 posibles estados $a$, $b$ y $c$ que representan si la variable esta positiva, negada o no pertenece a la cláusula respectivamente. Con esta nueva estructura se modifica el autómata booleano correspondiente a dicha fórmula para que trabaje con cadenas que pertenezcan al lenguaje $L^n_m=\{w^m\,|\,w\in\{0,1\} \wedge |w|=n\}$, observe que $w$ se puede interpretar como una asignación de valores para cada una de las variables.
+
+\notaparaelautor{Uy, brutal :-/... el cambio está demasiado brusco. Te propondría que antes de explicar esta forma de solucionar el problema hables de la forma de representar cualquier SAT usando las letras a, b, c.}
+
+\subsection{Lenguaje $L^n_m$}
+
+En \cite{aSMSAT} se define una gramática matricial simple que describe el lenguaje $L^n_m$:
+
+$$
+      G_n=(\{A_1,A_{11},\ldots A_{1m}\},\ldots,\{A_n,A_{n1},\ldots A_{nm}\},\Sigma,P,S,\Sigma)
+$$
+donde:
+\begin{itemize}
+      \item \( \Sigma \) =$\{0,1\}$.
+      \item \( P \) es un conjunto finito de matrices de producciones:
+            \begin{itemize}
+                  \item  $[S \to A_1A_2\ldots A_n]$
+                  \item  $[A_1 \to 1A_{12}, \ldots, A_n \to 1A_{n2}]$
+                  \item  $[A_1 \to 0A_{12}, \ldots, A_n \to 0A_{n2}]$
+                  \item  Para $2 \leq i < m$, $[A_{1i} \to 1A_{1(i+1)}, \ldots, A_{ni} \to 1A_{n(i + 1)}]$
+                  \item  Para $2 \leq i < m$, $[A_{1i} \to 0A_{1(i+1)}, \ldots, A_{ni} \to 0A_{n(i + 1)}]$
+                  \item  $[A_{1m} \to 1, \ldots, A_{nm} \to 1]$
+                  \item  $[A_{1m} \to 0, \ldots, A_{nm} \to 0]$
+            \end{itemize}
+      \item \( S \) es el \textbf{símbolo inicial}.
+\end{itemize}
+
+En \cite{simpleMatrixLanguages} se demuestra que esta gramática en efecto, genera le lenguaje $L^n_m$.
+
+\agregaesto{TRANSICIÓN A LO QUE SIGUE.}
+
+\subsection{Intersección con el autómata booleano}
+
+En \cite{aSMSAT} se menciona que las $n-SMG$ son cerradas bajo la intersección con lenguajes regulares, pero cuando se analiza la intersección del autómata con la $n-SMG$ que describe el lenguaje $L^n_m$ se obtiene una gramática con una cantidad de producciones exponencial en relación a la cantidad de variables de la fórmula booleana, lo cual impide analizar si el lenguaje resultante es vacío en un tiempo polinomial.
+
+\notaparaelautor{¿Y entonces qué fue lo que se hizo en ese trabajo? :-/. Si lo dejas así es un anticlimax. Explica por qué lo estamo referenciando, si no, no tiene sentido ni mencionarlo.}
+
+
+\begin{thebibliography}{99}
+      
+      \bibitem{mainRCGBib}
+      Boullier, Pierre. 
+      \textit{Proposal for a Natural Language Processing Syntactic Backbone}. 
+      Research Report RR-3342, INRIA, 1998. 
+      
+      \bibitem{propertiesRCGBib}
+      Boullier, Pierre. 
+      \textit{A Cubic Time Extension of Context-Free Grammars}. 
+      Research Report RR-3611, INRIA, 1999. 
+      
+      \bibitem{simpleMatrixLanguages}
+      Ibarra, Oscar H. 
+      \textit{Simple matrix languages}. 
+      \textit{Information and Control}, Vol. 17, No. 4, pp. 359-394, 1970. 
+      
+      \bibitem{globalIndexLanguages}
+      Castaño, José M. 
+      \textit{Global Index Languages}. 
+      Ph.D. Thesis, The Faculty of the Graduate School of Arts and Sciences, Brandeis University, 2004.
+      
+      \bibitem{authomataTheory}
+      Hopcroft, John E., Motwani, Rajeev, y Ullman, Jeffrey D. 
+      \textit{Introduction to Automata Theory, Languages, and Computation}. 
+      3ª edición, Addison-Wesley, 2006. ISBN: 9780321455369.
+      
+      \bibitem{aCFSAT}
+      Fernández Arias, Alina. 
+      \textit{El problema de la satisfacibilidad booleana libre del contexto}. 
+      Facultad de Matemática y Computación, Universidad de La Habana, 2007.
+      
+      \bibitem{aSRCSAT}
+      Aguilera López, Manuel. 
+      \textit{Problema de la Satisfacibilidad Booleana de Concatenación de Rango Simple}. 
+      Facultad de Matemática y Computación, Universidad de La Habana, 2016.
+      
+      \bibitem{aSMSAT}
+      Rodríguez Salgado, José Jorge. 
+      \textit{Gramáticas Matriciales Simples. Primera aproximación para una solución al problema SAT}. 
+      Facultad de Matemática y Computación, Universidad de La Habana, 2019.
+      
+\end{thebibliography}
+
+
+
+
+\end{document}
