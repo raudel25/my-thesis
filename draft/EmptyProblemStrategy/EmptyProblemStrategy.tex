@@ -3,7 +3,7 @@
 \usepackage[utf8]{inputenc} % Permite escribir caracteres especiales directamente
 \usepackage[spanish]{babel} % Configura el idioma a español
 
-\title{Solución polinomial de instancias del SAT usando Teoría de Lenguajes}
+\title{Estrategia para la solución del SAT usando el problema del vació}
 \author{Raudel Alejandro Gómez Molina}
 
 \usepackage[lmargin=2cm,rmargin=5cm]{geometry}
@@ -14,7 +14,9 @@
 
 \maketitle
 
-En el presente capítulo se presentan los trabajos realizados anteriormente que tratan sobre el tema desarrollado en esta investigación.
+En el presente capítulo se presenta una estrategia para la solución del SAT, la cual dado un SAT, construye un formalismo
+que genera todas las soluciones a dicho SAT, entonces para comprobar si el SAT es satisfacible solo resta comprobar si el
+conjunto de cadenas generadas por el formalismo es no vació.
 
 \section{Antecedentes}
 
@@ -97,11 +99,11 @@ Ahora durante el reconocimiento de la cadena se tienen 2 casos:
 
 \begin{enumerate}
       \item $B_1$ se evalúa positivo en este caso no es necesario que el autómata $B_2$ se evalué positivo, por lo
-            que se añade una función $\overline{\delta}$ y el conjunto de estados $P$ 
+            que se añade una función $\overline{\delta}$ y el conjunto de estados $P$
             que consume una cantidad de caracteres igual a la cantidad de instancias de $A_2$ (utilizando los estados
             de $P$) y termina en el estado $V_2$.
       \item $B_2$ se evalúa negativo en este caso es necesario que $B_2$ se evalué positivo, para ello se agrega una epsilon
-      transición entre los estados $F_1$ y $q_2$, entonces el resultado de la evaluación de la cadena dependerá
+            transición entre los estados $F_1$ y $q_2$, entonces el resultado de la evaluación de la cadena dependerá
             del estado final de $B_2$.
 \end{enumerate}
 
@@ -206,7 +208,11 @@ Otro resultado interesante es encontrar un algoritmo que permita generar todas l
 generado por la intersección del autómata booleano y el formalismo seleccionado, con estas cadenas se pueden obtener los valores de
 verdad para cada una de las variables que satisfacen la fórmula booleana.
 
-En las próximas secciones se presentarán los problemas SAT asociados a los trabajos que siguen el enfoque descrito anteriormente\agregaesto{, que han sido TANTOS: uno con noséqué, otro con estaotracosa y por último se utilizó estotro.}.
+En las próximas secciones se presentan los problemas SAT asociados a los trabajos que siguen el enfoque descrito anteriormente
+que han sido 2: el primero usa un las gramáticas de concatenación de rango simple para definir el orden de las
+variables y el segundo requiere un representación de un SAT como una cadena y usa esta representación para interceptar
+el autómata booleano con una gramática matricial simple que sirve de mecanismo de control para el valor de las instancias
+de las variables.
 
 \section{Problema de la satisfacibilidad booleana de concatenación de rango simple}
 
@@ -232,15 +238,56 @@ que este algoritmo es polinomial siempre y cuando la aridad de la gramática sea
 El SRC-SAT constituye un paso de avance en cuanto al CF-SAT ya que describe un espacio mucho más amplio de instancias de SAT
 que pueden ser resueltas en un tiempo polinomial.
 
-\agregaesto{TRANSICIÓN A LO QUE SIGUE.}
+En las próximas secciones se aborda el primer enfoque para analizar la solución de un SAT de manera general, es decir, no solo
+se resuelven instancias específicas como en las secciones anteriores, para ello primeramente es necesario definir la representación
+de cualquier fórmula booleana en CNF como una cadena. 
+
+\section{Transformación de una fórmula booleana a una cadena}
+
+Dada una fórmula booleana $F$ en CNF se puede definir la siguiente estructura:
+$$F=X_1 \wedge X_2 \wedge \ldots \wedge X_n$$
+donde cada cláusula $X_i$ es una disyunción de literales:
+$$X_i=L_{i1} \vee L_{i2} \vee \ldots \vee L_{im}$$
+y cada literal $L_{ij}$ es una variable booleana o su negación. En cada cláusula $X_i$ las variables que aparecen en $F$, puede tener cada una 3 estados posibles: $a$ si la variable aparece positiva, $b$ si la variable aparece negada y $c$ si la variable no pertenece a ninguno de los literales de la cláusula.
+
+Por ejemplo la siguiente fórmula booleana en $CNF$:
+
+$$F=(x_1 \vee x_2) \wedge (\neg x_1 \vee x_2 \vee x_3) \wedge (x_1 \vee \neg x_2 \vee x_3)$$
+
+para la primera cláusula $x_1$ aparece positiva ($a$), $x_2$ aparece positiva ($a$) y $x_3$ no aparece $(c)$, para la segunda
+$x_1$ aparece negada ($b$), $x_2$ aparece positiva ($a$) y $x_3$ aparece positiva $(a)$ y para la tercera 
+$x_1$ aparece positiva ($a$), $x_2$ aparece negada ($b$) y $x_3$ aparece positiva $(a)$.
+
+A partir de la afirmación anterior, se puede definir una cadena de símbolos $w$ que representa a la cláusula $X_i$ sobre una secuencia de variables $v_1,v_2,\ldots,v_p$ de la siguiente manera:
+
+\begin{itemize}
+      \item $w$ cuenta con exactamente $p$ símbolos.
+      \item Si la variable $v_j$ aparece positiva en $X_i$, entonces el $j$-ésimo símbolo es $a$.
+      \item Si la variable $v_j$ aparece negada en $X_i$, entonces el $j$-ésimo símbolo es $b$.
+      \item Si la variable $v_j$ no aparece en $X_i$, entonces el $j$-ésimo símbolo es $c$.
+\end{itemize}
+Si se toma la secuencia de variables correspondiente a $F$, y se le aplica el procedimiento anterior a cada cláusula
+se obtiene una cadena de símbolos que representa a dicha cláusula en $F$.
+
+Si ya se tiene una representación para cada cláusula de $F$ solo resta obtener una cadena de símbolos que represente a $F$,
+esto se puede lograr concatenando las cadenas de símbolos de cada cláusula de $F$ en el orden que aparecen con un separador
+en este caso se eligió el símbolo $d$.
+
+Por ejemplo la siguiente fórmula booleana en \textit{CNF}:
+$$F=(x_1 \vee x_2) \wedge (\neg x_1 \vee x_2 \vee x_3) \wedge (x_1 \vee \neg x_2 \vee x_3)$$
+puede ser expresada como la cadena de símbolos:
+$$w=aacdbaadabad$$
+tomando como secuencia de variables $x_1, x_2, x_3$.
+
 
 \section{Primera aproximación a la solución del SAT usando gramáticas matriciales simples}
 
-En \cite{aSMSAT} se propone un nuevo enfoque a los 2 problemas anteriores, el cual se basa en eliminar la restricción de la estructura de la fórmula booleana y en su lugar se trabaja con una representación diferente de la misma.
+En \cite{aSMSAT} se propone un nuevo enfoque a los 2 problemas anteriores, el cual se basa en eliminar la restricción de la estructura de la fórmula booleana y 
+en su lugar se trabaja con la transformación de la misma en una cadena.
 
-Dada un fórmula booleana en CNF con $n$ variables distintas y $m$ cláusulas en \cite{aSMSAT} se propone una representación de la misma en una secuencia de cláusulas (definiendo una misma secuencia de variables para cada cláusula) donde cada variable tiene 3 posibles estados $a$, $b$ y $c$ que representan si la variable esta positiva, negada o no pertenece a la cláusula respectivamente. Con esta nueva estructura se modifica el autómata booleano correspondiente a dicha fórmula para que trabaje con cadenas que pertenezcan al lenguaje $L^n_m=\{w^m\,|\,w\in\{0,1\} \wedge |w|=n\}$, observe que $w$ se puede interpretar como una asignación de valores para cada una de las variables.
-
-\notaparaelautor{Uy, brutal :-/... el cambio está demasiado brusco. Te propondría que antes de explicar esta forma de solucionar el problema hables de la forma de representar cualquier SAT usando las letras a, b, c.}
+Con esta nueva estructura se modifica el autómata booleano correspondiente a dicha fórmula para que trabaje con 
+cadenas que pertenezcan al lenguaje $L^n_m=\{w^m\,|\,w\in\{0,1\} \wedge |w|=n\}$, observe que $w$ se puede 
+interpretar como una asignación de valores 0 ó 1 para cada una de las variables, que representan su valor de verdad.
 
 \subsection{Lenguaje $L^n_m$}
 
@@ -267,14 +314,18 @@ donde:
 
 En \cite{simpleMatrixLanguages} se demuestra que esta gramática en efecto, genera le lenguaje $L^n_m$.
 
-\agregaesto{TRANSICIÓN A LO QUE SIGUE.}
+Ahora solo resta interceptar esta gramática con el autómata booleano para determinar si el SAT es satisfacible.
 
 \subsection{Intersección con el autómata booleano}
 
-En \cite{aSMSAT} se menciona que las $n-SMG$ son cerradas bajo la intersección con lenguajes regulares, pero cuando se analiza la intersección del autómata con la $n-SMG$ que describe el lenguaje $L^n_m$ se obtiene una gramática con una cantidad de producciones exponencial en relación a la cantidad de variables de la fórmula booleana, lo cual impide analizar si el lenguaje resultante es vacío en un tiempo polinomial.
+En \cite{aSMSAT} se menciona que las $n-SMG$ son cerradas bajo la intersección con lenguajes regulares, 
+pero cuando se analiza la intersección del autómata con la $n-SMG$ que describe el lenguaje $L^n_m$ se 
+obtiene una gramática con una cantidad de producciones exponencial en relación a la cantidad de variables 
+de la fórmula booleana, lo cual impide analizar si el lenguaje resultante es vacío en un tiempo polinomial.
 
-\notaparaelautor{¿Y entonces qué fue lo que se hizo en ese trabajo? :-/. Si lo dejas así es un anticlimax. Explica por qué lo estamo referenciando, si no, no tiene sentido ni mencionarlo.}
-
+Este es el primer acercamiento para la solución de cualquier instancia del SAT (aunque sigue siendo una solución exponencial
+en términos de complejidad computacional), en el próximo capítulo se presenta una estrategia de solución diferente
+que busca otras alternativas para la solución de cualquier instancia del SAT.
 
 \begin{thebibliography}{99}
       

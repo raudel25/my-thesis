@@ -1,0 +1,437 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc} % Permite escribir caracteres especiales directamente
+\usepackage[spanish]{babel} % Configura el idioma a español
+
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{multicol}
+\usepackage[lmargin=2cm,rmargin=5cm]{geometry}
+
+\input{word-comments.tex}
+
+
+\title{Estrategia para la solución del SAT usando gramáticas de concatenación de rango}
+\author{Raudel Alejandro Gómez Molina}
+
+\begin{document}
+
+\maketitle
+
+En el presente capítulo se abordan las estrategias presentadas en los 2 capítulos anteriores utilizando gramáticas de concatenación
+de rango.
+
+Para ello primeramente se muestra como generar $L_{0,1}$ con una RCG que es necesario para las 2 secciones posteriores.
+
+\section{$L_{0,1}$ como lenguaje de concatenación de rango}
+
+Se define la gramática $G_{0,1}$ como sigue:
+\[
+    G_{0,1} = (N, T, V, P, S),
+\]
+donde:
+
+\begin{itemize}
+    \item $N=\{S,A,B,C,Eq\}$
+    \item $T=\{0,1,d\}$.
+    \item $V=\{X,Y,P\}$.
+    \item El conjunto de cláusulas $P$ es el siguiente:
+          \begin{itemize}
+              \item  $S(X)\to A(X)$
+              \item $A(YdX)\to B(X,Y)C(X)$
+              \item $B(XdY,P)\to B(Y,P) C(X) Eq(X,P)$
+              \item $B(\varepsilon,Y)\to \varepsilon$
+              \item $C(0X)\to C(X)$
+              \item $C(1X)\to C(X)$
+              \item $C(\varepsilon)\to \varepsilon$
+          \end{itemize}
+    \item El \textbf{símbolo inicial} es $S$.
+\end{itemize}
+
+El predicado $Eq$ se define en \cite{mainRCGBib} y comprueba que dos cadenas sobre un alfabeto sean iguales,
+por otro lado el predicado $B$ se encarga de definir la sustitución en rango de la próxima cadena de 0 y 1 y
+comprobar que este sea igual al patrón inicial. De esta manera se pueden reconocer cadenas que pertenezcan al lenguaje $L_{0,1}$.
+
+En las próximas 2 secciones se presentan las estrategias abordadas en los capítulos 3 y 4 usando gramáticas de concatenación
+rango.
+
+\section{Solución del SAT usando el problema del vacío}
+
+En esta sección se presentan 2 enfoques que siguen la línea de lo expuesto en el capítulo 3: dada una fórmula booleana
+obtener formalismo que sirva como mecanismo de control sobre las instancias de las variables (en este caso la propuesta será emplear gramáticas
+de concatenación de rango) e interceptar dicho formalismo con el autómata booleano asociado a la fórmula booleana
+original.
+
+\subsection{$L^n_m$ y $L_{0,1}$}
+
+En esta sección se presenta una RCG que permite generar el lenguaje $L^n_m$ definido en \cite{aSMSAT}.
+
+Según las definiciones plantedas en los capítulos 3 y 4, $L^n_m=\{w^m\,|\,w\in\{0,1\}^* \wedge |w|=n\}$ y $L_{0,1}=\{wd\}^+$, por tanto
+es fácil observar que $L^n_m \subset L_{0,1}$ para un $n$ y un $m$ específico.
+
+Luego también es posible generar el lenguaje $L^n_m$ mediante una RCG, haciendo modificaciones en $G_{0,1}$, para ello
+se define la gramática $G^n_m$ como sigue:
+
+\[
+    G^n_m = (N, T, V, P, S),
+\]
+donde:
+
+\begin{itemize}
+    \item $N=\{S,A,B_0,\ldots,B_m,C_1,\ldots,C_n,Eq\}$
+    \item $T=\{0,1,d\}$.
+    \item $V=\{X,Y,P\}$.
+    \item El \textbf{símbolo inicial} es $S$.
+\end{itemize}
+
+
+A continuación se desglosa el conjunto de cláusulas P en varias fases agrupando las cláusulas por funcionalidad:
+\begin{itemize}
+    \item  $S(X)\to A(X)$
+    \item $A(YdX)\to B_0(X,Y)C_1(X)$
+    \item \textbf{Primera fase:} Los predicados $B_i\,\forall\,0\leq i\leq m$ se encargan de definir las transiciones en la gramática
+          que permiten contar el número de cadenas $w\in \{0,1\}$ que existen en la cadena original, verificar que
+          este número es $m$ y comprobar que las cadenas $w$ reconocidas sean iguales.
+          \begin{itemize}
+              \item $B_0(XdY,P)\to B_1(Y,P) C_1(X) Eq(X,P)$
+              \item $B_1(XdY,P)\to B_2(Y,P) C_1(X) Eq(X,P)$
+                    $$\vdots$$
+              \item $B_{m-1}(XdY,P)\to B_m(Y,P) C_1(X) Eq(X,P)$
+              \item $B_m(\varepsilon,Y)\to \varepsilon$
+          \end{itemize}
+    \item \textbf{Segunda fase:} Los predicados $C_i\,\forall\,1\leq i\leq n$ se encargan de verificar que las
+          cadenas $w$ reconocidas en la fase anterior solo estén conformadas por los caracteres 0 ó 1 y tengan exactamente
+          longitud $n$.
+          \begin{itemize}
+              \item $C_1(0X)\to C_2(X)$
+              \item $C_1(1X)\to C_2(X)$
+              \item $C_2(0X)\to C_3(X)$
+              \item $C_2(1X)\to C_3(X)$
+                    $$\vdots$$
+              \item $C_{n-1}(0X)\to C_n(X)$
+              \item $C_{n-1}(1X)\to C_n(X)$
+              \item $C_n(\varepsilon)\to \varepsilon$
+          \end{itemize}
+\end{itemize}
+
+Observe que las modificaciones añadidas a $G_{0,1}$, fueron añadir nuevos predicados y transiciones que permitan
+cantar la cantidad de cadenas $w$ reconocidas y la longitud de dichas cadenas. Además la nueva gramática obtenida
+tiene una cantidad de cláusulas en el orden $O(n+m)$.
+
+Siguiendo la idea de \cite{aSMSAT} ahora solo resta interceptar $G^n_m$ con el autómata booleano correspondiente a dicha
+fórmula y comprobar si el lenguaje generado es no vacío. La intercepción de una RCG con un autómata finito se expone en secciones posteriores.
+
+A continuación se presenta una generalización de los trabajos \cite{aCFSAT} y \cite{aSRCSAT}, abordados en el capítulo 3.
+
+\subsection{Orden de las instancias de las variables de un SAT}
+
+En \cite{aCFSAT} y en \cite{aSRCSAT} se proponen 2 formalismos para reconocer el orden de las variables de instancias específicas
+del SAT que permiten dar una solución en tiempo polinomial, en esta sección se presenta un algoritmo para generar una
+RCG que permita reconocer el orden de las instancias de las variables de cualquier SAT.
+
+Sea una fórmula booleana:
+
+$$F=L_1\,S_1\,L_2\,S_2\,\ldots\,S_{m-1}\,L_m,$$
+
+donde los $L_i\,\forall\,1\leq i\leq m$ son literales que representan una variable o su negación (dos literales
+$L_x$ y $L_y$ pueden representar la misma variable) y los $S_i\,\forall\,1\leq i\leq m-1$ son los operadores
+booleanos de disyunción y conjunción según corresponda. Además se define la función $\text{equals}(L_x,L_y)$
+que recibe dos literales de $F$ y devuelve verdadero o falso en dependencia de si los literales corresponden
+a la misma variable o no.
+
+Ahora dada un fórmula booleana $F$, con $m$ literales y $n$ variables se define la gramática $G_{ord}$
+como sigue:
+
+\[
+    G_{ord} = (N, T, V, P, S),
+\]
+donde:
+
+\begin{itemize}
+    \item $N=\{S,A,B_1,B_2,\ldots,B_n,C_1,C_2,\ldots,C_n\}$
+    \item $T=\{0,1,d\}$.
+    \item $V=\{X_1,X_2,\ldots,X_m,Y\}$.
+    \item El conjunto de cláusulas $P$ es el siguiente:
+          \begin{itemize}
+              \item  $S(X)\to A(X)$
+              \item $A(X_1X_2\ldots X_m)\to
+                        B_1(X_{\alpha_{1,1}}\ldots X_{\alpha_{1,\beta_1}})
+                        B_2(X_{\alpha_{2,1}}\ldots X_{\alpha_{2,\beta_2}})
+                        \ldots B_n(X_{\alpha_{n,1}}\ldots X_{\alpha_{n,\beta_n}})$
+              \item $B_i(1Y)\to  Eq(Y,1^{\beta_i})\,\forall \,1\leq i\leq n$
+
+              \item $B_i(0Y)\to  Eq(Y,0^{\beta_i})\,\forall \,1\leq i\leq n$
+          \end{itemize}
+    \item El \textbf{símbolo inicial} es $S$.
+\end{itemize}
+
+Cada una de las variables $X_i\,\forall\,1\leq i\leq n$ en $G_{ord}$ corresponde al literal $L_i$ de $F$.
+Además se cumple que el conjunto $\{\alpha_{1,1},\ldots,\alpha_{1,\beta_1},\alpha_{2,1},\ldots,
+    \alpha_{2,\beta_2},\ldots,\alpha_{n,1},\ldots,\alpha_{n,\beta_n}\}$ es una permutación de los los números del
+$1$ al $m$ y para todos los conjuntos $S_i=\{\alpha_{i,1},\ldots,\alpha_{i,\beta_i}\}\,\forall\,1\leq i\leq n$ se cumple
+$\text{equals}(L_x,L_y)$ es verdadera para todos los pares $x, y$ tales que $x\neq y \wedge x,y\in S_i$.
+
+Observe que en la construcción de $G_{ord}$ a cada variable se le asigna un literal de $F$, lo que significa
+para una cadena reconocida por $G_{ord}$ cada caracter asociado a una variable $X_i$ representa el valor de verdad
+para la variable asociada a $L_i$ en $F$. El funcionamiento de la gramática se basa en reconocer los rangos de la cadena
+de entrada que representa la asignación a los valores de las instancias de las variables en $F$ y a cada rango se le asocia
+una variable de $G_{ord}$, luego las variables que en $G_{ord}$ que corresponden a una misma instancia de una variable en
+$F$ se agrupan en un solo predicado comprobando que todas tengan el mismo valor de verdad.
+
+Siguiendo la estrategia de \cite{aCFSAT} y \cite{aSRCSAT} solo resta interceptar la gramática generada con el autómata
+booleano correspondiente a $F$ y comprobar si el lenguaje generado es no vacío. En la próxima sección se aborda el problema de interceptar una RCG con un autómata finito.
+
+\subsection{Problema del vacío para la intercepción de una RCG con un autómata finito}
+
+Primeramente como se mencionó en el capítulo 1 toda CFG tiene una RCG equivalente asociada y a su vez todo autómata finito tiene una
+CFG equivalente asociada \cite{authomataTheory}, por lo que dado un autómata finito se puede construir una RCG que sea equivalente.
+Entonces la intercepción de una RCG y un autómata finito puede ser descrita mediante otra RCG, el problema aquí es como se mencionó
+anteriormente el problema del vacío para una RCG es indecidible.
+
+En \cite{propertiesRCGBib1} se menciona que el problema del vacío para la intercepción de un lenguaje regular y una RCG es un
+problema NP-Completo y se demuestra con una reducción al 3-SAT, en el caso que ocupa el estudio de este trabajo se puede
+hacer una reducción parecida tomando como referencia los resultados de las 2 secciones anteriores que permiten reducir este problema
+al SAT.
+
+En la literatura consultada no se encontró un algoritmo que permitiera resolver este problema, por lo que no se pudo establecer
+un análisis de complejidad específico para este, sería interesante tratar de encontrar dicho algoritmo y analizar
+la complejidad lo que puede contribuir a una nueva estrategia para la solución del SAT.
+
+En siguiente sección se ataca el SAT desde otra perspectiva usando gramáticas de concatenación de rango.
+
+\section{Solución del SAT usando el problema de la palabra}
+
+En la presente sección se propone utilizar gramáticas de concatenación de rango para definir el enfoque descrito en el
+capítulo 4.
+
+\subsection{$L_{S-SAT}$ como lenguaje de concatenación de rango}
+
+Siguiendo con la idea abordada en las secciones del capítulo 4, que busca definir $L_{S-SAT}$ mediante transducción finita,
+como se mostró en una sección anterior el lenguaje $L_{0,1}$ puede ser generado mediante una RCG, el problema radica en que las RCG
+no son cerradas bajo transducción finita como se mencionó en el capítulo 1. Por ello no se puede asegurar que al aplicarle el
+transductor $T_{SAT}$ a la RCG que genera el lenguaje $L_{0,1}$ se obtenga una RCG, por lo cual no se puede realizar el análisis
+del problema de la palabra como mismo se hizo con las gramáticas de índice global en el capítulo 4.
+
+Ahora sería interesante profundizar en que tipo de formalismo se obtiene al aplicar el transductor $T_{SAT}$ sobre la
+la gramática analizada y realizar un análisis de la complejidad del problema de la palabra para dicho formalismo, el cual
+automáticamente se demuestra que es NP-Duro, porque tiene una reducción directa al SAT. Otro aspecto interesante
+sería investigar que propiedades de las RCG limitan que estas no sean cerradas bajo transducción finita y dado esas
+propiedades identificadas comprobar si todavía es posible generar el lenguaje $L_{0,1}$.
+
+A continuación se presenta otro enfoque distinto para generar $L_{S-SAT}$ que no emplea la transducción finita.
+
+\subsection{Otro enfoque para generar $L_{SAT}$}
+
+Para generar $L_{S-SAT}$ define la siguiente RCG:
+\[
+    G_{S-SAT} = (N, T, V, P, S),
+\]
+donde:
+
+\begin{itemize}
+    \item $N=\{S,A,B,C,P,N,Cp,Cn\}$
+    \item $T=\{a,b,c,d\}$.
+    \item $V=\{X,Y\}$.
+    \item El \textbf{símbolo inicial} es $S$.
+\end{itemize}
+
+A continuación se desglosa el conjunto de \textbf{cláusulas} $P$ en varias fases agrupando las cláusulas
+por funcionalidad:
+
+\begin{itemize}
+    \item $S(X)\to A(X)$
+    \item \textbf{Primera fase:} El siguiente conjunto de cláusulas genera la cadena de 0 y 1 que que da valores a las variables de la
+          fórmula booleana:
+          \begin{multicols}{2}
+              \begin{itemize}
+                  \item $A(aX)\to P(X,1)$
+                  \item $A(aX)\to N(X,0)$
+                  \item $A(bX)\to N(X,1)$
+                  \item $A(bX)\to P(X,0)$
+                  \item $A(cX)\to N(X,1)$
+                  \item $A(cX)\to N(X,0)$
+
+                  \item $P(aX,Y)\to P(X,Y1)$
+                  \item $P(aX,Y)\to P(X,Y0)$
+                  \item $P(bX,Y)\to P(X,Y1)$
+                  \item $P(bX,Y)\to P(X,Y0)$
+                  \item $P(cX,Y)\to P(X,Y1)$
+                  \item $P(cX,Y)\to P(X,Y0)$
+                  \item $P(dX,Y)\to B(X,Y)$
+
+                  \item $N(aX,Y)\to P(X,Y1)$
+                  \item $N(aX,Y)\to N(X,Y0)$
+                  \item $N(bX,Y)\to N(X,Y1)$
+                  \item $N(bX,Y)\to P(X,Y0)$
+                  \item $N(cX,Y)\to N(X,Y1)$
+                  \item $N(cX,Y)\to N(X,Y0)$
+              \end{itemize}
+          \end{multicols}
+
+          El predicado $A$ representa el primer predicado reconocimiento de este se deriva a los predicados $P$
+          (representa que la cláusula de la fórmula booleana se encuentra en un estado de verdad positivo)
+          y $N$ (representa que la cláusula de la fórmula booleana se encuentra en un estado de verdad negativo)
+          en dependencia del valor de la instancia de la variable correspondiente. El predicado $P$ deriva hacia
+          sí mismo independientemente del símbolo, exceptuando el símbolo $d$, caso en el que se procede a la siguiente
+          fase.
+          El funcionamiento de esta fase es prácticamente el mismo que el del transductor $T_{SAT}$.
+
+    \item \textbf{Segunda fase:} El siguiente conjunto de cláusulas se encarga de un mecanismo de clausura que le permite a la gramática
+          reconocer si la asignación realizada en la fase anterior es válida para las restantes cláusulas de la fórmula
+          booleana.
+          \begin{itemize}
+              \item $B(X_1dX_2,Y)\to C(X_1,Y) B(X_2,Y)$
+              \item $B(\varepsilon,Y)\to\varepsilon$
+          \end{itemize}
+
+          El predicado $B$ permite realizar la clausura mientras que el predicado $C$ comprueba que la cláusula de la fórmula
+          booleana actual sea satisfacible.
+
+    \item \textbf{Tercera fase:} Solo resta definir el comportamiento de $C$:
+          \begin{itemize}
+              \begin{multicols}{2}
+                  \item $C(X,Y)\to Cn(X,Y)$
+
+                  \item $Cn(aX,1Y) \to Cp(X,Y)$
+                  \item $Cn(aX,0Y) \to Cn(X,Y)$
+                  \item $Cn(bX,1Y) \to Cn(X,Y)$
+                  \item $Cn(bX,0Y) \to Cp(X,Y)$
+                  \item $Cn(cX,1Y) \to Cn(X,Y)$
+                  \item $Cn(cX,0Y) \to Cn(X,Y)$
+
+                  \item $Cp(aX,1Y) \to Cp(X,Y)$
+                  \item $Cp(aX,0Y) \to Cp(X,Y)$
+                  \item $Cp(bX,1Y) \to Cp(X,Y)$
+                  \item $Cp(bX,0Y) \to Cp(X,Y)$
+                  \item $Cp(cX,1Y) \to Cp(X,Y)$
+                  \item $Cp(cX,0Y) \to Cp(X,Y)$
+                  \item $Cp(\varepsilon,\varepsilon)\to \varepsilon$
+              \end{multicols}
+          \end{itemize}
+
+          Observe que este funcionamiento es exactamente igual al de la primera fase con un predicado que representa un estado
+          positivo ($Cp$) y un predicado que representa un estado
+          positivo ($Cn$) pero esta vez no se genera la cadena sino que se comprueba con un patrón predefinido en la primera
+          fase.
+
+\end{itemize}
+
+
+Como $G_{S-SAT}$ reconoce las fórmulas booleanas satisfacibles solo se debe analizar el problema de la
+palabra para determinar si una fórmula es satisfacible.
+
+\notaparaelautor{Ejemplito, por favor *cara de gatico de Shrek*}
+
+El siguiente paso es analizar la complejidad del problema de la palabra para la gramática presentada anteriormente.
+
+\subsubsection{Análisis de la complejidad computacional}
+
+Como se mencionó anteriormente no todas las RCG tienen un algoritmo de parsing lineal y $G_{S-SAT}$ es un ejemplo de
+ello, observe que en la primera fase se genera la cadena binaria que representa la asignación de valores a las variables
+booleanas y dicha cadena participa en los predicados de fases posteriores. Si se analiza el algoritmo de parsing descrito en
+\cite{mainRCGBib} un factor en la complejidad del algoritmo de parsing es la cantidad de rangos posibles para una cadena
+que debe ser reconocida por un predicado y en este caso la cadena que estamos analizando puede tomar $2^n$ valores distintos, donde
+$n$ es la cantidad de variables en la fórmula booleana por lo que la cantidad de rangos sería $n^22^n$, pero esta es una cota
+burda ya que una vez generada la cadena de asignación por la forma de la gramática solo se utiliza un solo rango que se va construyendo
+bajo demanda. El resto de las fases de la gramática tienen una complejidad de $m^2$ donde $m$ es la cantidad de caracteres
+en la cadena de entrada, por lo que la complejidad total sería $O(2^nm^2)$.
+
+Este es un resultado interesante ya que demuestra que no es necesario usar el transductor $T_{SAT}$ para definir el
+lenguaje $L_{S-SAT}$, mediante un formalismo de escritura regulada.
+
+En la siguiente sección se analiza una consecuencia directa del resultado de la gramática $G_{S-SAT}$.
+
+\section{Clases de problemas que abarcan las gramáticas de concatenación de rango}
+
+En \cite{propertiesRCGBib2} se menciona que para todo problema en P existe una RCG que lo reconoce en su representación
+como lenguaje formal. Ahora como se mostró anteriormente existe una RCG que permite resolver el SAT, por tanto
+como el SAT se puede reducir a cualquier problema en NP en una complejidad polinomial, entonces para todo
+problema en NP también existe una RCG que lo reconoce en su representación como lenguaje formal.
+
+En la próxima sección se presenta un primer acercamiento para resolver las instancias polinomiales del SAT usando gramáticas
+de concatenación de rango.
+
+\section{Instancias de SAT polinomiales empleando RCG}
+
+Como se mencionó en la sección anterior para todo problema en P existe una RCG que lo reconoce en su representación
+como lenguaje formal, entonces es posible resolver las todas las instancias polinomiales del SAT usando gramáticas de concatenación
+de rango.
+
+Si se observa el enfoque seguido en la construcción de $G_{S-SAT}$, en la representación del SAT como cadena se
+trabaja con una instancia del SAT general por lo que no se tienen en cuenta las propiedades específicas del problema,
+que en el caso de las instancias polinomiales, es lo que permite que el algoritmo para las misma sea polinomial.
+
+Entonces por la anterior observación el autor considera que esta no es una via factible para atacar los problemas
+de SAT polinomiales, por lo que se cree que se requiere una interpretación diferente que explote las propiedades del
+SAT analizado. Por otro lado si se toma el enfoque de $G_{S-SAT}$ puede ser posible que estas propiedades puedan ser
+explotadas durante el reconocimiento de la gramática que como se mencionó en el capítulo 1 pasa por un mecanismo de
+memorización, es decir, según las propiedades del SAT analizado modificar el mecanismo de memorización para que tenga
+en cuenta otras propiedades que permita que el mismo sea polinomial.
+
+Ahora por lo anteriormente planteado y según los algoritmos conocidos para problemas como el 2-SAT que se basan
+en algoritmos sobre grafos que marcan las dependencias entre las cláusulas del SAT, el autor recomienda que quizás
+una via factible para atacar problemas, como ejemplo el 2-SAT, sea tratar de armar transiciones dentro de una RCG
+que representen los mismos mecanismos de dependencias entre cláusulas que describe el grafo y luego realizar una asignación
+similar a como se hace en $G_{S-SAT}$.
+
+Con las ideas presentadas anteriormente sería interesante para futuros trabajos de investigación encontrar una RCG para cada
+instancia polinomial del SAT, lo que completaría el análisis hecho en este trabajo abarcando los principales puntos de
+vista del SAT desde las gramáticas de concatenación de rango.
+
+\begin{thebibliography}{99}
+
+    \bibitem{mainRCGBib}
+    Boullier, Pierre.
+    \textit{Proposal for a Natural Language Processing Syntactic Backbone}.
+    Research Report RR-3342, INRIA, 1998.
+
+    \bibitem{propertiesRCGBib}
+    Boullier, Pierre.
+    \textit{A Cubic Time Extension of Context-Free Grammars}.
+    Research Report RR-3611, INRIA, 1999.
+
+    \bibitem{propertiesRCGBib1}
+    Eberhard Bertsch and Mark-Jan Nederhof
+    \textit{On the Complexity of Some Extensions of RCG Parsing}.
+    International Workshop/Conference on Parsing Technologies, 2001.
+
+    \bibitem{propertiesRCGBib2}
+    Boullier, Pierre.
+    \textit{Counting with range concatenation grammar}.
+    Theor. Comput. Sci., 2003.
+
+    \bibitem{simpleMatrixLanguages}
+    Ibarra, Oscar H.
+    \textit{Simple matrix languages}.
+    \textit{Information and Control}, Vol. 17, No. 4, pp. 359-394, 1970.
+
+    \bibitem{globalIndexLanguages}
+    Castaño, José M.
+    \textit{Global Index Languages}.
+    Ph.D. Thesis, The Faculty of the Graduate School of Arts and Sciences, Brandeis University, 2004.
+
+    \bibitem{authomataTheory}
+    Hopcroft, John E., Motwani, Rajeev, y Ullman, Jeffrey D.
+    \textit{Introduction to Automata Theory, Languages, and Computation}.
+    3ª edición, Addison-Wesley, 2006. ISBN: 9780321455369.
+
+    \bibitem{aCFSAT}
+    Fernández Arias, Alina.
+    \textit{El problema de la satisfacibilidad booleana libre del contexto}.
+    Facultad de Matemática y Computación, Universidad de La Habana, 2007.
+
+    \bibitem{aSRCSAT}
+    Aguilera López, Manuel.
+    \textit{Problema de la Satisfacibilidad Booleana de Concatenación de Rango Simple}.
+    Facultad de Matemática y Computación, Universidad de La Habana, 2016.
+
+    \bibitem{aSMSAT}
+    Rodríguez Salgado, José Jorge.
+    \textit{Gramáticas Matriciales Simples. Primera aproximación para una solución al problema SAT}.
+    Facultad de Matemática y Computación, Universidad de La Habana, 2019.
+
+\end{thebibliography}
+
+
+\end{document}
