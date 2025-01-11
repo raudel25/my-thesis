@@ -1,23 +1,4 @@
-\documentclass[12pt]{article}
-
-\usepackage[utf8]{inputenc} % Permite escribir caracteres especiales directamente
-\usepackage[spanish]{babel} % Configura el idioma a español
-
-
-\usepackage{amsmath}
-\usepackage{multicol}
-\usepackage{tikz}
-\usetikzlibrary{automata, positioning}
-
-\usepackage[lmargin=2cm, rmargin=5cm]{geometry}
-\input{word-comments.tex}
-
-\title{Estrategia para la solución del SAT usando el problema de la palabra}
-\author{Raudel Alejandro Gómez Molina}
-
-\begin{document}
-
-\maketitle
+\chapter{Estrategia para la solución del SAT usando el problema de la palabra}
 
 En este capitulo se presenta un enfoque distinto al del capítulo anterior, que se basa en definir un lenguaje al cual
 pertenecen todos los problemas SAT que son satisfacibles y al cual se le denomina $L_{S-SAT}$. Una vez definido este lenguaje, para determinar
@@ -25,8 +6,8 @@ si un SAT es satisfacible solo es necesario verificar si la cadena que lo repres
 
 \section{Definición de $L_{SAT}$}
 
-El lenguaje de todas las fórmulas booleanas en CNF que son satisfacibles se define como $L_{S-SAT}=\{w\,|\,w \in L_{FULL-SAT} \wedge f_{SAT}(w)\}$, 
-donde $L_{FULL-SAT}$ representa el lenguaje de todas las fórmulas booleanas en CNF y $f_{SAT}(w)$ es una función que 
+El lenguaje de todas las fórmulas booleanas en CNF que son satisfacibles se define como $L_{S-SAT}=\{w\,|\,w \in L_{FULL-SAT} \wedge f_{SAT}(w)\}$,
+donde $L_{FULL-SAT}$ representa el lenguaje de todas las fórmulas booleanas en CNF y $f_{SAT}(w)$ es una función que
 determina si $w$ es satisfacible.
 
 En las próximas secciones se presenta el primer enfoque para definir $L_{S-SAT}$, el cual se basa en definir
@@ -36,12 +17,12 @@ el lenguaje mediante un transductor finito seleccionando un formalismo que sea c
 La idea para definir $L_{S-SAT}$ es construir un transductor finito que acepte como entrada cadenas del lenguaje $L_{0,1}=\{wd\}^+$ donde $w\in \{0,1\}^*$
 y devuelva como salida cadenas que representan una fórmula booleana en \textit{CNF} que sea verdadera si se evalúa en la cadena que el transductor recibió como entrada.
 
-Detrás de esta construcción se busca asociar cada carácter 0 ó 1 en la cadena de entrada al valor de la variable booleana correspondiente 
-en la cadena de salida y verificar que para dichos valores al evaluar la fórmula booleana se obtenga un valor de 
+Detrás de esta construcción se busca asociar cada carácter 0 ó 1 en la cadena de entrada al valor de la variable booleana correspondiente
+en la cadena de salida y verificar que para dichos valores al evaluar la fórmula booleana se obtenga un valor de
 positivo.
 
-A continuación se define el transductor finito $T_{SAT}$ (Figura \ref{fig:transducer_sat}) que sigue la construcción definida anteriormente, 
-para ello se define el transductor $T_{CLAUSE}$ (Figura \ref{fig:transducer_clause}) que hace el proceso de transducción 
+A continuación se define el transductor finito $T_{SAT}$ (Figura \ref{fig:transducer_sat}) que sigue la construcción definida anteriormente,
+para ello se define el transductor $T_{CLAUSE}$ (Figura \ref{fig:transducer_clause}) que hace el proceso de transducción
 para los valores de las variables de una cláusula $wd$, donde $w\in \{0,1\}$:
 
 \[
@@ -61,9 +42,9 @@ se define la función de transición $\delta$ de la siguiente manera:
 \begin{itemize}
     \item  transiciones para el estado $q_0$: representa el estado inicial. Si la entrada es un 1 el transductor
           puede escribir $a$, $b$ y $c$ si escriba $a$ pasa al estado positivo, si escribe $b$ pasa al estado negativo
-          y si escribe $c$ permanece en el mismo estado. Por otro lado si la entrada es un 0 se intercambian los estados 
+          y si escribe $c$ permanece en el mismo estado. Por otro lado si la entrada es un 0 se intercambian los estados
           cuando se escribe $a$ y $b$ y cuando se escribe $c$ permanece en el mismo estado.
-          
+
           \begin{multicols}{2}
               \begin{itemize}
                   \item $\delta_{SAT}(q_0,1)=(q_p,a)$
@@ -74,10 +55,10 @@ se define la función de transición $\delta$ de la siguiente manera:
                   \item $\delta_{SAT}(q_0,0)=(q_0,c)$
               \end{itemize}
           \end{multicols}
-          
+
     \item transiciones para el estado $q_p$ (estado positivo de $T_{CLAUSE}$): representa que para los valores asignados a las variables
-          se obtiene un valor positivo.  Como la fórmula se encuentra ya en un estado positivo lo que significa que al menos un literal 
-          se evaluó positivo no importa la entrada y lo que el transductor escriba se mantiene en el mismo estado. Este es el estado de 
+          se obtiene un valor positivo.  Como la fórmula se encuentra ya en un estado positivo lo que significa que al menos un literal
+          se evaluó positivo no importa la entrada y lo que el transductor escriba se mantiene en el mismo estado. Este es el estado de
           aceptación para el transductor lo cual significa que la cláusula toma un valor positivo.
           \begin{multicols}{2}
               \begin{itemize}
@@ -89,12 +70,12 @@ se define la función de transición $\delta$ de la siguiente manera:
                   \item $\delta_{SAT}(q_{p},0)=(q_{p},c)$
               \end{itemize}
           \end{multicols}
-          
+
     \item transiciones para el estado $q_n$ (estado negativo de $T_{CLAUSE}$): representa que para los valores asignados a las variables
-          se obtiene un valor negativo. Aquí las transiciones son idénticas a las del estado 
-          inicial, reemplazando el estado inicial por el estado negativo en los posibles resultados de la función de 
+          se obtiene un valor negativo. Aquí las transiciones son idénticas a las del estado
+          inicial, reemplazando el estado inicial por el estado negativo en los posibles resultados de la función de
           transición.
-          
+
           \begin{multicols}{2}
               \begin{itemize}
                   \item $\delta_{SAT}(q_{n},1)=(q_{p},a)$
@@ -185,35 +166,35 @@ Finalmente se define $L_{S-SAT}$ como el lenguaje de todas las transducciones $e
 
 $$L_{S-SAT} = \{e\,|\,\exists w \in L_{0,1} \wedge e \in T_{SAT}(w) \}.$$
 
-Aunque $L_{S-SAT}$ contiene todas las fórmulas booleanas satisfacibles, este conjunto por si 
-solo no sirve de mucho sin un formalismo que permita conocer si una cadena que representa una fórmula booleana 
-pertenece al lenguaje o no. Para ello se necesita encontrar un formalismo que sea capaz de generar el lenguaje 
-$L_{0,1}$ y al aplicarle el transductor $T_{SAT}$ a dicho formalismo se obtenga un formalismo que cuente con un 
+Aunque $L_{S-SAT}$ contiene todas las fórmulas booleanas satisfacibles, este conjunto por si
+solo no sirve de mucho sin un formalismo que permita conocer si una cadena que representa una fórmula booleana
+pertenece al lenguaje o no. Para ello se necesita encontrar un formalismo que sea capaz de generar el lenguaje
+$L_{0,1}$ y al aplicarle el transductor $T_{SAT}$ a dicho formalismo se obtenga un formalismo que cuente con un
 algoritmo de reconocimiento para reconocer si una cadena pertenece a dicho formalismo o no.
 
-Encontrar un formalismo que genere el lenguaje $L_{0,1}$, y que sea cerrado bajo transducción finita es 
+Encontrar un formalismo que genere el lenguaje $L_{0,1}$, y que sea cerrado bajo transducción finita es
 suficiente para generar el lenguaje $L_{S-SAT}$. Una pregunta relacionada con $L_{S-SAT}$
-sería saber si la existencia de dicho formalismo es una condición necesaria para definir dicho lenguaje. 
-Otra pregunta sería saber si existe un formalismo que sea capaz de describir el lenguaje $L_{S-SAT}$ y 
+sería saber si la existencia de dicho formalismo es una condición necesaria para definir dicho lenguaje.
+Otra pregunta sería saber si existe un formalismo que sea capaz de describir el lenguaje $L_{S-SAT}$ y
 el problema de la palabra en dicho formalismo sea polinomial (observe que de esta manera se estaría resolviendo el problema \textbf{P vs NP}).
 
 Mediante la transformación $L_{0,1}$ por el transductor finito se mantiene la invariante fundamental del SAT que a dos instancias de la misma variable se les asocia el mismo valor de verdad.
 
-Dado la transformación $L_{0,1}$ por el transductor finito se puede demostrar que el problema de la palabra de 
-cualquier formalismo que genere el lenguaje $L_{0,1}$ y sea cerrado bajo transducción finita es NP-Duro, 
-ya que puede ser reducido al SAT y por tanto a cualquier problema en NP. 
+Dado la transformación $L_{0,1}$ por el transductor finito se puede demostrar que el problema de la palabra de
+cualquier formalismo que genere el lenguaje $L_{0,1}$ y sea cerrado bajo transducción finita es NP-Duro,
+ya que puede ser reducido al SAT y por tanto a cualquier problema en NP.
 
 Ahora se presenta un formalismo que sirve para generar $L_{S-SAT}$ usando el transductor $T_{SAT}$.
 
 \section{$L_{S-SAT}$ como lenguaje de índice global}
 
-En esta sección se presenta una una forma de generar el lenguaje $L_{0,1}$ empleando una gramática de índice global. 
+En esta sección se presenta una una forma de generar el lenguaje $L_{0,1}$ empleando una gramática de índice global.
 
-Dada esta gramática de índice global que describe el lenguaje $L_{copy}^+$ que se define en el capítulo 2, es posible realizar una modificación para generar el lenguaje 
+Dada esta gramática de índice global que describe el lenguaje $L_{copy}^+$ que se define en el capítulo 2, es posible realizar una modificación para generar el lenguaje
 $L_{0,1}$, a esta nueva gramática se le denominará $G_{0,1}$, que se define como:
 
 $$
-    G_{0,1} = (N, \Sigma, I, S, \#, P) 
+    G_{0,1} = (N, \Sigma, I, S, \#, P)
 $$
 donde:
 
@@ -231,7 +212,7 @@ donde:
                   \item $R\underset{\overline{i}}{\to} RA$
                   \item $R\underset{\overline{j}}{\to} RB$
                   \item $R\underset{\overline{k}}{\to} RD$
-                        
+
                   \item $R\underset{[\#]}{\to} \varepsilon$
                   \item $A\underset{i}{\to} a$
                   \item $B\underset{j}{\to} b$
@@ -246,55 +227,5 @@ donde:
 
 Como modificaciones a la gramática anterior se ha introducido un nuevo terminal, un no terminal y un símbolo de la pila manteniendo la invariante de correspondencia que se mencionó anteriormente entre los elementos de estos 3 conjuntos. Por otro lado se modificaron las producciones del no terminal $L$ para que unicamente produzca la cadena vacía eliminando todos los elementos de la pila, con ello se puede generar el lenguaje $L_{0,1}$.
 
-\notaparaelautor{PON UN EJEMPLO DE DERIVACIÓN DE ESTA GRAMÁTICA.}
 
 Como se mencionó anteriormente las GIG son cerradas bajo transducción finita, por lo que $G_{0,1}$ permite describir $L_{S-SAT}$ usando el transductor $T_{SAT}$, el único inconveniente para este análisis es que luego de aplicar $T_{SAT}$ a la gramática, se obtiene un gramática ambigua y en estos casos el problema de la palabra para las GIG no es polinomial \cite{globalIndexLanguages}.
-
-
-
-\begin{thebibliography}{99}
-    
-    \bibitem{mainRCGBib}
-    Boullier, Pierre.
-    \textit{Proposal for a Natural Language Processing Syntactic Backbone}.
-    Research Report RR-3342, INRIA, 1998.
-    
-    \bibitem{propertiesRCGBib}
-    Boullier, Pierre.
-    \textit{A Cubic Time Extension of Context-Free Grammars}.
-    Research Report RR-3611, INRIA, 1999.
-    
-    \bibitem{simpleMatrixLanguages}
-    Ibarra, Oscar H.
-    \textit{Simple matrix languages}.
-    \textit{Information and Control}, Vol. 17, No. 4, pp. 359-394, 1970.
-    
-    \bibitem{globalIndexLanguages}
-    Castaño, José M.
-    \textit{Global Index Languages}.
-    Ph.D. Thesis, The Faculty of the Graduate School of Arts and Sciences, Brandeis University, 2004.
-    
-    \bibitem{authomataTheory}
-    Hopcroft, John E., Motwani, Rajeev, y Ullman, Jeffrey D.
-    \textit{Introduction to Automata Theory, Languages, and Computation}.
-    3ª edición, Addison-Wesley, 2006. ISBN: 9780321455369.
-    
-    \bibitem{aCFSAT}
-    Fernández Arias, Alina.
-    \textit{El problema de la satisfacibilidad booleana libre del contexto}.
-    Facultad de Matemática y Computación, Universidad de La Habana, 2007.
-    
-    \bibitem{aSRCSAT}
-    Aguilera López, Manuel.
-    \textit{Problema de la Satisfacibilidad Booleana de Concatenación de Rango Simple}.
-    Facultad de Matemática y Computación, Universidad de La Habana, 2016.
-    
-    \bibitem{aSMSAT}
-    Rodríguez Salgado, José Jorge.
-    \textit{Gramáticas Matriciales Simples. Primera aproximación para una solución al problema SAT}.
-    Facultad de Matemática y Computación, Universidad de La Habana, 2019.
-    
-\end{thebibliography}
-
-
-\end{document}

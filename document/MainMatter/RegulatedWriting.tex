@@ -1,84 +1,100 @@
 \chapter{Formalismos de escritura regulada}
 
-En este clásico se presentan los formalismo de escritura regulada que se utilizaran en capítulos posteriores.
+En los capítulos posteriores se presentan estrategias para la solución del SAT que emplean formalismo de la teoría de lenguajes,
+dichos formalismos utilizan formalismos de escritura regulada para controlar la asignación de valores para las variables del SAT.
+La mayoría de estos formalismos describen lenguajes más generales que los lenguajes libres del contexto.
+
+En el presente capítulo se presentan las gramáticas de concatenación de rango simple y las gramáticas matriciales simples que serán usadas en el capítulo 3, las gramáticas
+de índice global que serán usadas en el capítulo 4 y finalmente las gramáticas de concatenación de rango, las cuales
+representan el foco de atención de este trabajo, que serán usadas en el capítulo 5.
+
 
 \section{Gramáticas Matriciales}
 
 Una gramática matricial \cite{simpleMatrixLanguages} de grado $n$ \textit{$n$-MG} es una 4-tupla:
 
 \[
-    G_n = (V, P, S,\Sigma)
+      G_n = (V, P, S,\Sigma)
 \]
 
 donde:
 \begin{itemize}
-    \item \( V \) es un conjunto finito de \textbf{símbolos no terminales}.
-    \item \( \Sigma \) es un conjunto finito de \textbf{símbolos terminales}, con \( V \cap \Sigma = \emptyset \).
-    \item \( P \) es un conjunto finito de matrices. Cada matriz es una secuencia ordenada de \textbf{producciones} de la forma:
-          \[
-              [P_1, P_2, \dots, P_k]
-          \]
-          donde cada \( P_i \) es una regla \( A \to \alpha \), con $1\leq k\leq n$, \( A \in N \) y \( \alpha \in (N \cup T)^* \).
-    \item \( S  \) es el \textbf{símbolo inicial}.
+      \item \( V \) es un conjunto finito de \textbf{símbolos no terminales}.
+      \item \( \Sigma \) es un conjunto finito de \textbf{símbolos terminales}, con \( V \cap \Sigma = \emptyset \).
+      \item \( P \) es un conjunto finito de matrices. Cada matriz es una secuencia ordenada de \textbf{producciones} libres del contexto de la forma:
+            \[
+                  [P_1, P_2, \dots, P_k]
+            \]
+            donde cada \( P_i \) es una regla \( A \to \alpha \), con $1\leq k\leq n$, \( A \in N \) y \( \alpha \in (N \cup T)^* \).
+      \item \( S  \) es el \textbf{símbolo inicial}.
 \end{itemize}
 
 Observe que das CFG son gramáticas matriciales de grado 1, es decir $1$-MG.
 
-\subsection{Proceso de derivación}
+\subsection{Proceso de derivación de una Gramática Matricial}
 
 El proceso de derivación en una gramática matricial se realiza de la siguiente manera:
 \begin{enumerate}
-    \item Se selecciona una matriz \( [P_1, P_2, \dots, P_k] \in P \).
-    \item Las reglas \( P_1, P_2, \dots, P_k \) se aplican de manera secuencial a la cadena actual.
-    \item La derivación continúa hasta que la cadena derivada contenga solo símbolos terminales, es decir, pertenezca a \( T^* \).
+      \item Se selecciona una matriz \( [P_1, P_2, \dots, P_k] \in P \).
+      \item Las reglas \( P_1, P_2, \dots, P_k \) se aplican de manera secuencial a la cadena actual.
+      \item La derivación continúa hasta que la cadena derivada contenga solo símbolos terminales, es decir, pertenezca a \( T^* \).
 \end{enumerate}
+
+Un ejemplo de gramática matricial \( G_3 \) que genera el lenguaje \( L_{copy}^3\), sobre el alfabeto $\Sigma=\{a,b,c\}$ es el siguiente:
+
+\[
+      G_3 = (V, P, S, \Sigma)
+\]
+
+donde:
+\begin{itemize}
+      \item \( V = \{ S, X, Y, Z \} \).
+      \item \( \Sigma = \{ a, b, c \} \).
+      \item \( S \) es el símbolo inicial.
+      \item \( P \) está compuesto por las siguientes matrices de producción:
+            \[
+                  \begin{aligned}
+                        M_1 & : [S \to XYZ]                                               \\
+                        M_2 & : [X \to aX, Y \to aY, Z \to aZ]                            \\
+                        M_3 & : [X \to bX, Y \to bY, Z \to bZ]                            \\
+                        M_4 & : [X \to cX, Y \to cY, Z \to cZ]                            \\
+                        M_5 & : [X \to \varepsilon, Y \to \varepsilon, Z \to \varepsilon]
+                  \end{aligned}
+            \]
+\end{itemize}
+
+Ahora se presenta un caso particular de las gramáticas matriciales.
 
 \subsection{Gramáticas Matriciales Simples}
 
 Una gramática matricial simple de grado $n$ \textit{$n$-SMG} es una ($n$+3)-tupla:
 $$
-    G_n=(V_1,V_2,\ldots,V_n,P,S,\Sigma)
+      G_n=(V_1,V_2,\ldots,V_n,P,S,\Sigma)
 $$
 donde:
 \begin{itemize}
-    \item \( V_1, V_2, \ldots, V_n \) son conjuntos finitos de \textbf{símbolos no terminales} disjuntos 2 a 2.
-    \item \( \Sigma \) es un conjunto finito de \textbf{símbolos terminales}, con \( V_i \cap \Sigma = \emptyset\,\forall\,1\leq i\leq n \).
-    \item \( P \) es un conjunto finito de matrices. Cada matriz es una secuencia ordenada \textbf{producciones} que cumplan con una de las siguientes reglas:
-          \begin{itemize}
-              \item $[S\to w]$, donde $w\in \Sigma ^*$.
-              \item $[S\to a_{11}A_{11}\ldots A_{1k}a_{21}A_{21}\ldots A_{2k}\ldots A_{n1}a_{n1}\ldots A_{nk}b]$,
-                    donde $\forall i,j$ con $1\leq i\leq n\wedge 1\leq j\leq k$ se cumple que
-                    $A_{ij}\in V_i$, $a_{ij}\in \Sigma ^*$ y $b\in \Sigma ^*$.
-              \item $[A_1\to w_1,\ldots, A_n\to w_n]$, donde $A_i\in V_i\wedge w_i\in \Sigma ^*$ $\forall i\, 1\leq i\leq n$.
-              \item $[A_1 \to a_{11}A_{11}\ldots a_{1k}A_{1k}b_1,\ldots,A_n \to a_{n1}A_{n1}\ldots a_{nk}A_{nk}b_n]$, donde $\forall i,j$
-                    con $1\leq i\leq n\wedge 1\leq j\leq k$ se cumple que
-                    $A_{ij}\in V_i$, $a_{ij}\in \Sigma ^*$ y $b_{i}\in \Sigma ^*$.
-          \end{itemize}
-    \item \( S \) es el \textbf{símbolo inicial}.
+      \item \( V_1, V_2, \ldots, V_n \) son conjuntos finitos de \textbf{símbolos no terminales} disjuntos 2 a 2.
+      \item \( \Sigma \) es un conjunto finito de \textbf{símbolos terminales}, con \( V_i \cap \Sigma = \emptyset\,\forall\,1\leq i\leq n \).
+      \item \( P \) es un conjunto finito de matrices. Cada matriz es una secuencia ordenada \textbf{producciones} que cumplan con una de las siguientes reglas:
+            \begin{itemize}
+                  \item $[S\to w]$, donde $w\in \Sigma ^*$.
+                  \item $[S\to a_{11}A_{11}\ldots A_{1k}a_{21}A_{21}\ldots A_{2k}\ldots A_{n1}a_{n1}\ldots A_{nk}b]$,
+                        donde $\forall i,j$ con $1\leq i\leq n\wedge 1\leq j\leq k$ se cumple que
+                        $A_{ij}\in V_i$, $a_{ij}\in \Sigma ^*$ y $b\in \Sigma ^*$.
+                  \item $[A_1\to w_1,\ldots, A_n\to w_n]$, donde $A_i\in V_i\wedge w_i\in \Sigma ^*$ $\forall i\, 1\leq i\leq n$.
+                  \item $[A_1 \to a_{11}A_{11}\ldots a_{1k}A_{1k}b_1,\ldots,A_n \to a_{n1}A_{n1}\ldots a_{nk}A_{nk}b_n]$, donde $\forall i,j$
+                        con $1\leq i\leq n\wedge 1\leq j\leq k$ se cumple que
+                        $A_{ij}\in V_i$, $a_{ij}\in \Sigma ^*$ y $b_{i}\in \Sigma ^*$.
+            \end{itemize}
+      \item \( S \) es el \textbf{símbolo inicial}.
 \end{itemize}
 
 
 Observe que la restricción impuesta sobre las $n$-MG es cada matriz de producciones debe contener exactamente $n$ reglas de producción
 donde cada regla de producción utiliza no terminales de conjuntos distintos o puede contener una única producción cuya secuencia de no terminales
-esta compuesta por una secuencia de subsecuentes de terminales de conjuntos distintos.
+esta compuesta por una secuencia de subsecuencias de terminales de conjuntos distintos.
 
-\subsection{Propiedades de las Gramáticas Matriciales}
-
-A continuación se presentan las principales propiedades de las gramáticas matriciales.
-
-\begin{itemize}
-    \item \textbf{Cerradura bajo unión:} Dadas dos gramáticas matriciales $G_1$ y $G_2$,
-          la unión de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una gramática matricial.
-          $$G=(V_1\cup V_2\cup\{S\} , P_1\cup P_2\cup\{[S\to S_1],[S\to S_2]\}, S,\Sigma)$$
-    \item \textbf{Cerradas bajo concatenación:} Dadas 2 gramáticas matriciales $G_1$ y $G_2$, la concatenación de
-          los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una gramática matricial.
-          $$G=(V_1\cup V_2\cup\{S\} , P_1\cup P_2\cup\{[S\to S_1 S_2]\}, S,\Sigma)$$
-    \item \textbf{Cerradas bajo clausura de Kleene:} Dada una gramática matricial $G$, el lenguaje reconocido por
-          $G$ elevado a la clausura de Kleene es reconocido por una gramática matricial.
-          $$G=(V\cup\{S'\} , P\cup\{[S'\to S'S],[S'\to \varepsilon]\}, S',\Sigma)$$
-\end{itemize}
-
-
+En la próxima sección se presentan las gramáticas de índice global.
 \section{Gramáticas de Índice Global}
 
 Una gramática de índice global \textit{GIG}, es una extensión de las CFG, que añaden un mecanismo
@@ -89,58 +105,98 @@ en cada producción se puede realizar una operación de insertar o eliminar de l
 
 Una GIG es una 6-tupla:
 $$
-    G = (N, \Sigma, I, S, \#, P)
+      G = (N, \Sigma, I, S, \#, P)
 $$
 donde:
 
 \begin{itemize}
-    \item $N$ es un conjunto finito de \textbf{símbolos no terminales}.
-    \item \( \Sigma \) es un conjunto finito de \textbf{símbolos terminales}, $\Sigma \cap N=\emptyset$.
-    \item $I$ es un conjunto finito de \textbf{índices de pila}, $\Sigma \cap I=\emptyset \wedge I \cap I=\emptyset$.
-    \item $S\in N$ es el \textbf{símbolo inicial}.
-    \item $\#$ es el \textbf{símbolo inicial de la pila}, $\# \notin \Sigma \cup N \cup I$.
-    \item $P$ es un conjunto finito de \textbf{producciones} que tienen la siguiente forma, donde $x\in I\cup N\cup \Sigma$ y $y\in I\cup N$:
-          \begin{itemize}
-              \item $A \underset{\varepsilon}{\to} \alpha$ o $A \to \alpha$ (reglas epsilon o reglas libres del contexto).
-              \item $A \underset{[y]}{\to}  \alpha$ o $[..]A \to [..]\alpha$ (reglas epsilon o reglas con restricciones).
-              \item $A \underset{x}{\to} a \beta$ o $[..]A \to  [x..]a\beta$ (reglas de push o apertura de paréntesis).
-              \item $A \underset{\overline{x}}{\to} \alpha$ o $[x..]A \to [..]\alpha$ (reglas de pop o cierre de paréntesis).
-          \end{itemize}
+      \item $N$ es un conjunto finito de \textbf{símbolos no terminales}.
+      \item \( \Sigma \) es un conjunto finito de \textbf{símbolos terminales}, $\Sigma \cap N=\emptyset$.
+      \item $I$ es un conjunto finito de \textbf{índices de pila}, $\Sigma \cap I=\emptyset \wedge I \cap I=\emptyset$.
+      \item $S\in N$ es el \textbf{símbolo inicial}.
+      \item $\#$ es el \textbf{símbolo inicial de la pila}, $\# \notin \Sigma \cup N \cup I$.
+      \item $P$ es un conjunto finito de \textbf{producciones} que tienen la siguiente forma, donde $x\in I\cup N\cup \Sigma$ y $y\in I\cup N$:
+            \begin{itemize}
+                  \item $A \underset{\varepsilon}{\to} \alpha$ o $A \to \alpha$ (reglas épsilon o reglas libres del contexto).
+                  \item $A \underset{[y]}{\to}  \alpha$ o $[..]A \to [..]\alpha$ (reglas épsilon o reglas con restricciones).
+                  \item $A \underset{x}{\to} a \beta$ o $[..]A \to  [x..]a\beta$ (reglas de \textit{push} o apertura de paréntesis).
+                  \item $A \underset{\overline{x}}{\to} \alpha$ o $[x..]A \to [..]\alpha$ (reglas de \textit{pop} o cierre de paréntesis).
+            \end{itemize}
 \end{itemize}
 
 Como se puede observar la primera regla de producción consiste en dejar la pila intacta y puede ser interpretada como una regla de derivación
-libre del contexto, la segunda regla consiste en dejar la pila intacta pero solo se puede realizar si el caracter en el tope de la pila es el
-especificado, la tercera regla consiste en añadir un caracter a la pila y la cuarta regla consiste en eliminar un caracter de la pila.
+libre del contexto. La segunda regla consiste en dejar la pila intacta pero solo se puede realizar si el caracter en el tope de la pila es el
+especificado en la regla de producción. La tercera regla consiste en añadir un caracter a la pila y la cuarta regla consiste en eliminar un caracter de la pila.
 Una gramática GIG solo con producciones de la primera regla de producción es equivalente a una CFG.
+
+A continuación se describe el proceso de producción de las GIG.
 
 \subsection{Proceso de derivación}
 
 Como se mencionó anteriormente el proceso de derivación en las GIG es idéntico al proceso de derivación de las CFG, con la diferencia que
 en cada paso de la derivación se puede realizar una operación de insertar o eliminar de la pila, además de las operaciones de sustitución de símbolos.
-Otra restricción adicional es que el proceso de derivación en las GIG debe ser siempre de extrema izquierda.
+Otra restricción adicional es que en el proceso de derivación en las GIG solo se pueden usar producciones de extrema izquierda.
 
-Entonces una cadena es reconocida por una GIG si existe una secuencia de derivaciones desde $S$ que genere la cadena y que además la pila
-termine vacía al final de la derivación (con el símbolo $\#$ en el tope de la pila). Luego se puede definir el lenguaje generado por una GIG, $G$
+Una cadena es reconocida por una GIG si existe una secuencia de derivaciones desde $S$ que genere la cadena y que además la pila
+termine vacía al final de la derivación (con el símbolo $\#$ en el tope de la pila).
+
+Se define el lenguaje generado por una GIG, $G$
 como $L(G)=\{w\,|\,\#S\overset{*}{\to}\#w \wedge w\in \Sigma^* \}$.
 
+El lenguaje $L_{copy}^+$ se define como: $L_{copy}^+=\{ww^+\,|\,w\in Z^*\}$. A continuación se presenta una GIG que genera el lenguaje $L_{copy}^+$ sobre el alfabeto $\Sigma=\{a,b\}$ \cite{globalIndexLanguages}:
+$$
+      G_{ww^+} = (N, \Sigma, I, S, \#, P)
+$$
+donde:
+
+\begin{itemize}
+      \item $N= \{S,R,A,B,C\}$.
+      \item \( \Sigma=\{a,b\} \) .
+      \item $I=\{i,j\}$.
+      \item $S$ es el \textbf{símbolo inicial}.
+      \item $\#$ es el \textbf{símbolo inicial de la pila}.
+      \item $P$ es un conjunto finito de \textbf{producciones}:
+            \begin{multicols}{2}
+                  \begin{itemize}
+                        \item $S\underset{\varepsilon}{\to} AS\,|\,BS\,|\,C$
+                        \item $C\underset{\varepsilon}{\to} RC\,|\,L$
+                        \item $R\underset{\overline{i}}{\to} RA$
+                        \item $R\underset{\overline{j}}{\to} RB$
+                        \item $R\underset{[\#]}{\to} \varepsilon$
+                        \item $A\underset{i}{\to} a$
+                        \item $B\underset{j}{\to} b$
+                        \item $L\underset{\overline{i}}{\to} La\,|\,a$
+                        \item $L\underset{\overline{j}}{\to} Lb\,|\,b$
+                  \end{itemize}
+            \end{multicols}
+\end{itemize}
+
+El funcionamiento de la gramática anterior es el siguiente: a cada caracter de $\Sigma$ le corresponde un no
+terminal y un símbolo de la pila por el que se puede producir dicho caracter almacenando el caracter el símbolo
+de la pila correspondiente. El funcionamiento de la gramática lo compone además un mecanismo de recursión por el
+que se puede producir un no terminal asociado a un caracter solo eliminando el símbolo de la pila asociado a
+dicho caracter. Por último el mecanismo de recursión produce la cadena vacía solo si el símbolo inicial de la
+pila se encuentra en el tope.
+
+En la próxima sección se mencionan las propiedades de las GIG que son de interés para este trabajo.
 \subsection{Propiedades de las GIG}
 
-A continuación se describen las principales propiedades de las GIG:
+En esta sección se describen las principales propiedades de las GIG que serán empleadas en este trabajo:
 \begin{itemize}
-    \item \textbf{Cerradura bajo unión:} Dadas dos GIG $G_1$ y $G_2$, la unión de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una GIG
-          $$G=(N_1\cup N_2\cup \{S\},\Sigma_1\cup \Sigma_2,I_1\cup I_2,S,\#,P_1\cup P_2\cup \{S \underset{\varepsilon}{\to} S_1|S_2\})$$
-    \item \textbf{Cerradas bajo concatenación:} Dadas 2 GIG $G_1$ y $G_2$, la concatenación de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una GIG
-          $$G=(N_1\cup N_2\cup \{S\},\Sigma_1\cup \Sigma_2,I_1\cup I_2,S,\#,P_1\cup P_2\cup \{S \underset{\varepsilon}{\to} S_1S_2\})$$
-    \item \textbf{Cerradas bajo clausura de Kleene:} Dada una GIG $G$, el lenguaje reconocido por $G$ elevado a la clausura de Kleene es reconocido por una GIG
-          $$G=(N\cup \{S'\},\Sigma,I\cup \{S'\},S,\#,P\cup \{S'\underset{\varepsilon}{\to} S'S|\varepsilon\})$$
-    \item  \textbf{Cerradas bajo homomorfismo} Dada una GIG $G$, el homomorfismo de un lenguaje reconocido por $G$ es un lenguaje de índice global \cite{globalIndexLanguages}.
-    \item  \textbf{Cerradas bajo transducción finita:} Dada una GIG $G$, la transducción finita de un lenguaje reconocido por $G$ es un lenguaje de índice global \cite{globalIndexLanguages}.
+      \item  \textbf{Cerradas bajo homomorfismo} Dada una GIG $G$, el homomorfismo de un lenguaje reconocido por $G$ es un lenguaje de índice global \cite{globalIndexLanguages}.
+      \item  \textbf{Cerradas bajo transducción finita:} Dada una GIG $G$, la transducción finita del lenguaje que reconoce $G$ es un lenguaje de índice global \cite{globalIndexLanguages}.
 \end{itemize}
+
+En la siguiente sección se describen las gramáticas de concatenación de rango.
 
 \section{Gramáticas de Concatenación de Rango}
 
 Las gramáticas de concatenación de rango (\textit{RCG}) \cite{mainRCGBib} son un formalismo de gramáticas desarrollado
-para describir lenguajes más generales que los libres del contexto.
+en 1988 como una propuesta de Pierre Boullier, un investigador en el campo de la lingüística
+computacional. Su objetivo principal era proporcionar un modelo más general y expresivo que las CFG para describir
+lenguajes que van más allá de los libres del contexto. Las RCG fueron diseñadas con el fin de capturar propiedades
+de lenguajes naturales y formales que requieren dependencias más complejas, como las que se encuentran en los
+lenguajes de programación y ciertas estructuras lingüísticas humanas.
 
 \subsection{Definiciones}
 
@@ -149,110 +205,185 @@ para describir lenguajes más generales que los libres del contexto.
 \paragraph{Gramática de Concatenación de Rango Positiva:} una gramática de concatenación de rango positiva (\textit{PRCG}) se define como una 5-tupla:
 
 \[
-    G = (N, T, V, P, S),
+      G = (N, T, V, P, S),
 \]
 donde:
 
 \begin{itemize}
-    \item $N$: Es un conjunto finito de \textbf{predicados o símbolos no terminales}: Cada predicado tiene una \textbf{aridad}, que indica el número de argumentos que toma.
-    \item $T$: Es un conjunto finito de \textbf{símbolos terminales}.
-    \item $V$: Es un conjunto finito de \textbf{variables}.
-    \item $P$: Es un conjunto finito de \textbf{cláusulas}, de la forma:
-          \[
-              A(x_1, x_2, \ldots, x_k) \to B_1(y_{1,1}, y_{1,2}, \ldots, y_{1,m_1}) \ldots B_n(y_{n,1}, y_{n,2}, \ldots, y_{n,m_n}),
-          \]
-          donde $A, B_i \in N$, $x_i, y_{i,j} \in (V \cup T)^*$, y $k$ es la aridad de $A$.
-    \item $S \in N$: Es el \textbf{predicado inicial} de la gramática.
+      \item $N$: Es un conjunto finito de \textbf{predicados o símbolos no terminales}: Cada predicado tiene una \textbf{aridad}, que indica el número de argumentos que toma.
+      \item $T$: Es un conjunto finito de \textbf{símbolos terminales}.
+      \item $V$: Es un conjunto finito de \textbf{variables}.
+      \item $P$: Es un conjunto finito de \textbf{cláusulas}, de la forma:
+            \[
+                  A(x_1, x_2, \ldots, x_k) \to B_1(y_{1,1}, y_{1,2}, \ldots, y_{1,m_1}) \ldots B_n(y_{n,1}, y_{n,2}, \ldots, y_{n,m_n}),
+            \]
+            donde $A, B_i \in N$, $x_i, y_{i,j} \in (V \cup T)^*$, y $k$ es la aridad de $A$.
+      \item $S \in N$: Es el \textbf{predicado inicial} de la gramática.
 \end{itemize}
-
-\paragraph{Gramática de Concatenación de Rango Negativa:} una gramática de concatenación de rango negativa (\textit{NRCG}) es similar a una PRCG, pero predicados o no terminales negativos que se denotan de la siguiente manera: $\overline{A}$.
 
 \paragraph{Gramática de Concatenación de Rango Simple:} las gramáticas de concatenación de rango simple (\textit{SRCG}) son un subconjunto de las RCG que restringen la forma de las cláusulas de producción.
 Una RCG $G$ es \textbf{simple} si los argumentos en el lado derecho de una cláusula son variables distintas, y todas estas variables (y no otras) aparecen una sola vez en los argumentos del lado izquierdo.
-Un resultado interesante es que para cada CFG existe una SRCG equivalente que genera el mismo lenguaje.
+Para cada CFG existe una SRCG equivalente que genera el mismo lenguaje \cite{mainRCGBib}.
 
-\paragraph{Sustiución de rango:} una sustitución de rango es un mecanismo que reemplaza una variable por un rango de la cadena.
+Por ejemplo una cláusulas de una SRCG pueden tener la siguiente estructura:
+\[
+      A(X_1, X_2, \ldots, X_k) \to B_1(X_1) \ldots B_n(X_n).
+\]
+
+Los predicados $B_i$ pueden tener más de un argumento siempre y cuando estos sean variables distintas en este caso
+la cantidad de predicados $B_i$ debe ser menor que $n$ ya que todas las variables en el lado derecho deben aparecer en
+el lado izquierdo de la cláusula y viceversa:
+\[
+      A(X_1, X_2, \ldots, X_k) \to B_1(X_1,X_n),B_2(X_2) \ldots B_{n-1}(X_{n-1}).
+\]
+
+\paragraph{Sustitución de rango:} una sustitución de rango es un mecanismo que reemplaza una variable por un rango de la cadena.
 Por ejemplo dado el predicado $A(Xa)$ donde $X \in V \wedge a \in T$, si se instancia la cadena $baa$ en $A$, $X$ puede
 ser asociada con el rango $ba$ de la cadena original.
 
+En la próxima sección se describe el proceso de derivación de las RCG.
 \subsection{Proceso de derivación}
 
 La principal idea detrás de las RCG, para realizar una derivación, se basa en encontrar para cada argumento del predicado izquierdo de una cláusula todas las
-posibles sustituciones en rango de la cadena, asociar los valores de las variables a los argumentos de los predicados derechos y continuar
+posibles sustituciones en rango de la cadena, entonces es necesario asociar los valores de las variables que se reconocen
+en los argumentos del predicado izquierdo a los argumentos de los predicados derechos y continuar
 el proceso de derivación en los predicados derechos.
 
 Por ejemplo, dada la cláusula $A(X,aYb)\to B(aXb,Y)$ , donde $X$ y $Y$ son símbolos variables y $a$ y $b$
 son símbolos terminales, la cadena predicado $A(a,abb)$ deriva como $B(aab,b)$, porque $A(a,abb)$
-coincide con $A(X,aYb)$ cuando $ X=a \wedge Y=b$. De forma similar, si existiera una regla
+coincide con $A(X,aYb)$ cuando $ X=a \wedge Y=b$.
 
-Una secuencia de argumentos son reconocidos por un predicado si existe una secuencia de derivaciones que comienza
-en dicho predicado y termina en la cadena vacía, si el predicado es negativo en el caso de las NRCG ocurre lo contrario
-la secuencia de argumentos no es reconocida por el predicado. Una RCG reconoce una cadena si dicha cadena es reconocida
-por el predicado inicial.
+Las RCG a diferencia de las gramáticas anteriores no generan cadenas, su funcionamiento se basa en reconocer si una cadena pertenece o no al lenguaje.
 
-Ejemplo dada la siguiente RCG:
+Una secuencia de argumentos se reconocen por un predicado si existe una secuencia de derivaciones que comienza
+en dicho predicado y termina en la cadena vacía. Dada la siguiente cláusula $A(X_1,\ldots,X_n)\to B_1(X_1)\ldots B_n(X_n)$,
+para los rangos $w_1,\ldots,w_n$ asociados a las variables $X_1,\ldots,X_n$ respectivamente, si existe una
+secuencia de derivaciones para cada uno de los predicados $B_1(w_1),\ldots,B_n(w_n)$ que derive en la cadena vacía,
+entonces se reconoce el predicado $A(w_1,\ldots,w_n)$.
+
+Por ejemplo, dada la siguiente RCG:
 
 \[
-    G = (N, T, V, P, S),
+      G = (N, T, V, P, S),
 \]
 donde:
 
 \begin{itemize}
-    \item  N=$\{A,S\}$.
-    \item T=$\{a,b,c\}$.
-    \item V=$\{X,Y,Z\}$.
-    \item El conjunto de cláusulas $P$ es el siguiente:
-          $$S(XYZ)\to A(X,Y,Z)$$
-          $$A(aX,aY,aZ)\to A(X,Y,Z)$$
-          $$A(bX,bY,bZ)\to A(X,Y,Z)$$
-          $$A(cX,cY,cZ)\to A(X,Y,Z)$$
-          $$A(\varepsilon,\varepsilon,\varepsilon)\to \varepsilon$$
-    \item El símbolo inicial es $S$.
+      \item  N=$\{A,S\}$.
+      \item T=$\{a,b,c\}$.
+      \item V=$\{X,Y,Z\}$.
+      \item El conjunto de cláusulas $P$ es el siguiente:
+            $$S(XYZ)\to A(X,Y,Z)$$
+            $$A(aX,aY,aZ)\to A(X,Y,Z)$$
+            $$A(bX,bY,bZ)\to A(X,Y,Z)$$
+            $$A(cX,cY,cZ)\to A(X,Y,Z)$$
+            $$A(\varepsilon,\varepsilon,\varepsilon)\to \varepsilon$$
+      \item El símbolo inicial es $S$.
 \end{itemize}
-La cadena $aaabbbccc$ es reconocida por la RCG anterior, ya que se puede derivar de la siguiente manera:
-$$S(abcabcabc)\to A(abc,abc,abc)\to A(bc,bc,bc)\to A(c,c,c)\to A(\varepsilon,\varepsilon,\varepsilon)\to \varepsilon$$
+La cadena $abcabcabc$ es reconocida por la RCG anterior, ya que se puede derivar de la siguiente manera:
+$$S(abcabcabc)\to A(abc,abc,abc)\to A(bc,bc,bc)\to A(c,c,c)\to A(\varepsilon,\varepsilon,\varepsilon)\to \varepsilon$$.
 
-De manera general el lenguaje reconocido por la RCG anterior es $L=\{www\,|\,w\in \{a,b,c\}^*\}$.
+En el primer paso de la derivación se toma la primera cláusula, la sustitución en rango asocia las variables $X=abc$, $Y=abc$ y $Z=abc$
+a los rangos $w[0\dots 2]$, $w[3\dots 5]$ y $w[6\dots 8]$ ($w[i\dots j]$ representa el rango que va desde el $i$-ésimo caracter hasta el $j$-ésimo
+con la cadena indexada en 0) respectivamente, derivando en el predicado $A(abc,abc,abc)$. En el segundo paso se
+toma la segunda cláusula, la sustitución en rango asocia las variables $X=bc$, $Y=bc$ y $Z=bc$ a los rangos $w[1\dots 2]$, $w[4\dots 5]$ y $w[7\dots 8]$
+respectivamente, derivando en el predicado $A(bc,bc,bc)$. En el tercer paso se toma la tercera cláusula,
+la sustitución en rango asocia las variables $X=c$, $Y=c$ y $Z=c$ a los rangos $w[2\dots 2]$, $w[5\dots 5]$ y
+$w[8\dots 8]$ respectivamente, derivando en el predicado $A(c,c,c)$.
+En el cuarto paso se toma la cuarta cláusula, la sustitución en rango asocia las variables
+$X=\varepsilon$, $Y=\varepsilon$ y $Z=\varepsilon$ respectivamente, derivando en el predicado
+$A(\varepsilon,\varepsilon,\varepsilon)$. Finalmente en el  último paso se toma la última cláusula
+que deriva en la cadena vacía, por lo que de esta manera se reconoce la cadena $abcabcabc$.
 
+El lenguaje que reconoce la RCG anterior es $L_{copy}^3$, sobre el alfabeto $\Sigma=\{a,b,c\}$.
+
+A continuación se presentan las principales propiedades de las RCG.
 \subsection{Propiedades de las RCG}
 
 A continuación se describen las principales propiedades de las RCG \cite{propertiesRCGBib}:
 \begin{itemize}
-    \item \textbf{Cerradura bajo unión:} Dadas dos RCG $G_1$ y $G_2$, la unión de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una RCG
-          $$G=(N_1\cup N_2\cup \{S\},T_1\cup T_2,V_1\cup V_2,P_1\cup P_2\cup \{S(X)\to S_1(X)|S_2(X)\},S)$$
-    \item \textbf{Cerradas bajo intersección:} Dadas dos RCG $G_1$ y $G_2$, la intersección de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una RCG
-          $$G=(N_1\cup N_2\cup \{S\},T_1\cup T_2,V_1\cup V_2,P_1\cup P_2\cup \{S(X)\to S_1(X)S_2(X)\},S)$$
-    \item \textbf{Cerradas bajo complemento:} Dada una RCG $G$, el complemento del lenguaje reconocido por $G$ es reconocido por una RCG
-          $$G'=(N\cup \{\overline{S}\},T,V,P\cup \{S'(X)\to \overline{S}(X)\},S')$$
-    \item \textbf{Cerradas bajo concatenación:} Dadas dos RCG $G_1$ y $G_2$, la concatenación de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una RCG
-          $$G=(N_1\cup N_2\cup \{S\},T_1\cup T_2,V_1\cup V_2,P_1\cup P_2\cup \{S(XY)\to S_1(X)S_2(Y)\},S)$$
-    \item \textbf{Cerradas bajo clausura de Kleene:} Dada una RCG $G$, la clausura de Kleene del lenguaje reconocido por $G$ es reconocida por una RCG
-          $$G'=(N\cup \{S'\},T,V,P\cup \{S'(XY)\to S(X)S'(Y)|\varepsilon\},S')$$
-    \item  \textbf{No cerradas bajo homomorfismo:} Dada una RCG $G$, el homomorfismo de un lenguaje reconocido por $G$ no es necesariamente reconocido por una RCG \cite{propertiesRCGBib}.
-    \item  \textbf{No cerradas bajo transducción finita:} Dada una RCG $G$, la transducción finita de un lenguaje reconocido por $G$ no es necesariamente reconocida por una RCG.
-          Esto es una consecuencia de la no cerradura bajo homomorfismo.
+      \item \textbf{Cerradura bajo unión:} Dadas dos RCG $G_1$ y $G_2$, la unión de los lenguajes reconocidos por $G_1$ y $G_2$ se reconoce por una RCG \cite{mainRCGBib}.
+      \item \textbf{Cerradas bajo intersección:} Dadas dos RCG $G_1$ y $G_2$, la intersección de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una RCG \cite{mainRCGBib}.
+      \item \textbf{Cerradas bajo complemento:} Dada una RCG $G$, el complemento del lenguaje reconocido por $G$ se reconoce por una RCG \cite{mainRCGBib}.
+      \item \textbf{Cerradas bajo concatenación:} Dadas dos RCG $G_1$ y $G_2$, la concatenación de los lenguajes reconocidos por $G_1$ y $G_2$ se reconoce por una RCG \cite{mainRCGBib}.
+      \item \textbf{Cerradas bajo clausura de Kleene:} Dada una RCG $G$, la clausura de Kleene del lenguaje se reconoce por $G$ es reconocida por una RCG \cite{mainRCGBib}.
+      \item  \textbf{No cerradas bajo homomorfismo:} Dada una RCG $G$, el homomorfismo de un lenguaje reconocido por $G$ no es necesariamente se reconoce por una RCG \cite{propertiesRCGBib}.
+      \item  \textbf{No cerradas bajo transducción finita:} Dada una RCG $G$, la transducción finita de un lenguaje reconocido por $G$ no es necesariamente se reconoce por una RCG.
+            Esto es una consecuencia de la propiedad anterior ya que como se mencionó en el capítulo anterior un homomorfismo es un caso particular de un transductor finito.
+            Esta propiedad trae implicaciones en una cuestión analizada en el capítulo 5.
 \end{itemize}
 
 
 \subsection{Problema de la palabra, problema del vacío y equivalencia de 2 RCG}
 
-\paragraph{Problema de la palabra:} En general en la mayoría de los casos este problema es polinomial y pasa por
-un algoritmo de memorización sobre las cadenas que son instanciadas en los rangos de los predicados de la RCG \cite{mainRCGBib} (como la cantidad
-máxima de rangos de la cadena es $n^2$ y la máxima aridad de un predicado es constante, este proceso de memorización cuenta
-con cantidad polinomial de estados), en
-una complejidad de $O(|P|n^{2h(l+1)})$ donde $h$ es la máxima aridad en un predicado, $l$ es la máxima cantidad de predicados
-en el lado derecho de una cláusula y $n$ es la longitud de la cadena a ser reconocida.
+\subsubsection{Problema de la palabra}
+
+En general en la mayoría de los casos este problema es polinomial y pasa
+por un algoritmo de memorización sobre las cadenas que son instanciadas en los rangos de los predicados de la
+RCG \cite{mainRCGBib}.  Como la cantidad máxima de rangos de la cadena es $n^2$ y la máxima aridad de un
+predicado es constante, este proceso de memorización cuenta con cantidad polinomial de
+estados, en una complejidad de $O(|P|n^{2h(l+1)})$ donde $h$ es la máxima aridad en un predicado, $l$
+es la máxima cantidad de predicados en el lado derecho de una cláusula y $n$ es la longitud de la cadena
+que se reconoce.
 
 Pero existen casos en los que el problema de la palabra no
-es polinomial, por ejemplo puede pasar que se instancien argumentos de en los predicados con rangos que no pertenezcan
-a la propia cadena de entrada y sean generados durante el proceso de reconocimiento.
+es polinomial \cite{propertiesRCGBib}, el ejemplo presentado en \cite{propertiesRCGBib} muestra una RCG que se enfoca en el problema de contar,
+en este trabajo se analiza otro caso en el que este problema no es polinomial.
 
-\paragraph{Problema del vacío:} El problema del vacío para una RCG es indecidible \cite{propertiesRCGBib}, la razón principal para esto es que como se mencionó anteriormente
-para toda CFG existe una RCG equivalente y como las RCG son cerradas bajo intersección existen RCG que describen
-la intersección de 2 lenguajes libres del contexto y determinar si dicha intersección es vacía es un problema indecidible.
+\subsubsection{Problema de la palabra no polinomial}
 
-En el caso de las SRCG este problema es polinomial \cite{mainRCGBib}.
+El algoritmo de reconocimiento presentado en la sección anterior utiliza un proceso de memorización sobre los rangos
+de la cadena, la idea fundamental para esto y lo que acota la complejidad del algoritmo es que la cantidad de estados
+asociados a la memorización es igual a la cantidad de rangos de la cadena, el cual es polinomial con respecto a la longitud
+de la cadena.
 
-\paragraph{Problema de la equivalencia:} El problema de la equivalencia para 2 RCG es indecidible, la demostración es muy sencilla dadas 2 RCG $G_1$ y $G_2$ el problema
-de saber si $G_1$ es equivalente a $G_2$ es equivalente a saber si $G_1\cap \overline{G_2}=\emptyset$ y como se mencionó anteriormente el problema del vacío para una RCG
-es indecidible.
+Ahora ¿que pasaría si algún predicado de la gramática trabajara con rangos que no pertenecen a la cadena original?
+En este caso si se emplea el algoritmo anterior ya la complejidad no depende de la cantidad de rangos de la cadena original
+porque pueden aparecer otros rangos que no pertenezcan a dicha cadena.
+
+Por ejemplo a continuación se presenta una RCG que no tiene uso real porque existe otra RCG equivalente que reconoce el
+mismo lenguaje, pero ilustra lo descrito anteriormente:
+\[
+      G = (N, T, V, P, S),
+\]
+donde:
+
+\begin{itemize}
+      \item  N=$\{A,B,Eq,S\}$.
+      \item T=$\{0,1\}$.
+      \item V=$\{X,Y\}$.
+      \item El conjunto de cláusulas $P$ es el siguiente:
+            $$S(X)\to A(X,X)$$
+            $$A(1X,Y)\to B(X,0,Y)$$
+            $$A(1X,Y)\to B(X,1,Y)$$
+            $$A(0X,Y)\to B(X,1,Y)$$
+            $$A(0X,Y)\to B(X,0,Y)$$
+            $$B(1X,Y,Z)\to B(X,1Y,Z)$$
+            $$B(1X,Y,Z)\to B(X,0Y,Z)$$
+            $$B(0X,Y,Z)\to B(X,0Y,Z)$$
+            $$B(0X,Y,Z)\to B(X,1Y,Z)$$
+            $$B(\varepsilon,Y,Z)\to Eq(Y,Z)$$
+      \item El símbolo inicial es $S$.
+\end{itemize}
+
+El funcionamiento de la gramática anterior se basa en dada una cadena $w$ generar todas las posibles cadenas $q$, tales
+que $|w|=|q|$ y luego comprobar si $w = q$. Observe que como se dijo anteriormente está gramática no tiene caso de uso
+ya que para toda cadena $w$ siempre va a existir una cadena $q$ tal que $w=q$, por lo que se puede modelar con solamente
+la cláusula $S(X)\to \varepsilon$. Pero sin embargo la complejidad del reconocimiento de $G$ es mayor que $2^n$ (con $n$
+igual al tamaño de la cadena d entrada), ya que esta es la cantidad de rangos posibles que puede recibir el predicado $B$.
+En el capítulo 5 se presenta una RCG de este estilo, pero que si tiene caso de uso en los problemas de la Ciencia de la Computación.
+
+En la próxima sección se aborda el problema del vacío para las RCG.
+\subsubsection{Problema del vacío}
+
+El problema del vacío para una RCG es indecidible \cite{propertiesRCGBib}.
+La razón principal para esto es que como para toda CFG existe una RCG equivalente y como las RCG son cerradas
+bajo intersección existen RCG que describen la intersección de 2 lenguajes libres del contexto y determinar
+si dicha intersección es vacía es un problema indecidible \cite{propertiesRCGBib}.
+
+En el caso de las SRCG este problema es polinomial \cite{mainRCGBib}. En el capítulo 3 se analiza un caso de uso de las
+SRCG donde esta propiedad juega un rol importante.
+
+En este capítulo se analizaron los principales formalismos de escritura regulada, que son necesarios para la compresión de
+los siguientes capítulos. Todos los formalismos descritos generan lenguajes dependientes del contexto y sirven para
+solucionar problemas que modelan el SAT utilizando teoría de lenguajes.
