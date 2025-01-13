@@ -23,7 +23,7 @@ En este capitulo se presenta un enfoque distinto al del capítulo anterior, que 
 pertenecen todos los problemas SAT que son satisfacibles y al cual se le denomina $L_{S-SAT}$. Una vez definido este lenguaje, para determinar
 si un SAT es satisfacible solo es necesario verificar si la cadena que lo representa pertenece a $L_{S-SAT}$.
 
-\section{Definición de $L_{SAT}$}
+\section{Definición de $L_{S-SAT}$}
 
 El lenguaje de todas las fórmulas booleanas en CNF que son satisfacibles se define como $L_{S-SAT}=\{w\,|\,w \in L_{FULL-SAT} \wedge f_{SAT}(w)\}$, 
 donde $L_{FULL-SAT}$ representa el lenguaje de todas las fórmulas booleanas en CNF y $f_{SAT}(w)$ es una función que 
@@ -31,7 +31,7 @@ determina si $w$ es satisfacible.
 
 En las próximas secciones se presenta el primer enfoque para definir $L_{S-SAT}$, el cual se basa en definir
 el lenguaje mediante un transductor finito seleccionando un formalismo que sea cerrado bajo transducción finita.
-\section{Transductor SAT}
+\section{Transductor $T_{SAT}$}
 
 La idea para definir $L_{S-SAT}$ es construir un transductor finito que acepte como entrada cadenas del lenguaje $L_{0,1}=\{wd\}^+$ donde $w\in \{0,1\}^*$
 y devuelva como salida cadenas que representan una fórmula booleana en \textit{CNF} que sea verdadera si se evalúa en la cadena que el transductor recibió como entrada.
@@ -60,7 +60,7 @@ se define la función de transición $\delta$ de la siguiente manera:
 
 \begin{itemize}
     \item  transiciones para el estado $q_0$: representa el estado inicial. Si la entrada es un 1 el transductor
-          puede escribir $a$, $b$ y $c$ si escriba $a$ pasa al estado positivo, si escribe $b$ pasa al estado negativo
+          puede escribir $a$, $b$ y $c$, si escribe $a$ pasa al estado positivo, si escribe $b$ pasa al estado negativo
           y si escribe $c$ permanece en el mismo estado. Por otro lado si la entrada es un 0 se intercambian los estados 
           cuando se escribe $a$ y $b$ y cuando se escribe $c$ permanece en el mismo estado.
           
@@ -76,9 +76,9 @@ se define la función de transición $\delta$ de la siguiente manera:
           \end{multicols}
           
     \item transiciones para el estado $q_p$ (estado positivo de $T_{CLAUSE}$): representa que para los valores asignados a las variables
-          se obtiene un valor positivo.  Como la fórmula se encuentra ya en un estado positivo lo que significa que al menos un literal 
+          se obtiene un valor de verdad positivo.  Como la fórmula se encuentra ya en un estado positivo lo que significa que al menos un literal 
           se evaluó positivo no importa la entrada y lo que el transductor escriba se mantiene en el mismo estado. Este es el estado de 
-          aceptación para el transductor lo cual significa que la cláusula toma un valor positivo.
+          aceptación para el transductor lo cual significa que la cláusula toma un valor de verdad positivo.
           \begin{multicols}{2}
               \begin{itemize}
                   \item $\delta_{SAT}(q_{p},1)=(q_{p},a)$
@@ -91,7 +91,7 @@ se define la función de transición $\delta$ de la siguiente manera:
           \end{multicols}
           
     \item transiciones para el estado $q_n$ (estado negativo de $T_{CLAUSE}$): representa que para los valores asignados a las variables
-          se obtiene un valor negativo. Aquí las transiciones son idénticas a las del estado 
+          se obtiene un valor de verdad negativo. Aquí las transiciones son idénticas a las del estado 
           inicial, reemplazando el estado inicial por el estado negativo en los posibles resultados de la función de 
           transición.
           
@@ -233,8 +233,8 @@ donde:
                   \item $R\underset{\overline{k}}{\to} RD$
                         
                   \item $R\underset{[\#]}{\to} \varepsilon$
-                  \item $A\underset{i}{\to} a$
-                  \item $B\underset{j}{\to} b$
+                  \item $A\underset{i}{\to} 1$
+                  \item $B\underset{j}{\to} 0$
                   \item $D\underset{k}{\to} d$
                   \item $L\underset{\overline{i}}{\to} L$
                   \item $L\underset{\overline{j}}{\to} L$
@@ -246,7 +246,57 @@ donde:
 
 Como modificaciones a la gramática anterior se ha introducido un nuevo terminal, un no terminal y un símbolo de la pila manteniendo la invariante de correspondencia que se mencionó anteriormente entre los elementos de estos 3 conjuntos. Por otro lado se modificaron las producciones del no terminal $L$ para que unicamente produzca la cadena vacía eliminando todos los elementos de la pila, con ello se puede generar el lenguaje $L_{0,1}$.
 
-\notaparaelautor{PON UN EJEMPLO DE DERIVACIÓN DE ESTA GRAMÁTICA.}
+A continuación se presenta un ejemplo de una cadena que se obtiene como derivación de la gramática $G_{0,1}$.
+
+\subsection{Ejemplo de reconocimiento de $G_{0,1}$}
+
+En esta sección se presenta una secuencia de derivaciones que permiten obtener la cadena $110d110d110d$ mediante 
+la gramática $G_{0,1}$ (para cada derivación primero se muestra la regla de producción. seguido del estado de la 
+pila y del estado del la cadena generada):
+
+\begin{enumerate}
+    \begin{multicols}{2}
+        \item $S\underset{\varepsilon}{\to} AS$ $[\#]$ $AS$
+        \item $A\underset{i}{\to} 1$ $[i\#]$ $1S$
+        \item $S\underset{\varepsilon}{\to} AS$ $[i\#]$ $1AS$
+        \item $A\underset{i}{\to} 1$ $[ii\#]$ $11S$
+        \item $S\underset{\varepsilon}{\to} BS$ $[ii\#]$ $11BS$
+        \item $B\underset{j}{\to} 0$ $[jii\#]$ $110S$
+        \item $S\underset{\varepsilon}{\to} DC$ $[jii\#]$ $110DC$
+        \item $D\underset{k}{\to} d$ $[kjii\#]$ $110dC$
+        
+        \item $C\underset{\varepsilon}{\to} RC$ $[kjii\#]$ $110dRC$
+        \item $R\underset{\overline{k}}{\to} RD$ $[jii\#]$ $110dRDC$
+        \item $R\underset{\overline{j}}{\to} RB$ $[ii\#]$ $110dRBDC$
+        \item $R\underset{\overline{i}}{\to} RA$ $[i\#]$ $110dRABDC$
+        \item $R\underset{\overline{i}}{\to} RA$ $[\#]$ $110dRAABDC$
+        \item $R\underset{[\#]}{\to} \varepsilon$ $[\#]$ $110dAABDC$
+        \item $A\underset{i}{\to} 1$ $[i\#]$ $110d1ABDC$
+        \item $A\underset{i}{\to} 1$ $[ii\#]$ $110d11BDC$
+        \item $B\underset{i}{\to} 0$ $[jii\#]$ $110d110DC$
+        \item $D\underset{i}{\to} d$ $[kjii\#]$ $110d110dC$
+        
+        \item $C\underset{k}{\to} d$ $[kjii\#]$ $110d110dRC$
+        \item $R\underset{\overline{k}}{\to} RD$ $[jii\#]$ $110d110dRDC$
+        \item $R\underset{\overline{j}}{\to} RB$ $[ii\#]$ $110d110dRBDC$
+        \item $R\underset{\overline{i}}{\to} RA$ $[i\#]$ $110d110dRABDC$
+        \item $R\underset{\overline{i}}{\to} RA$ $[\#]$ $110d110dRAABDC$
+        \item $R\underset{[\#]}{\to} \varepsilon$ $[\#]$ $110d110dAABDC$
+        \item $A\underset{i}{\to} 1$ $[i\#]$ $110d110d1ABDC$
+        \item $A\underset{i}{\to} 1$ $[ii\#]$ $110d110d11BDC$
+        \item $B\underset{i}{\to} 0$ $[jii\#]$ $110d110d110DC$
+        \item $D\underset{i}{\to} d$ $[kjii\#]$ $110d110d110dC$
+        
+        \item $C\underset{\varepsilon}{\to} L$ $[kjii\#]$ $110d110d110dL$
+        \item $L\underset{\overline{k}}{\to} L$ $[jii\#]$ $110d110d110dL$
+        \item $L\underset{\overline{j}}{\to} L$ $[ii\#]$ $110d110d110dL$
+        \item $L\underset{\overline{i}}{\to} L$ $[i\#]$ $110d110d110dL$
+        \item $L\underset{\overline{i}}{\to} L$ $[\#]$ $110d110d110dL$
+        \item $L\underset{[\#]}{\to} \varepsilon$ $[\#]$ $110d110d110d$
+    \end{multicols}
+\end{enumerate}
+
+Por tanto existe una secuencia de derivaciones desde $S$ hasta la cadena $110d110d110d$, por lo que $G_{0,1}$ genera la cadena $110d110d110d$.
 
 Como se mencionó anteriormente las GIG son cerradas bajo transducción finita, por lo que $G_{0,1}$ permite describir $L_{S-SAT}$ usando el transductor $T_{SAT}$, el único inconveniente para este análisis es que luego de aplicar $T_{SAT}$ a la gramática, se obtiene un gramática ambigua y en estos casos el problema de la palabra para las GIG no es polinomial \cite{globalIndexLanguages}.
 
