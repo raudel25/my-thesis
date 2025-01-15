@@ -2,26 +2,37 @@
 
 ## Preliminares
 
-- Teoría de lenguajes formales
-- Escritura regulada (gramáticas matriciales, gramáticas de índice global)
+- Teoría de lenguajes
+- Autómatas
+- Maquina de Turing
+- Complejidad Computacional
+- Problema de la satisfacibilidad booleana
+
+## Formalismos de escritura regulada
+
+- Gramáticas Matriciales
+- Gramáticas de Índice Global
 - Gramáticas de Concatenación de Rango
-- SAT (Definición, FNC, 3-SAT)
-- Instancias polinomiales de SAT
 
-## Solución polinomial de instancias del SAT usando Teoría de Lenguajes
+## Estrategia para la solución del SAT usando el problema del vacío
 
-- Gramáticas Libres del contexto
-- Gramáticas Matriciales simples
-- Gramáticas Concatenación de rango simple
+- Antecedentes
+- Autómata booleano
+- Problema de satisfacibilidad booleana libre del contexto
+- Problema de satisfacibilidad booleana de concatenación de rango simple
+- Transformación de una fórmula booleana en una cadena
+- Primera aproximación del SAT usando gramáticas matriciales simples
 
-## SAT como problema de la palabra
+## Estrategia para la solución del SAT usando el problema del vacío
 
-- Transformación del SAT a una cadena de símbolos
-- Resolver instancias polinomiales de SAT
+- Definición de $L_{S-SAT}$
+- Transductor $T_{SAT}$
+- $L_{S-SAT}$ como lenguaje de índice global
 
-## Full SAT
+## Estrategia para la solución del SAT usando el gramáticas de concatenación de rango
 
-- Transductor finito
-- Definición de Full-SAT
-- Full-SAT con gramáticas de índice global
-- Full-SAT con gramáticas de concatenación de rango
+- $L_{0,1}$ como lenguaje de concatenación de rango
+- Solución del SAT usando el problema del vacío
+- Solución del SAT usando el problema de la palabra
+- Clases de problemas que reconocen las RCG
+- Instancias de SAT polinomiales empleando RCG 
