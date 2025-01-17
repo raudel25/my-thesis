@@ -201,15 +201,67 @@ Mediante la transformación $L_{0,1}$ por el transductor finito se mantiene la i
 
 Dado la transformación $L_{0,1}$ por el transductor finito se puede demostrar que el problema de la palabra de 
 cualquier formalismo que genere el lenguaje $L_{0,1}$ y sea cerrado bajo transducción finita es NP-Duro, 
-ya que puede ser reducido al SAT y por tanto a cualquier problema en NP. 
+ya que puede ser reducido al SAT y por tanto a cualquier problema en NP. En la siguiente sección se demuestra
+el planteamiento anterior.
+
+\subsection{Demostración de $L_{S-SAT}$ generado mediante $T_{SAT}$}
+
+En esta sección se demuestra que el problema de la palabra de cualquier formalismo que genere el lenguaje $L_{0,1}$ y sea cerrado bajo transducción
+finita es NP-Duro, para ello se debe demostrar que el lenguaje $L_{S-SAT}$ definido mediante una transducción finita
+realmente es igual al lenguaje de todas las fórmulas booleanas satisfacibles.
+
+La idea de la demostración es la siguiente primero demostrar que para cualquier cadena binaria $w$, $T_{CLAUSE}(w)$ es
+el conjunto de todas las cláusulas que son satisfacibles por $w$, después demostrar que $T_{SAT}(e)$ contiene todas
+las fórmulas de $n$ cláusulas satisfacibles  por la cadena $w$ donde $e=(wd)^n \wedge w\in\{0,1\}^*$ y por último demostrar que:
+$$L_{S-SAT} = \{e\,|\,\exists w \in L_{0,1} \wedge e \in T_{SAT}(w) \}.$$
+
+Para demostrar que dada una cadena binaria $w$, $T_{CLAUSE}(w)$ es el conjunto de todas las cláusulas que son satisfacibles 
+por $w$ primero suponga que $q\in T_{CLAUSE}(w)$. Entonces en el proceso que generó $q$ el transductor terminó en el estado 
+$q_p$ y como empezó en el estado $q_0$ ocurrió una transición desde $q_0$ a $q_p$ o desde $q_n$ a $q_p$ y esto solo es posible
+si el transductor leyó un 1 y escribió una a o si leyó un 0 y escribió una b. Esto significa que en la fórmula booleana
+que representa $q$ hay una variable sin negar a la cual se le asigna un 1 o una variable negada a la cual se le asigna un 0,
+por lo tanto se cumple que $w$ satisface la fórmula booleana que representa $q$. Ahora sea una fórmula booleana $F$ satisfacible 
+por $w$ cuya representación es $q$ entonces se cumple que en $F$ hay una variable sin negar a la cual se le asigna un 1 o una variable 
+negada a la cual se le asigna un 0, se dice sin pérdida de la generalidad que la primera variable que cumple esto es la $i$-ésima.
+Entonces observe que si se hace el reconocimiento de los primeros $i-1$ caracteres por $T_{CLAUSE}$ se pueden seguir 
+las transiciones de tal manera que los primeros $i-1$ caracteres de la cadena generada sean iguales a los primeros $i-1$
+caracteres de $q$. Dado este punto solo es posible que el transductor esté en el estado $q_0$ o $q_n$, pero como se cumple
+que la $i$-ésima variable está sin negar y se le asigna un 1 o está negada y se le asigna un 0, entonces se puede tomar 
+la opción de leer un 1 y escribir una a o leer un 0 y escribir una b según corresponda y de esta manera según en el estado que se
+encuentre se pasa al estado $q_p$. Posteriormente se toman las restantes transiciones de manera que la cadena generada
+sea $q$ y se mantiene en el mismo estado ya que $q_p$ solo tiene transiciones hacia sí mismo. De esta manera se demuestra
+que $T_{CLAUSE}(w)$ es el conjunto de todas las cláusulas que son satisfacibles por $w$.
+
+Para demostrar que $T_{SAT}(e)$ contiene todas las fórmulas satisfacibles por la cadena $e=(wd)^n$ donde $w\in\{0,1\}^*$
+se hará una inducción sobre $n$. Se define los  conjuntos $A_{w,n}$ como el conjunto formado por todas las cadenas
+que representan fórmulas booleanas de $n$ cláusulas satisfacibles por $w$ y $B_w$ el conjunto formado por todas las cadenas que representan las 
+cláusulas que son satisfacibles por $w$. El caso base $n=1$ se demuestra 
+porque la transducción se realiza solo sobre el primer transductor $T_{CLAUSE}$ que conforma a $T_{SAT}$ y como
+se demostró anteriormente $T_{CLAUSE}(w)$ contiene todas cláusulas satisfacibles por $w$. 
+Se supone para $n=k$ y se demuestra para $n=k+1$, se cumple que $A_{w,n}=\{xyd\,|\,x\in A_{w,n-1} \wedge y\in B_w\}$ y 
+$T_{SAT}((wd)^n)=\{xyd\,|\,x\in T_{SAT}((wd)^{n-1}) \wedge y\in T_{CLAUSE}(w)\}$. Por hipótesis de inducción se cumple
+que $A_{w,n-1}=T_{SAT}((wd)^{n-1})$ y además se cumple que $B_w=T_{CLAUSE}(w)$, lo cual implica que $A_{w,n}=T_{SAT}((wd)^n)$.
+
+Para concluir el tercer paso de la demostración sea $e$ tal que existe $w$, donde $w \in L_{0,1} \wedge e \in T_{SAT}(w)$
+entonces se cumple que la fórmula booleana asociada a $e$ es satisfacible por $w$. Ahora sea $F$ una fórmula booleana
+satisfacible con $n$ cláusulas y sea $e$ su cadena asociada, por tanto existe $w$ tal que $w$ satisface a $F$, 
+luego se cumple que $e\in T_{SAT}((wd)^n)$. Por tanto se cumple que:
+$$L_{S-SAT} = \{e\,|\,\exists w \in L_{0,1} \wedge e \in T_{SAT}(w) \}.$$
+
+Para demostrar que el problema de la palabra de cualquier formalismo que genere el lenguaje $L_{0,1}$ y sea cerrado bajo transducción
+finita es NP-Duro suponga que existe un formalismo $G$ que genera $L_{0,1}$ y es cerrado bajo transducción finita.
+Entonces $G$ es capaz de generar el lenguaje $L_{S-SAT}$ por la demostración anterior y determinar si una cadena $e$ pertenece a $L_{S-SAT}$ es 
+equivalente a determinar si la fórmula booleana asociada a $e$ es satisfacible, por otro lado dado una fórmula booleana $F$
+saber si esta es satisfacible o no es equivalente a determinar si su cadena asociada pertenece a $L_{S-SAT}$. Por tanto 
+el problema de la palabra de $G$ es NP-Duro.
 
 Ahora se presenta un formalismo que sirve para generar $L_{S-SAT}$ usando el transductor $T_{SAT}$.
 
 \section{$L_{S-SAT}$ como lenguaje de índice global}
 
-En esta sección se presenta una una forma de generar el lenguaje $L_{0,1}$ empleando una gramática de índice global. 
+En esta sección se presenta una una forma de generar el lenguaje $L_{0,1}$ empleando una gramática de índice global.
 
-Dada esta gramática de índice global que describe el lenguaje $L_{copy}^+$ que se define en el capítulo 2, es posible realizar una modificación para generar el lenguaje 
+Dada esta gramática de índice global que describe el lenguaje $L_{copy}^+$ que se define en el capítulo 2, es posible realizar una modificación para generar el lenguaje
 $L_{0,1}$, a esta nueva gramática se le denominará $G_{0,1}$, que se define como:
 
 $$
@@ -250,8 +302,8 @@ A continuación se presenta un ejemplo de una cadena que se obtiene como derivac
 
 \subsection{Ejemplo de reconocimiento de $G_{0,1}$}
 
-En esta sección se presenta una secuencia de derivaciones que permiten obtener la cadena $110d110d110d$ mediante 
-la gramática $G_{0,1}$ (para cada derivación primero se muestra la regla de producción. seguido del estado de la 
+En esta sección se presenta una secuencia de derivaciones que permiten obtener la cadena $110d110d110d$ mediante
+la gramática $G_{0,1}$ (para cada derivación primero se muestra la regla de producción. seguido del estado de la
 pila y del estado del la cadena generada):
 
 \begin{enumerate}
