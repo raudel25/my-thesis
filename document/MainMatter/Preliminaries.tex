@@ -1,7 +1,7 @@
 
-\chapter{Preliminares}
-\author{Raudel Alejandro Gómez Molina}
 
+\chapter{Preliminares}
+\label{chap:preliminaries}
 
 \section{Teoría de Lenguajes}
 
@@ -9,19 +9,10 @@ En esta sección se definen los principales conceptos de teoría de lenguajes qu
 
 \subsection{Conceptos básicos}
 
-\paragraph{Alfabeto:} Un alfabeto, denotado como $\Sigma$, es un conjunto finito y no vacío de símbolos.
-
-Por ejemplo, el alfabeto $\Sigma=\{1,0\}$ está formado por los símbolos 0 y 1.
-
-\paragraph{Cadena:} Una cadena es una sucesión finita de símbolos del alfabeto.
-
-Por ejemplo: $11$ y $101$ pueden ser cadenas sobre el alfabeto $\Sigma$.
-
-\paragraph{Lenguaje:} Un lenguaje es un conjunto de cadenas definido sobre un alfabeto.
-
-Por ejemplo: el lenguaje de la
-representación binaria de todos los números pares $L=\{w\,|\,\text{last}(w)=0\}$, $\text{last}(w)$
-representa el último caracter de la cadena $w$.
+Los conceptos básicos de la teoría de lenguajes son los siguientes: un alfabeto, denotado como $\Sigma$, es un conjunto finito y no vacío de símbolos;
+una cadena es una sucesión finita de símbolos del alfabeto y un lenguaje es un conjunto de cadenas definido sobre un alfabeto. Por ejemplo, el 
+alfabeto $\Sigma=\{1,0\}$ está formado por los símbolos 0 y 1; $11$ y $101$ pueden ser cadenas sobre el alfabeto $\Sigma$ y un ejemplo de lenguaje
+es $L=\{w\,|\,\text{last}(w)=0\}$, $\text{last}(w)$ representa el último caracter de la cadena $w$.
 
 Dados los conceptos básicos, ahora es necesario definir las operaciones básicas entre los elementos de la teoría de lenguajes.
 
@@ -29,20 +20,14 @@ Dados los conceptos básicos, ahora es necesario definir las operaciones básica
 
 Como los lenguajes son conjuntos, todas las operaciones sobre conjuntos también se definen para lenguajes.
 
-\paragraph{Unión:} La unión de dos lenguajes $L_1$ y $L_2$ se define como el conjunto de cadenas que
-pertenecen a $L_1$ o a $L_2$:
-$$L_1\cup L_2=\{w\,|\,w\in L_1\,\vee\,w\in L_2\}.$$
-
-\paragraph{Intersección:} La intersección de dos lenguajes $L_1$ y $L_2$ se define como el conjunto de
-cadenas que pertenecen a $L_1$ y a $L_2$:
-$$L_1\cap L_2=\{w\,|\,w\in L_1\,\wedge\,w\in L_2\}.$$
+\paragraph{Operaciones relacionadas con conjuntos:} La unión, intersección y el complemento 
+constituyen operaciones entre lenguajes y se definen mediante los conceptos de la teoría de conjuntos
+que representan cada una de estas operaciones.
 
 \paragraph{Concatenación:} La concatenación de dos lenguajes $L_1$ y $L_2$ se define como el conjunto
 de cadenas que resultan de concatenar una cadena de $L_1$ con una cadena de $L_2$:
 $$L_1\circ L_2=\{w_1w_2\,|\,w_1\in L_1\,\wedge\,w_2\in L_2\}.$$
-\paragraph{Complemento:} El complemento de un lenguaje $L$ se define como el conjunto de cadenas que no
-pertenecen a $L$:
-$$\overline{L}=\{w\,|\,w\notin L\}.$$
+
 \paragraph{Clausura de Kleene:} La clausura de Kleene de un lenguaje $L$ se define como el conjunto de
 cadenas que resultan de concatenar cero o más cadenas de $L$:
 $$L^*=\{w_1w_2\ldots w_n\,|\,n\geq 0\,\text{y}\,w_i\in L\}$$
@@ -61,26 +46,30 @@ tal que:
             es decir, el homomorfismo preserva la concatenación.
 \end{enumerate}
 
-Por ejemplo sobre el alfabeto $\Sigma=\{a,b\}$, se define el homomorfismo $h$, tal que $h(a)=0$ y $h(b)=1$, entonces
-$h(ab)=01$.
+Por ejemplo si sobre el alfabeto $\Sigma=\{a,b\}$, se define el homomorfismo $h$, tal que $h(a)=0$ y $h(b)=11$, entonces
+$h(ab)=011$.
 
-Todos los conceptos anteriormente planteados definen la base de la teoría de lenguajes y de estos se derivan algunas 
+Todos estos conceptos son la base de la teoría de lenguajes y de estos se derivan algunas 
 preguntas como determinar si una cadena pertenece a un lenguaje o determinar si un lenguaje es vacío. A continuación se presentan 3 problemas que serán usados en el desarrollo de este trabajo.
 
 \subsection{Problemas relacionados con Lenguajes}
 
 Los problemas relacionados con la teoría de lenguajes permiten vincular los problemas de otra naturaleza 
-con su representación en la teoría de lenguajes formales. 
+con su representación en la teoría de lenguajes formales, lo cual constituye una herramienta para resolver
+estos problemas desde los conceptos y formalismos de la teoría de lenguajes.
 
 \paragraph{Problema de la palabra:} Consiste en determinar si una cadena pertenece a un lenguaje dado.
 
 Todo problema en Ciencia de la Computación puede ser reducido a un problema de la palabra, ya que cualquier problema
-puede ser codificado como un lenguaje formal \cite{authomataTheory}.
+puede ser codificado como un lenguaje formal \cite{authomataTheory}. 
 
-\paragraph{Problema del vacío:} Consiste en determinar si un lenguaje es vacío. 
+Por ejemplo dado el lenguaje $L=\{w\,|\,\text{last}(w)=0\}$, $\text{last}(w)$ determinar si $1100100$ pertenece a $L$.
 
-\paragraph{Problema de la equivalencia:} Consiste en determinar si dos $L_1$ y $L_2$ lenguajes son iguales (es decir si se cumple que
-$L_1\subseteq L_2 \wedge L_2\subseteq L_1$).
+\paragraph{Problema del vacío:} Consiste en determinar si un lenguaje es vacío. Por ejemplo dado el lenguaje
+$L=\{w\,|\,\text{last}(w)=0\}$, $\text{last}(w)$ determinar si el conjunto de cadenas que define $L$ es vacío o no.
+
+\paragraph{Problema de la equivalencia:} Consiste en determinar si dos lenguajes $L_1$ y $L_2$ son iguales (es decir si se cumple que
+$L_1\subseteq L_2 \wedge L_2\subseteq L_1$). Este problema se usa en el capítulo \ref{chap:RCG} para definir propiedades de algunos formalismos.
 
 En la próxima sección se presentan las gramáticas, un mecanismo que permite definir un lenguaje.
 
@@ -117,7 +106,7 @@ A continuación se presenta la jerarquía de Chomsky, que clasifica a los lengua
 
 \subsection{Jerarquía de Chomsky}
 
-La \textbf{Jerarquía de Chomsky} (Figura~\ref{fig:ChomskySchema}) clasifica las gramáticas en cuatro tipos, según las restricciones en sus reglas de producción y la capacidad expresiva de los lenguajes que generan \cite{geeksforgeeks_chomsky_hierarchy}.
+La \textbf{Jerarquía de Chomsky} (Figura~\ref{fig:ChomskySchema}) clasifica los lenguajes en cuatro tipos, según las restricciones en sus reglas de producción y la capacidad expresiva de los lenguajes que generan \cite{geeksforgeeks_chomsky_hierarchy}.
 
 \begin{enumerate}
       \item \textbf{Tipo 0: Gramáticas irrestrictas}
@@ -173,22 +162,23 @@ La \textbf{Jerarquía de Chomsky} (Figura~\ref{fig:ChomskySchema}) clasifica las
       \label{fig:ChomskySchema} %
 \end{figure}
 
-Las diferencias entre los elementos de la Jerarquía de Chomsky se pueden ilustrar con el lenguaje 
-\textit{Copy} sobre un alfabeto $\Sigma$, que se define como $L_{copy}=\{w^+\,|\,w\in Z^*\}$.
-Si se toma un caso particular de $L_{copy}$, al cual se le llama $L_{copy}^n=\{w^n\,|\,w\in Z^*\}$,
-$L_{copy}^1$ es un lenguaje regular, mientras que $L_{copy}^2$ es un lenguaje libre del contexto y por último
-$L_{copy}^k\,\forall\,k\geq 3$ es un lenguaje dependiente del contexto \cite{authomataTheory}. El lenguaje 
-$L_{copy}$ se usa en los restantes capítulos como base de formalismos que describen el tema analizado en este trabajo.
+Las diferencias entre los elementos de la Jerarquía de Chomsky se pueden ilustrar con el lenguaje \textit{Copy}
+sobre un alfabeto $\Sigma$, que se define como $L_{copy}=\{w^+\,|\,w\in Z^*\}$.  Si se toma un caso particular 
+de $L_{copy}$, al cual se le llama $L_{copy}^n=\{w^n\,|\,w\in Z^*\}$, $L_{copy}^1$ es un lenguaje regular, 
+mientras que $L_{rev-copy}=\{ww_r\,|\,w\in Z^*\}$, donde $w_r$ es $w$ invertida, es un lenguaje libre del contexto y por último $L_{copy}^k\,\forall\,k\geq 2$ es un lenguaje dependiente del contexto \cite{authomataTheory}. 
+El lenguaje $L_{copy}$ se usa en los restantes capítulos como base de formalismos que describen el lenguaje de las fórmulas booleanas satisfacibles.
 
 En la próxima sección se presentan los principales conceptos relacionados con las gramáticas libres del contexto y las 
-gramáticas regulares. Estos contenidos sirven de base para el resto de los capítulos y secciones.
+gramáticas regulares. 
+
 \section{Autómatas}
-Un autómata es un modelo de cómputo en la teoría de lenguajes. En esta sección se abordan los principales conceptos sobre los autómatas.
+Un autómata es un modelo en la teoría de lenguajes \cite{authomataTheory}, el cual se define como una máquina 
+abstracta que procesa cadenas de símbolos de un alfabeto finito y determina si una cadena pertenece a un lenguaje. 
+En esta sección se abordan los principales conceptos sobre los autómatas regulares y de pila.
 \subsection{Autómata regular}
 
-Un autómata regular \cite{authomataTheory}, también conocido como autómata finito, es un modelo matemático 
-que permite reconocer lenguajes regulares. Este tipo de autómata se define como una máquina abstracta que 
-procesa cadenas de símbolos de un alfabeto finito y determina si una cadena pertenece a un lenguaje regular.
+Un autómata regular \cite{authomataTheory}, también conocido como autómata finito, es un modelo matemático que 
+permite reconocer si una cadena pertenece a un lenguaje regular. 
 
 Un autómata regular se define como una 5-tupla $$\mathcal{A} = (Q, \Sigma, \delta, q_0, F),$$ donde:
 
@@ -200,23 +190,16 @@ Un autómata regular se define como una 5-tupla $$\mathcal{A} = (Q, \Sigma, \del
       \item $F \subseteq Q$: Es el conjunto de \textbf{estados de aceptación o estados finales}.
 \end{itemize}
 
-El autómata comienza en el estado inicial $q_0$ y procesa una cadena de entrada símbolo por símbolo.
-En cada paso, la función de transición $\delta$ determina el siguiente estado del autómata. Si, después de
-procesar toda la cadena, el autómata termina en un estado de aceptación $q \in F$, entonces la cadena
-se acepta; de lo contrario, se rechaza.
+El autómata comienza en el estado inicial $q_0$ y procede a leer el primer símbolo de la cadena.
+En cada paso, la función de transición $\delta$ determina, con base en el símbolo actual de la cadena, el siguiente estado al que debe pasar el autómata, avanzando al siguiente símbolo.
+Si, al finalizar la lectura del último símbolo de la cadena, el autómata se encuentra en un estado de aceptación $q \in F$, entonces la cadena es aceptada; en caso contrario, es rechazada.
 
-Se puede extender el concepto de autómata finito añadiendo un nuevo tipo de transición que no consume ningún 
-caracter, la cual recibe el nombre de transición $\varepsilon$. Se puede demostrar \cite{authomataTheory} que
-el conjunto de lenguajes reconocido por un autómata finito sin transiciones $\varepsilon$
-(\textit{autómata finito determinista}) es equivalente al conjunto de lenguajes reconocido por un autómata finito con transiciones $\varepsilon$ (\textit{autómata finito no determinista}).
+Se puede extender el concepto de autómata finito añadiendo un nuevo tipo de transición que no consume ningún caracter, la cual recibe el nombre de transición $\varepsilon$. Se puede demostrar \cite{authomataTheory} que el conjunto de lenguajes reconocido por un autómata finito sin transiciones $\varepsilon$ (\textit{autómata finito determinista}) es equivalente al conjunto de lenguajes reconocido por un autómata finito con transiciones $\varepsilon$ (\textit{autómata finito no determinista}).
 
-A continuación se presenta el concepto de autómata que reconoce a los lenguajes libres del contexto.
+A continuación se presenta el concepto de autómata de pila que reconoce a los lenguajes libres del contexto.
 \subsection{Autómata de pila y Gramáticas libres del contexto}
 
-Un autómata de pila \cite{authomataTheory} es un modelo matemático de computación que extiende los autómatas finitos al incluir una estructura de datos adicional: una pila. Este modelo es capaz de reconocer lenguajes libres de contexto,
-proporcionando una conexión directa con las gramáticas libres de contexto \textit{CFG}. 
-Es decir dada una gramática libre del contexto se puede construir un autómata de pila que reconozca el lenguaje 
-generado por la gramática y viceversa \cite{authomataTheory}.
+Un autómata de pila \cite{authomataTheory} es un modelo matemático que extiende los autómatas finitos al incluir una estructura de datos adicional. 
 
 Un autómata de pila se define como una 7-tupla
 \[
@@ -234,20 +217,23 @@ donde:
       \item $F \subseteq Q$: Es el conjunto de \textbf{estados de aceptación o estados finales}.
 \end{itemize}
 
-Un autómata de pila procesa una cadena de entrada desde el estado inicial $q_0$ y
-puede utilizar transiciones $\varepsilon$ (sin consumir entrada). En cada paso, la función $\delta$
-determina el nuevo estado, los símbolos que se insertan o sacan de la pila, y el avance en la entrada.
-Tras procesar toda la cadena, el autómata termina en un estado de aceptación o con una pila vacía 
-(dependiendo del criterio de aceptación), la cadena se acepta.
+El autómata de pila comienza en el estado inicial $q_0$ con una pila vacía y lee el primer símbolo de la cadena.
+En cada paso, la función de transición $\delta$ determina, basado en el estado actual, el símbolo leído de la cadena y el símbolo en la cima de la pila, el siguiente estado al que pasa el autómata, las acciones sobre la pila (como empujar o desapilar), y el próximo símbolo a leer.
+Si, al finalizar la lectura del último símbolo de la cadena, el autómata se encuentra en un estado de aceptación $q \in F$ o la pila está vacía (dependiendo del criterio de aceptación), entonces la cadena es aceptada; en caso contrario, es rechazada.
 
-A continuación se presenta una combinación de un autómata finito con un homomorfismo. 
+Un autómata de pila es capaz de reconocer lenguajes libres de contexto, proporcionando una conexión directa con las gramáticas libres de contexto \textit{CFG}.
+
+A continuación se presenta una extensión de los autómatas finitos.
+
 \subsection{Transductor finito}
 
-Un transductor finito \cite{geeksforgeeks_finite_state_transducer} es un modelo computacional que extiende los autómatas finitos al incluir tanto entradas como salidas.
-Formalmente, un transductor finito es un autómata finito con una función de transición extendida
-que asocia una salida a cada transición.
+Un transductor finito \cite{geeksforgeeks_finite_state_transducer} es un modelo computacional que extiende los autómatas finitos al incluir tanto entradas como salidas.  
+Formalmente, un transductor finito es un autómata finito con una función de transición extendida que recibe un símbolo de la cadena de entrada y un estado, dando como
+salida el estado al cual pasa el transductor y un símbolo. Como resultado de la aceptación de una cadena el transductor
+genera una cadena de salida formada por todos los símbolos que se obtuvieron como salida mediante la función de transición
+en el proceso de reconocimiento.
 
-Un transductor finito puede representarse como una 6-tupla:
+Un transductor finito se define como una 6-tupla:
 \[
       T = (Q, \Sigma, \Gamma, \delta, q_0, F),
 \]
@@ -261,12 +247,12 @@ donde:
       \item \(F \subseteq Q\) es el conjunto de estados finales.
 \end{itemize}
 
-Observe que un homorfismo es un transductor finito de un solo estado y tantas transiciones hacia el mismo estado como transformaciones
-de símbolos en el homomorfismo.
-
-Por ejemplo se define el siguiente transductor finito $T$:
+Por ejemplo se define el siguiente transductor finito $T$, el cual reconoce cadenas del alfabeto $\{a,b\}$
+que tengan ninguna o más $a$ seguida de una o más $b$ y genera una cadena formada por una cantidad de $0$ igual
+a la cantidad de $a$ de la cadena original seguida de una cantidad de $1$ igual a la misma cantidad de $b$ de
+la cadena original:
 \[
-      T = (\{q_0, q_1\}, \Sigma, \Gamma, \delta, q_0, Q),
+      T = (Q, \Sigma, \Gamma, \delta, q_0, F),
 \]
 
 donde:
@@ -289,9 +275,16 @@ donde:
       \item \(F = \{q_1\}\) es el conjunto de estados finales.
 \end{itemize}
 
-Entonces la cadena $aaaabbbbb$ es reconocida por $T$ y $T(aaaabbbbb)=000011111$.
+Para reconocer $aaaabbbbb$, primero $T$ empieza por el estado $q_0$ y el primer caracter $a$, entonces pasa al estado $q_0$ y genera un $0$.
+Luego, al leer el segundo caracter $a$, se mantiene en el estado $q_0$ y genera otro $0$. Este proceso se repite hasta el quinto caracter
+que es $b$, entonces pasa al estado $q_1$. Luego, al leer el sexto caracter $b$, se mantiene en el estado $q_1$ y genera un $1$. Este proceso
+se repite varias veces hasta que se llega al final de la cadena, por tanto se genera la cadena $000011111$.
 
-A continuación se describe el modelo de cómputo más general que describe el resto de los elementos de la Jerarquía de Chomsky.
+Observe que un homomorfismo es un transductor finito de un solo estado y tantas transiciones hacia el mismo estado como transformaciones de símbolos en el homomorfismo.
+
+A continuación se presenta otra máquina abstracta, la cual representa modelo de cómputo más general que describe el resto de los elementos de la Jerarquía de Chomsky y 
+representa la formalización de un algoritmo.
+
 
 \section{Máquina de Turing}
 
@@ -311,10 +304,8 @@ definida.
 En una Máquina de Turing no determinista, para cada estado y símbolo leído, pueden existir múltiples
 transiciones posibles.
 
-La Máquina de Turing es fundamental en el estudio de la computabilidad, ya que establece un marco teórico 
-para definir qué problemas son resolubles mediante algoritmos. Este modelo formalizó el concepto de 
-\textit{función computable}, es decir, aquellas funciones que pueden ser calculadas mediante una secuencia 
-finita de pasos definidos por una máquina de Turing \cite{authomataTheory}.
+La Máquina de Turing es fundamental en el estudio de la computabilidad, ya que establece un marco teórico para definir qué problemas son resolubles mediante algoritmos. Este modelo formalizó el concepto de \textit{función computable}, es decir, aquellas funciones que pueden ser calculadas mediante una secuencia finita de pasos definidos por una máquina de Turing \cite{authomataTheory}. Este marco teórico constituye
+la definición formal de algoritmo \cite{authomataTheory} por lo que es importante para comprender todas los problemas relacionados con la computación.
 
 Todas las operaciones con lenguajes y los problemas relacionados con ellos tienen una dificultad y para medir esta dificultad
 se utiliza un marco teórico llamado complejidad computacional, el cual se presenta en la próxima sección.
@@ -355,7 +346,8 @@ un arreglo son $\Theta(n)$, ya que necesitan realizar una cantidad $n$ de operac
 la cantidad de elementos del arreglo.
 
 Se dice que un algoritmo tiene un tiempo polinomial si puede resolverse en una complejidad de $O(n^k)$, donde $n$ es el tamaño de la entrada del algoritmo y $k$
-es una constante. Por ejemplo encontrar el mínimo y el máximo de un arreglo tiene un tiempo polinomial.
+es una constante. Por ejemplo encontrar el mínimo y el máximo de un arreglo tiene un tiempo polinomial, ya que se necesita realizar una cantidad de operaciones
+proporcional al tamaño del arreglo.
 
 
 En la próxima sección se presenta la clasificación de los problemas de acuerdo a su complejidad computacional.
@@ -367,24 +359,17 @@ Los problemas computacionales \cite{authomataTheory} se agrupan en diferentes cl
 Un problema pertenece a la clase P si puede resolverse en tiempo polinomial.
 
 \paragraph{Problemas en la clase NP:}
-Un problema pertenece a NP si su solución puede verificarse en tiempo polinomial mediante una Máquina de Turing 
-determinista. Alternativamente, un problema está en NP si puede resolverse en tiempo polinomial mediante una 
-Máquina de Turing no determinista \cite{authomataTheory}.
+Un problema pertenece a NP si su solución puede verificarse en tiempo polinomial mediante una Máquina de Turing determinista. Alternativamente, un problema está en NP si puede resolverse en tiempo polinomial mediante una Máquina de Turing no determinista \cite{authomataTheory}.
 
 \paragraph{Problemas en la clase NP-Completo:}
-Un problema pertenece a la clase NP-Completo, si pertenece a NP y además es tan difícil como cualquier 
-otro problema en NP. Esto significa que cualquier problema en NP puede reducirse a este problema en 
-tiempo polinómico \cite{authomataTheory}.
+Un problema pertenece a la clase NP-Completo, si pertenece a NP y además es tan difícil como cualquier otro problema en NP. Esto significa que cualquier problema en NP puede reducirse a este problema en tiempo polinómico \cite{authomataTheory}.
 
 \paragraph{Problemas en la clase NP-Duro:}
-Un problema pertenece a la clase NP-Duro, es tan difícil como cualquier otro problema en NP, pero no 
-necesariamente pertenece a NP \cite{authomataTheory}.  
+Un problema pertenece a la clase NP-Duro, si es tan difícil como cualquier otro problema en NP, pero no
+necesariamente pertenece a NP \cite{authomataTheory}.
 
 \paragraph{Problemas no decidibles:}
-Un problema es no decidible si no existe una Máquina de Turing que pueda resolverlo correctamente para todas las 
-entradas posibles. Esto significa que no hay algoritmo que garantice una respuesta en tiempo finito en todos los 
-casos \cite{authomataTheory}. Un ejemplo clásico de problema no decidible es el \textit{Problema de la Parada}
-\cite{authomataTheory}, que consiste en determinar si una Máquina de Turing se detendrá para una entrada dada.
+Un problema es no decidible si no existe una Máquina de Turing que pueda resolverlo correctamente para todas las entradas posibles. Esto significa que no hay algoritmo que garantice una respuesta en tiempo finito en todos los casos \cite{authomataTheory}. Un ejemplo clásico de problema no decidible es el \textit{Problema de la Parada} \cite{authomataTheory}, que consiste en determinar si una Máquina de Turing se detendrá para una entrada dada.
 
 En la siguiente sección se realiza la comparación entre las clases P y NP.
 
@@ -402,7 +387,8 @@ en NP-Duro que no se puedan resolver en tiempo polinomial \cite{authomataTheory}
 Por otra parte existen problemas para los cuales no existe ningún algoritmo, como los problemas indecidibles.
 
 A continuación se presenta el problema que sirve de base a los problemas de la clase NP-Completo y que a su
-vez, la relación de este con la teoría de lenguajes, es el foco de atención de este trabajo.
+vez, la relación de este con la teoría de lenguajes, es el foco de atención de este trabajo, ya que permite 
+resolver el problema de la próxima sección mediante un enfoque distinto a los métodos tradicionales.
 
 \section{Problema de la satisfacibilidad booleana}
 
@@ -486,6 +472,49 @@ principales casos:
             lineales modulares y aplicando eliminación de Gauss.
 \end{itemize}
 
-En este capítulo se abordó todo el contenido de la teoría de lenguajes y el SAT necesario para el contenido de los capítulos posteriores.
-En el siguiente capítulo se abordan los formalismos de escritura regulada que se usan en los capítulos 3, 4 y 5, estos formalismos reconocen lenguajes
-que pertenecen a los lenguajes dependientes del contexto en la Jerarquía de Chomsky.
+En la siguiente sección se describen 2 trabajos que vinculan el SAT con la teoría de lenguajes.
+
+\section{Solución de instancias del SAT usando Teoría de Lenguajes}
+
+Como parte del estudio del problema SAT, se han desarrollado anteriormente en 
+la Facultad de Matemática y Computación de la Universidad de La Habana 
+2 trabajos utilizando un enfoque 
+basado en formalismos de la teoría de lenguajes, buscando resolver 
+instancias específicas del SAT, que tienen una solución polinomial. 
+
+La idea principal que se aborda en \cite{aCFSAT} consta de tres partes: asumir que todas las variables en 
+la fórmula son distintas, construir un autómata finito que reconozca cadenas de 0 y 1 hagan verdadera esa 
+fórmula (asumiendo que todas las variables son distintas), y por último intersectar ese lenguaje con algún 
+formalismo que garantice que todas las instancias de la misma variable tenga el mismo valor. Luego de esos 
+tres pasos, se obtiene un lenguaje libre del contexto de las cadenas de 0 y 1 que satisfacen la fórmula y 
+que además respeta los valores de las variables duplicadas.  Finalmente, para determinar si la fórmula es 
+satisfacible o no, basta con determinar si el lenguaje es vacío. Todo el algoritmo descrito anteriormente tiene un tiempo polinomial en relación con el 
+tamaño de la fórmula booleana.
+
+El autómata finito diseñado en \cite{aCFSAT}, se denominó \textbf{autómata booleano}. La idea detrás de este es representar 
+las reglas de la lógica proposicional en transiciones entre los estados de un autómata finito, donde cada estado del autómata representa un valor de verdad positivo o 
+negativo lo cual significa que hasta ese momento (solo tomando las instancias de las variables asociadas a los 
+caracteres reconocidos) la fórmula se evalúa positiva o negativa respectivamente \cite{aCFSAT}.
+
+Posteriormente en \cite{aCFSAT} se define el concepto del orden libre del contexto: una fórmula booleana tiene un orden libre del contexto si para cualquier par de instancias de una variable $x_i$ y $x_j$ con $i<j$ se
+cumple que si existe otra variable con instancia $x_k$ con $i<k<j$ entonces todas las instancias de esta nueva
+variable ocurren entre $x_i$ y $x_j$.
+
+Para terminar con lo expuesto en \cite{aCFSAT}, para determinar si una fórmula booleana con un orden libre del contexto 
+es satisfacible se intersecta el autómata booleano asociado a dicha fórmula con una gramática libre del contexto 
+que comprueba que todas las instancias de las variables tienen el mismo valor, luego se comprueba si el lenguaje
+generado es no vacío.
+
+El trabajo expuesto en \cite{aSRCSAT} es una generalización de la idea de \cite{aCFSAT}, pero esta vez se intersecta
+el autómata booleano asociado a la fórmula booleana con una gramática de concatenación de rango simple (esta gramática
+se define en el próximo capítulo) que describe el orden de las variables. Luego se procede igual que en \cite{aCFSAT}
+y se comprueba si el lenguaje generado es no vacío.
+
+En este trabajo se sigue otro enfoque para resolver el SAT usando teoría de lenguajes, en vez de usar el problema
+del vacío se construye el lenguaje de todas las fórmulas booleanas satisfacibles y para determinar si un SAT
+es satisfacible se analiza el problema del vacío. Esto permite demostrar que muchos formalismos tienen el problema
+de la palabra NP-Duro (los que sean cerrados bajo transducción finita y su representación luego de la transducción sea $O(1)$,
+y además que genere un lenguaje que es subconjunto de $L_{copy}$, el cual se define en el capítulo \ref{chap:LSATFT}). Por otro lado se obtiene
+una gramática de concatenación de rango que reconoce las fórmulas booleanas satisfacibles, lo que permite demostrar
+que las gramáticas de concatenación de rango reconocen todos los problemas que pertenecen a la clase NP. Pero antes 
+de esto es necesario definir y analizar las gramáticas de concatenación de rango y para ello se dedica el próximo capítulo.

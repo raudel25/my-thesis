@@ -19,30 +19,132 @@
 
 \maketitle
 
-En este capitulo se presenta un enfoque distinto al del capítulo anterior, que se basa en definir un lenguaje al cual
-pertenecen todos los problemas SAT que son satisfacibles y al cual se le denomina $L_{S-SAT}$. Una vez definido este lenguaje, para determinar
-si un SAT es satisfacible solo es necesario verificar si la cadena que lo representa pertenece a $L_{S-SAT}$.
+% \chapter{Preliminares}
+% \label{chap:preliminaries}
+
+% \chapter{Gramáticas de concatenación de rango}
+% \label{chap:RCG}
+
+% \chapter{Lenguaje de las fórmulas booleanas satisfacibles empleando transducción finita}
+% \label{chap:LSATFT}
+
+% \chapter{Lenguaje de las fórmulas booleanas satisfacibles empleando gramáticas de concatenación de rango}
+% \label{chap:LSATRCG}
+
+En este capítulo se presenta un enfoque distinto a los expuestos en \cite{aCFSAT} y \cite{aSRCSAT}, que se basa 
+en definir un lenguaje al cual pertenecen todos los problemas SAT que son satisfacibles y al cual se le 
+denomina $L_{S-SAT}$. Una vez definido este lenguaje, para determinar si un SAT es satisfacible solo es 
+necesario verificar si la cadena que lo representa pertenece a $L_{S-SAT}$.
+
+Para definir el lenguaje $L_{S-SAT}$ primeramente es necesario buscar una transformación de una fórmula booleana
+que pueda ser interpretada por un formalismo de la teoría de lenguajes, luego se necesita un mecanismo que sea capaz
+de determinar si una cadena que representa la asignación de los valores de las variables es capaz de satisfacer dicha 
+fórmula booleana.
+
+En este capítulo se presenta una transformación de una fórmula booleana a una cadena. Posteriormente se define 
+el lenguaje $L_{0,1}=\{wd\}^+$, donde $w\in\{0,1\}^*$, la cadena $w$ representa la asignación de valores para cada
+variable. Entonces se define un transductor finito que toma una cadena del lenguaje $L_{0,1}$ y genera todas las 
+fórmulas booleanas que son satisfacibles por dicha cadena, mediante este mecanismo se puede definir el lenguaje
+$L_{S-SAT}$. Para finalizar se demuestra que para cualquier formalismo que genere $L_{0,1}$, sea cerrado bajo transducción
+finita y su representación luego de la transducción sea $O(1)$, el problema de la palabra es NP-Duro.
+
+A continuación se presenta una transformación de una fórmula booleana en una cadena.
+
+\section{Transformación de una fórmula booleana a una cadena}
+
+Dada una fórmula booleana $F$ en CNF se puede definir la siguiente estructura:
+$$F=X_1 \wedge X_2 \wedge \ldots \wedge X_n$$
+donde cada cláusula $X_i$ es una disyunción de literales:
+$$X_i=L_{i1} \vee L_{i2} \vee \ldots \vee L_{im}$$
+y cada literal $L_{ij}$ es una variable booleana o su negación. En cada cláusula $X_i$ las variables que aparecen en $F$, puede tener cada una 3 estados posibles: $a$ si la variable aparece positiva, $b$ si la variable aparece negada y $c$ si la variable no pertenece a ninguno de los literales de la cláusula.
+
+Por ejemplo la siguiente fórmula booleana en $CNF$:
+
+$$F=(x_1 \vee x_2) \wedge (\neg x_1 \vee x_2 \vee x_3) \wedge (x_1 \vee \neg x_2 \vee x_3)$$
+
+para la primera cláusula $x_1$ aparece positiva ($a$), $x_2$ aparece positiva ($a$) y $x_3$ no aparece $(c)$, para la segunda
+$x_1$ aparece negada ($b$), $x_2$ aparece positiva ($a$) y $x_3$ aparece positiva $(a)$ y para la tercera 
+$x_1$ aparece positiva ($a$), $x_2$ aparece negada ($b$) y $x_3$ aparece positiva $(a)$.
+
+A partir de la afirmación anterior, se puede definir una cadena de símbolos $w$ que representa a la cláusula $X_i$ sobre una secuencia de variables $v_1,v_2,\ldots,v_p$ de la siguiente manera:
+
+\begin{itemize}
+    \item $w$ cuenta con exactamente $p$ símbolos.
+    \item Si la variable $v_j$ aparece positiva en $X_i$, entonces el $j$-ésimo símbolo es $a$.
+    \item Si la variable $v_j$ aparece negada en $X_i$, entonces el $j$-ésimo símbolo es $b$.
+    \item Si la variable $v_j$ no aparece en $X_i$, entonces el $j$-ésimo símbolo es $c$.
+\end{itemize}
+Si se toma la secuencia de variables correspondiente a $F$, y se le aplica el procedimiento anterior a cada cláusula
+se obtiene una cadena de símbolos que representa a dicha cláusula en $F$.
+
+Si ya se tiene una representación para cada cláusula de $F$ solo resta obtener una cadena de símbolos que represente a $F$,
+esto se puede lograr concatenando las cadenas de símbolos de cada cláusula de $F$ en el orden que aparecen con un separador
+en este caso se eligió el símbolo $d$.
+
+Por ejemplo la siguiente fórmula booleana en \textit{CNF}:
+$$F=(x_1 \vee x_2) \wedge (\neg x_1 \vee x_2 \vee x_3) \wedge (x_1 \vee \neg x_2 \vee x_3)$$
+puede ser expresada como la cadena de símbolos:
+$$w=aacdbaadabad$$
+tomando como secuencia de variables $x_1, x_2, x_3$.
+
+Entonces una vez definida la transformación de una fórmula booleana en una cadena se puede definir el lenguaje
+de todas las fórmulas booleanas en CNF:
+$$L_{FULL-SAT}=\{w\,|\,\exists F : t_{SAT}(F)=w\},$$
+donde $F$ es una fórmula booleana en CNF y $t_{SAT}(x)$ es una función que recibe una fórmula booleana y devuelve
+su representación mediante los estados $a$, $b$ y $c$ y el separador $d$.
+
+En la próxima sección se define el lenguaje $L_{S-SAT}$.
 
 \section{Definición de $L_{S-SAT}$}
 
 El lenguaje de todas las fórmulas booleanas en CNF que son satisfacibles se define como $L_{S-SAT}=\{w\,|\,w \in L_{FULL-SAT} \wedge f_{SAT}(w)\}$, 
-donde $L_{FULL-SAT}$ representa el lenguaje de todas las fórmulas booleanas en CNF y $f_{SAT}(w)$ es una función que 
-determina si $w$ es satisfacible.
+donde $L_{FULL-SAT}$ representa el lenguaje de todas las fórmulas booleanas en CNF y $f_{SAT}(w)$
+es una función que determina si $w$ es satisfacible.
 
-En las próximas secciones se presenta el primer enfoque para definir $L_{S-SAT}$, el cual se basa en definir
-el lenguaje mediante un transductor finito seleccionando un formalismo que sea cerrado bajo transducción finita.
+En la próxima sección se presenta la definición de $L_{S-SAT}$ usando transducción finita.
+
+\subsection{Definición del $L_{S-SAT}$ usando transducción finita}
+
+La idea para definir $L_{S-SAT}$ es construir un transductor finito, denominado $T_{SAT}$, que acepte como entrada cadenas del lenguaje $L_{0,1}$
+y devuelva como salida cadenas que representan una fórmula booleana en \textit{CNF}, detrás de esta construcción se busca asociar cada carácter 0 ó 1 en la cadena de entrada al valor de la variable booleana correspondiente en la cadena de salida y verificar que para dichos valores al evaluar la fórmula booleana se obtenga un valor de verdad positivo.
+
+Se define $L_{S-SAT}$ como el lenguaje de todas las transducciones $e$ que se obtienen del transductor $T_{SAT}$, a partir del lenguaje de cadenas de entrada $L_{0,1}=\{wd\}^+$ donde $w\in \{0,1\}^*$.
+
+$$L_{S-SAT} = \{e\,|\,\exists w \in L_{0,1} \wedge e \in T_{SAT}(w) \}.$$
+
+Aunque $L_{S-SAT}$ contiene todas las fórmulas booleanas satisfacibles, este conjunto por si solo no sirve de 
+mucho sin un mecanismo que permita conocer si una cadena que representa una fórmula booleana pertenece al 
+lenguaje o no. Una forma de obtener ese mecanismo es encontrar un formalismo que sea capaz de generar el 
+lenguaje $L_{0,1}$ y que al aplicarle el transductor $T_{SAT}$ a dicho formalismo se obtenga otro que 
+cuente con un algoritmo de reconocimiento para determinar si una cadena pertenece a este o no.
+
+Encontrar un formalismo que genere el lenguaje $L_{0,1}$ ($G_{0,1}$), y que sea cerrado bajo transducción finita es 
+suficiente para generar el lenguaje $L_{S-SAT}$. Una pregunta relacionada con $L_{S-SAT}$ sería saber si la 
+existencia de $G_{0,1}$ es una condición necesaria para construir dicho lenguaje.  Otra cuestión a analizar
+sería el problema de la palabra para $G_{0,1}$, observe que si este problema es polinomial con respecto al tamaño
+de la fórmula booleana se estaría resolviendo el problema \textbf{P vs NP}.
+
+Mediante la transformación $L_{0,1}$ por el transductor finito se mantiene la invariante del SAT que a dos 
+instancias de la misma variable se les asocia el mismo valor de verdad, porque a las variables se
+le asignan los mismos valores en todas las cláusulas.
+
+Dada la transformación de $L_{0,1}$ por el transductor finito se puede demostrar que el problema de la 
+palabra de cualquier formalismo que genere el lenguaje $L_{0,1}$, sea cerrado bajo transducción finita 
+su representación luego de la transducción sea $O(1)$, es NP-Duro, ya que puede ser reducido al SAT y por tanto a cualquier problema en NP. 
+
+En la siguiente sección se define el transductor $T_{SAT}$.
+
 \section{Transductor $T_{SAT}$}
 
-La idea para definir $L_{S-SAT}$ es construir un transductor finito que acepte como entrada cadenas del lenguaje $L_{0,1}=\{wd\}^+$ donde $w\in \{0,1\}^*$
-y devuelva como salida cadenas que representan una fórmula booleana en \textit{CNF} que sea verdadera si se evalúa en la cadena que el transductor recibió como entrada.
+En esta sección se define el transductor finito $T_{SAT}$ (Figura \ref{fig:transducer_sat}) que sigue la construcción definida en la sección anterior.
 
-Detrás de esta construcción se busca asociar cada carácter 0 ó 1 en la cadena de entrada al valor de la variable booleana correspondiente 
-en la cadena de salida y verificar que para dichos valores al evaluar la fórmula booleana se obtenga un valor de 
-positivo.
+Para ello se construye el transductor $T_{CLAUSE}$ (Figura \ref{fig:transducer_clause}) que hace el proceso de 
+transducción para los valores de las variables de una cláusula $wd$, donde $w\in \{0,1\}$. La idea detrás de $T_{CLAUSE}$
+es construir un transductor que genere todas las posibles cláusulas satisfacibles por los valores de las variables
+que determina la cadena de entrada, este transductor tiene 3 estados: el estado inicial, el estado positivo (representa que la
+cláusula generada ya es satisfacible) y el estado negativo (representa que la cláusula generada aún no es satisfacible).
 
-A continuación se define el transductor finito $T_{SAT}$ (Figura \ref{fig:transducer_sat}) que sigue la construcción definida anteriormente, 
-para ello se define el transductor $T_{CLAUSE}$ (Figura \ref{fig:transducer_clause}) que hace el proceso de transducción 
-para los valores de las variables de una cláusula $wd$, donde $w\in \{0,1\}$:
+A continuación se define $T_{CLAUSE}$:
 
 \[
     T_{CLAUSE} = (Q, {\Sigma}, \Gamma, \delta, q_{0}, F),
@@ -56,13 +158,15 @@ donde:
     \item \(q_{0} = q_0\) estado inicial.
     \item \(F={q_p}\) conjunto de estados finales.
 \end{itemize}
-se define la función de transición $\delta$ de la siguiente manera:
+Se define la función de transición $\delta$ de la siguiente manera:
 
 \begin{itemize}
-    \item  transiciones para el estado $q_0$: representa el estado inicial. Si la entrada es un 1 el transductor
-          puede escribir $a$, $b$ y $c$, si escribe $a$ pasa al estado positivo, si escribe $b$ pasa al estado negativo
-          y si escribe $c$ permanece en el mismo estado. Por otro lado si la entrada es un 0 se intercambian los estados 
-          cuando se escribe $a$ y $b$ y cuando se escribe $c$ permanece en el mismo estado.
+    \item Transiciones para el estado $q_0$: representa el estado inicial. Si la entrada es un 1 el
+          transductor puede escribir $a$, $b$ y $c$, si escribe $a$ pasa al estado positivo, si escribe $b$
+          pasa al estado negativo y si escribe $c$ permanece en el mismo estado. Por otro lado si la entrada 
+          es un 0 se intercambian los estados cuando se escribe $a$ y $b$, es decir cuando se escribe $a$
+          pasa al estado negativo y cuando se escribe una $b$ pasa al estado positivo, mientras que cuando 
+          se escribe $c$ permanece en el mismo estado.
           
           \begin{multicols}{2}
               \begin{itemize}
@@ -75,10 +179,11 @@ se define la función de transición $\delta$ de la siguiente manera:
               \end{itemize}
           \end{multicols}
           
-    \item transiciones para el estado $q_p$ (estado positivo de $T_{CLAUSE}$): representa que para los valores asignados a las variables
-          se obtiene un valor de verdad positivo.  Como la fórmula se encuentra ya en un estado positivo lo que significa que al menos un literal 
-          se evaluó positivo no importa la entrada y lo que el transductor escriba se mantiene en el mismo estado. Este es el estado de 
-          aceptación para el transductor lo cual significa que la cláusula toma un valor de verdad positivo.
+    \item Transiciones para el estado $q_p$ (estado positivo de $T_{CLAUSE}$): representa que para los valores
+          asignados a las variables se obtiene un valor de verdad positivo.  Como la fórmula se encuentra ya en un 
+          estado positivo lo que significa que al menos un literal se evaluó positivo no importa la 
+          entrada y lo que el transductor escriba se mantiene en el mismo estado. Este es el estado de 
+          aceptación para el transductor lo cual significa que la cláusula se evalúa con un valor de verdad positivo.
           \begin{multicols}{2}
               \begin{itemize}
                   \item $\delta_{SAT}(q_{p},1)=(q_{p},a)$
@@ -90,11 +195,13 @@ se define la función de transición $\delta$ de la siguiente manera:
               \end{itemize}
           \end{multicols}
           
-    \item transiciones para el estado $q_n$ (estado negativo de $T_{CLAUSE}$): representa que para los valores asignados a las variables
-          se obtiene un valor de verdad negativo. Aquí las transiciones son idénticas a las del estado 
-          inicial, reemplazando el estado inicial por el estado negativo en los posibles resultados de la función de 
-          transición.
-          
+    \item Transiciones para el estado $q_n$ (estado negativo de $T_{CLAUSE}$): representa que para los valores
+          asignados a las variables se obtiene un valor de verdad negativo. Si la entrada es un 1 el 
+          transductor puede escribir $a$, $b$ y $c$, si escribe $a$ pasa al estado positivo, si escribe $b$
+          pasa al estado negativo y si escribe $c$ permanece en el mismo estado. Por otro lado si la entrada 
+          es un 0 se intercambian los estados cuando se escribe $a$ y $b$, es decir cuando se escribe $a$
+          pasa al estado negativo y cuando se escribe una $b$ pasa al estado positivo, mientras que cuando 
+          se escribe $c$ permanece en el mismo estado.
           \begin{multicols}{2}
               \begin{itemize}
                   \item $\delta_{SAT}(q_{n},1)=(q_{p},a)$
@@ -133,7 +240,17 @@ se define la función de transición $\delta$ de la siguiente manera:
     \label{fig:transducer_clause} % Esto es para referenciar la figura en el texto
 \end{figure}
 
-Para definir el transductor $T_{SAT}$ se toman dos instancias del transductor $T_{CLAUSE}$ ($T_1$ y $T_2$ respectivamente) y se concatenan añadiendo una transición del estado $q_{p_1}$ (estado positivo de $T_1$) al estado $q_{0_2}$ (estado inicial de $T_2$) con el símbolo $d$ (tanto de lectura como de escritura) y además se agrega una clausura a $T_2$ con una transición del estado $q_{p_2}$ (estado positivo de $T_2$) al estado $q_{0_2}$ con el símbolo $d$ (tanto de lectura como de escritura). Entonces solo resta definir el estado inicial y el estado final de $T_{SAT}$, los cuales serían $q_{0_1}$ (estado inicial de $T_1$) y $q_{0_2}$ (estado inicial de $T_2$), respectivamente.
+Entonces para definir $T_{SAT}$ mediante $T_{CALUSE}$, la idea es modificar $T_{CALUSE}$ para que cuando se genere
+una cláusula y termine en el estado positivo se continue leyendo los valores de la cadena de entrada que son necesarios para generar
+la próxima cláusula. Esto se logra definiendo $q_0$ como el estado de aceptación y agregando una transición del estado 
+$q_p$ al estado $q_0$ que lea una $d$ y escriba una $d$, de esta manera cuando una cláusula se genera con un valor de 
+verdad positivo se pasa a generar la siguiente cláusula desde el estado inicial. La construcción anterior tiene 
+una dificultad y es que el transductor genera la cadena vacía, para solucionar esto se pueden tomar 2 instancias de 
+$T_{CLAUSE}$ y unirlas mediante una transición, esta idea se expone a continuación.
+
+Para definir el transductor $T_{SAT}$ (Figura \ref{fig:transducer_sat}) se toman dos instancias del transductor $T_{CLAUSE}$ ($T_1$ y $T_2$ respectivamente) y se concatenan añadiendo una transición del estado $q_{p_1}$ (estado positivo de $T_1$) al estado $q_{0_2}$ (estado inicial de $T_2$) con el símbolo $d$ (tanto de lectura como de escritura) y además se agrega una clausura a $T_2$ con una transición del estado $q_{p_2}$ (estado positivo de $T_2$) al estado $q_{0_2}$ con el símbolo $d$ (tanto de lectura como de escritura). Entonces solo resta definir el estado inicial y el estado final de $T_{SAT}$, los cuales serían $q_{0_1}$ (estado inicial de $T_1$) y $q_{0_2}$ (estado inicial de $T_2$), respectivamente.
+
+
 
 \begin{figure}[h]
     \begin{otherlanguage}{english}
@@ -177,182 +294,55 @@ Para definir el transductor $T_{SAT}$ se toman dos instancias del transductor $T
     \label{fig:transducer_sat} % Esto es para referenciar la figura en el texto
 \end{figure}
 
-A continuación se define el lenguaje $L_{S-SAT}$ usando transducción finita.
+A continuación se presenta la demostración de que le lenguaje $L_{S-SAT}$ definido mediante una transducción finita 
+reconoce todas las fórmulas satisfacibles.
 
-\subsection{Definición del $L_{S-SAT}$ usando transducción finita}
+\subsection{Demostración de que $L_{S-SAT}$ definido mediante una transducción finita
+    reconoce todas las fórmulas satisfacibles}
 
-Finalmente se define $L_{S-SAT}$ como el lenguaje de todas las transducciones $e$ que se obtienen del transductor $T_{SAT}$, a partir del lenguaje de cadenas de entrada $L_{0,1}=\{wd\}^+$ donde $w\in \{0,1\}^*$.
+En esta sección se demuestra que el problema de la palabra de cualquier formalismo que genere el lenguaje 
+$L_{0,1}$, sea cerrado bajo transducción finita y su representación luego de la transducción sea $O(1)$, es NP-Duro. Para ello se debe demostrar que el lenguaje 
+$L_{S-SAT}$ definido mediante $T_{SAT}$ realmente es igual al lenguaje de todas las fórmulas booleanas satisfacibles.
 
+La idea de la demostración es probar que para cualquier cadena binaria $w$, $T_{CLAUSE}(w)$ es el conjunto de todas las cláusulas que son satisfacibles por $w$.
+Después demostrar que $T_{SAT}(e)$ contiene todas las fórmulas de $n$ cláusulas satisfacibles por la cadena $w$ donde $e=(wd)^n \wedge w\in\{0,1\}^*$ y por último demostrar que:
 $$L_{S-SAT} = \{e\,|\,\exists w \in L_{0,1} \wedge e \in T_{SAT}(w) \}.$$
 
-Aunque $L_{S-SAT}$ contiene todas las fórmulas booleanas satisfacibles, este conjunto por si 
-solo no sirve de mucho sin un formalismo que permita conocer si una cadena que representa una fórmula booleana 
-pertenece al lenguaje o no. Para ello se necesita encontrar un formalismo que sea capaz de generar el lenguaje 
-$L_{0,1}$ y al aplicarle el transductor $T_{SAT}$ a dicho formalismo se obtenga un formalismo que cuente con un 
-algoritmo de reconocimiento para reconocer si una cadena pertenece a dicho formalismo o no.
+Para demostrar que dada una cadena binaria $w$, $T_{CLAUSE}(w)$ es el conjunto de todas las cláusulas que son 
+satisfacibles por $w$ primero suponga que $q\in T_{CLAUSE}(w)$. Entonces en el proceso que generó $q$ el 
+transductor terminó en el estado $q_p$ y como empezó en el estado $q_0$ ocurrió una transición desde $q_0$
+a $q_p$ o desde $q_n$ a $q_p$ y esto solo es posible si el transductor leyó un 1 y escribió una a o si leyó un 
+0 y escribió una b. Esto significa que en la fórmula booleana que representa $q$ hay una variable sin negar a 
+la cual se le asigna un 1 o una variable negada a la cual se le asigna un 0, por lo tanto se cumple que $w$
+satisface la fórmula booleana que representa $q$.
 
-Encontrar un formalismo que genere el lenguaje $L_{0,1}$, y que sea cerrado bajo transducción finita es 
-suficiente para generar el lenguaje $L_{S-SAT}$. Una pregunta relacionada con $L_{S-SAT}$
-sería saber si la existencia de dicho formalismo es una condición necesaria para definir dicho lenguaje. 
-Otra pregunta sería saber si existe un formalismo que sea capaz de describir el lenguaje $L_{S-SAT}$ y 
-el problema de la palabra en dicho formalismo sea polinomial (observe que de esta manera se estaría resolviendo el problema \textbf{P vs NP}).
+Sea una fórmula booleana $F$ satisfacible por $w$, representada por la cadena $q$, entonces se cumple que en 
+$F$ hay una variable sin negar a la cual se le asigna un 1 (lo cual significa que la variable toma
+un valor de verdad positivo) o una variable 
+negada a la cual se le asigna un 0 (lo cual significa que la variable toma
+un valor de verdad negativo). Sin pérdida de la generalidad se asume que la primera variable que cumple esto es la $i$-ésima.  
+Entonces observe que si se hace el reconocimiento de los primeros $i-1$ caracteres por $T_{CLAUSE}$ se pueden 
+seguir las transiciones de tal manera que los primeros $i-1$ caracteres de la cadena generada sean iguales a 
+los primeros $i-1$ caracteres de $q$. Dado este punto solo es posible que el transductor esté en el estado 
+$q_0$ o $q_n$, pero como se cumple que la $i$-ésima variable está sin negar y se le asigna un 1 o está negada 
+y se le asigna un 0, entonces se puede tomar la opción de leer un 1 y escribir una a o leer un 0 y escribir 
+una b según corresponda. De esta manera según en el estado en que se encuentre el autómata se pasa al estado $q_p$. 
+Luego se toman las restantes transiciones de manera que la cadena generada sea $q$ y se mantiene en el mismo estado ya que $q_p$ solo tiene transiciones hacia sí mismo. De esta manera se demuestra que $T_{CLAUSE}(w)$ es el conjunto de todas las cláusulas que son satisfacibles por $w$.
 
-Mediante la transformación $L_{0,1}$ por el transductor finito se mantiene la invariante fundamental del SAT que a dos instancias de la misma variable se les asocia el mismo valor de verdad.
+Para demostrar que $T_{SAT}(e)$ contiene todas las fórmulas satisfacibles por la cadena $e=(wd)^n$ donde $w\in\{0,1\}^*$ se hará una inducción sobre $n$. Se define los conjuntos $A_{w,n}$ como el conjunto formado por todas las cadenas que representan fórmulas booleanas de $n$ cláusulas satisfacibles por $w$ y $B_w$ el conjunto formado por todas las cadenas que representan las cláusulas que son satisfacibles por $w$. El caso base $n=1$ se demuestra porque la transducción se realiza solo sobre el primer transductor $T_{CLAUSE}$ que conforma a $T_{SAT}$ y como se demostró anteriormente $T_{CLAUSE}(w)$ contiene todas cláusulas satisfacibles por $w$.  Se supone para $n=k$ y se demuestra para $n=k+1$, se cumple que $A_{w,n}=\{xyd\,|\,x\in A_{w,n-1} \wedge y\in B_w\}$ y $T_{SAT}((wd)^n)=\{xyd\,|\,x\in T_{SAT}((wd)^{n-1}) \wedge y\in T_{CLAUSE}(w)\}$. Por hipótesis de inducción se cumple que $A_{w,n-1}=T_{SAT}((wd)^{n-1})$ y además se cumple que $B_w=T_{CLAUSE}(w)$, lo cual implica que $A_{w,n}=T_{SAT}((wd)^n)$.
 
-Dado la transformación $L_{0,1}$ por el transductor finito se puede demostrar que el problema de la palabra de 
-cualquier formalismo que genere el lenguaje $L_{0,1}$ y sea cerrado bajo transducción finita es NP-Duro, 
-ya que puede ser reducido al SAT y por tanto a cualquier problema en NP. En la siguiente sección se demuestra
-el planteamiento anterior.
-
-\subsection{Demostración de $L_{S-SAT}$ generado mediante $T_{SAT}$}
-
-En esta sección se demuestra que el problema de la palabra de cualquier formalismo que genere el lenguaje $L_{0,1}$ y sea cerrado bajo transducción
-finita es NP-Duro, para ello se debe demostrar que el lenguaje $L_{S-SAT}$ definido mediante una transducción finita
-realmente es igual al lenguaje de todas las fórmulas booleanas satisfacibles.
-
-La idea de la demostración es la siguiente primero demostrar que para cualquier cadena binaria $w$, $T_{CLAUSE}(w)$ es
-el conjunto de todas las cláusulas que son satisfacibles por $w$, después demostrar que $T_{SAT}(e)$ contiene todas
-las fórmulas de $n$ cláusulas satisfacibles  por la cadena $w$ donde $e=(wd)^n \wedge w\in\{0,1\}^*$ y por último demostrar que:
+Para concluir el tercer paso de la demostración sea $e$ tal que existe $w$, donde $w \in L_{0,1} \wedge e \in T_{SAT}(w)$ entonces se cumple que la fórmula booleana asociada a $e$ es satisfacible por $w$. Ahora sea $F$ una fórmula booleana satisfacible con $n$ cláusulas y sea $e$ su cadena asociada, por tanto existe $w$ tal que $w$ satisface a $F$, luego se cumple que $e\in T_{SAT}((wd)^n)$. Por tanto se cumple que:
 $$L_{S-SAT} = \{e\,|\,\exists w \in L_{0,1} \wedge e \in T_{SAT}(w) \}.$$
 
-Para demostrar que dada una cadena binaria $w$, $T_{CLAUSE}(w)$ es el conjunto de todas las cláusulas que son satisfacibles 
-por $w$ primero suponga que $q\in T_{CLAUSE}(w)$. Entonces en el proceso que generó $q$ el transductor terminó en el estado 
-$q_p$ y como empezó en el estado $q_0$ ocurrió una transición desde $q_0$ a $q_p$ o desde $q_n$ a $q_p$ y esto solo es posible
-si el transductor leyó un 1 y escribió una a o si leyó un 0 y escribió una b. Esto significa que en la fórmula booleana
-que representa $q$ hay una variable sin negar a la cual se le asigna un 1 o una variable negada a la cual se le asigna un 0,
-por lo tanto se cumple que $w$ satisface la fórmula booleana que representa $q$. Ahora sea una fórmula booleana $F$ satisfacible 
-por $w$ cuya representación es $q$ entonces se cumple que en $F$ hay una variable sin negar a la cual se le asigna un 1 o una variable 
-negada a la cual se le asigna un 0, se dice sin pérdida de la generalidad que la primera variable que cumple esto es la $i$-ésima.
-Entonces observe que si se hace el reconocimiento de los primeros $i-1$ caracteres por $T_{CLAUSE}$ se pueden seguir 
-las transiciones de tal manera que los primeros $i-1$ caracteres de la cadena generada sean iguales a los primeros $i-1$
-caracteres de $q$. Dado este punto solo es posible que el transductor esté en el estado $q_0$ o $q_n$, pero como se cumple
-que la $i$-ésima variable está sin negar y se le asigna un 1 o está negada y se le asigna un 0, entonces se puede tomar 
-la opción de leer un 1 y escribir una a o leer un 0 y escribir una b según corresponda y de esta manera según en el estado que se
-encuentre se pasa al estado $q_p$. Posteriormente se toman las restantes transiciones de manera que la cadena generada
-sea $q$ y se mantiene en el mismo estado ya que $q_p$ solo tiene transiciones hacia sí mismo. De esta manera se demuestra
-que $T_{CLAUSE}(w)$ es el conjunto de todas las cláusulas que son satisfacibles por $w$.
+Para demostrar que el problema de la palabra de cualquier formalismo que genere el lenguaje $L_{0,1}$, sea 
+cerrado bajo transducción finita y su representación luego de la transducción sea $O(1)$, es NP-Duro suponga 
+que existe un formalismo $G$ que genera $L_{0,1}$ y es cerrado bajo transducción finita.
 
-Para demostrar que $T_{SAT}(e)$ contiene todas las fórmulas satisfacibles por la cadena $e=(wd)^n$ donde $w\in\{0,1\}^*$
-se hará una inducción sobre $n$. Se define los  conjuntos $A_{w,n}$ como el conjunto formado por todas las cadenas
-que representan fórmulas booleanas de $n$ cláusulas satisfacibles por $w$ y $B_w$ el conjunto formado por todas las cadenas que representan las 
-cláusulas que son satisfacibles por $w$. El caso base $n=1$ se demuestra 
-porque la transducción se realiza solo sobre el primer transductor $T_{CLAUSE}$ que conforma a $T_{SAT}$ y como
-se demostró anteriormente $T_{CLAUSE}(w)$ contiene todas cláusulas satisfacibles por $w$. 
-Se supone para $n=k$ y se demuestra para $n=k+1$, se cumple que $A_{w,n}=\{xyd\,|\,x\in A_{w,n-1} \wedge y\in B_w\}$ y 
-$T_{SAT}((wd)^n)=\{xyd\,|\,x\in T_{SAT}((wd)^{n-1}) \wedge y\in T_{CLAUSE}(w)\}$. Por hipótesis de inducción se cumple
-que $A_{w,n-1}=T_{SAT}((wd)^{n-1})$ y además se cumple que $B_w=T_{CLAUSE}(w)$, lo cual implica que $A_{w,n}=T_{SAT}((wd)^n)$.
-
-Para concluir el tercer paso de la demostración sea $e$ tal que existe $w$, donde $w \in L_{0,1} \wedge e \in T_{SAT}(w)$
-entonces se cumple que la fórmula booleana asociada a $e$ es satisfacible por $w$. Ahora sea $F$ una fórmula booleana
-satisfacible con $n$ cláusulas y sea $e$ su cadena asociada, por tanto existe $w$ tal que $w$ satisface a $F$, 
-luego se cumple que $e\in T_{SAT}((wd)^n)$. Por tanto se cumple que:
-$$L_{S-SAT} = \{e\,|\,\exists w \in L_{0,1} \wedge e \in T_{SAT}(w) \}.$$
-
-Para demostrar que el problema de la palabra de cualquier formalismo que genere el lenguaje $L_{0,1}$ y sea cerrado bajo transducción
-finita es NP-Duro suponga que existe un formalismo $G$ que genera $L_{0,1}$ y es cerrado bajo transducción finita.
-Entonces $G$ es capaz de generar el lenguaje $L_{S-SAT}$ por la demostración anterior y determinar si una cadena $e$ pertenece a $L_{S-SAT}$ es 
-equivalente a determinar si la fórmula booleana asociada a $e$ es satisfacible, por otro lado dado una fórmula booleana $F$
-saber si esta es satisfacible o no es equivalente a determinar si su cadena asociada pertenece a $L_{S-SAT}$. Por tanto 
-el problema de la palabra de $G$ es NP-Duro.
-
-Ahora se presenta un formalismo que sirve para generar $L_{S-SAT}$ usando el transductor $T_{SAT}$.
-
-\section{$L_{S-SAT}$ como lenguaje de índice global}
-
-En esta sección se presenta una una forma de generar el lenguaje $L_{0,1}$ empleando una gramática de índice global.
-
-Dada esta gramática de índice global que describe el lenguaje $L_{copy}^+$ que se define en el capítulo 2, es posible realizar una modificación para generar el lenguaje
-$L_{0,1}$, a esta nueva gramática se le denominará $G_{0,1}$, que se define como:
-
-$$
-    G_{0,1} = (N, \Sigma, I, S, \#, P) 
-$$
-donde:
-
-\begin{itemize}
-    \item $N= \{S,R,A,B,C,D\}$.
-    \item \( \Sigma=\{0,1,d\} \) .
-    \item $I=\{i,j,k\}$.
-    \item $S$ es el \textbf{símbolo inicial}.
-    \item $\#$ es el \textbf{símbolo inicial de la pila}.
-    \item $P$ es un conjunto finito de \textbf{producciones}:
-          \begin{multicols}{2}
-              \begin{itemize}
-                  \item $S\underset{\varepsilon}{\to} AS\,|\,BS\,|\,DC$
-                  \item $C\underset{\varepsilon}{\to} RC\,|\,L$
-                  \item $R\underset{\overline{i}}{\to} RA$
-                  \item $R\underset{\overline{j}}{\to} RB$
-                  \item $R\underset{\overline{k}}{\to} RD$
-                        
-                  \item $R\underset{[\#]}{\to} \varepsilon$
-                  \item $A\underset{i}{\to} 1$
-                  \item $B\underset{j}{\to} 0$
-                  \item $D\underset{k}{\to} d$
-                  \item $L\underset{\overline{i}}{\to} L$
-                  \item $L\underset{\overline{j}}{\to} L$
-                  \item $L\underset{\overline{k}}{\to} L$
-                  \item $L\underset{[\#]}{\to} \varepsilon$
-              \end{itemize}
-          \end{multicols}
-\end{itemize}
-
-Como modificaciones a la gramática anterior se ha introducido un nuevo terminal, un no terminal y un símbolo de la pila manteniendo la invariante de correspondencia que se mencionó anteriormente entre los elementos de estos 3 conjuntos. Por otro lado se modificaron las producciones del no terminal $L$ para que unicamente produzca la cadena vacía eliminando todos los elementos de la pila, con ello se puede generar el lenguaje $L_{0,1}$.
-
-A continuación se presenta un ejemplo de una cadena que se obtiene como derivación de la gramática $G_{0,1}$.
-
-\subsection{Ejemplo de reconocimiento de $G_{0,1}$}
-
-En esta sección se presenta una secuencia de derivaciones que permiten obtener la cadena $110d110d110d$ mediante
-la gramática $G_{0,1}$ (para cada derivación primero se muestra la regla de producción. seguido del estado de la
-pila y del estado del la cadena generada):
-
-\begin{enumerate}
-    \begin{multicols}{2}
-        \item $S\underset{\varepsilon}{\to} AS$ $[\#]$ $AS$
-        \item $A\underset{i}{\to} 1$ $[i\#]$ $1S$
-        \item $S\underset{\varepsilon}{\to} AS$ $[i\#]$ $1AS$
-        \item $A\underset{i}{\to} 1$ $[ii\#]$ $11S$
-        \item $S\underset{\varepsilon}{\to} BS$ $[ii\#]$ $11BS$
-        \item $B\underset{j}{\to} 0$ $[jii\#]$ $110S$
-        \item $S\underset{\varepsilon}{\to} DC$ $[jii\#]$ $110DC$
-        \item $D\underset{k}{\to} d$ $[kjii\#]$ $110dC$
-        
-        \item $C\underset{\varepsilon}{\to} RC$ $[kjii\#]$ $110dRC$
-        \item $R\underset{\overline{k}}{\to} RD$ $[jii\#]$ $110dRDC$
-        \item $R\underset{\overline{j}}{\to} RB$ $[ii\#]$ $110dRBDC$
-        \item $R\underset{\overline{i}}{\to} RA$ $[i\#]$ $110dRABDC$
-        \item $R\underset{\overline{i}}{\to} RA$ $[\#]$ $110dRAABDC$
-        \item $R\underset{[\#]}{\to} \varepsilon$ $[\#]$ $110dAABDC$
-        \item $A\underset{i}{\to} 1$ $[i\#]$ $110d1ABDC$
-        \item $A\underset{i}{\to} 1$ $[ii\#]$ $110d11BDC$
-        \item $B\underset{i}{\to} 0$ $[jii\#]$ $110d110DC$
-        \item $D\underset{i}{\to} d$ $[kjii\#]$ $110d110dC$
-        
-        \item $C\underset{k}{\to} d$ $[kjii\#]$ $110d110dRC$
-        \item $R\underset{\overline{k}}{\to} RD$ $[jii\#]$ $110d110dRDC$
-        \item $R\underset{\overline{j}}{\to} RB$ $[ii\#]$ $110d110dRBDC$
-        \item $R\underset{\overline{i}}{\to} RA$ $[i\#]$ $110d110dRABDC$
-        \item $R\underset{\overline{i}}{\to} RA$ $[\#]$ $110d110dRAABDC$
-        \item $R\underset{[\#]}{\to} \varepsilon$ $[\#]$ $110d110dAABDC$
-        \item $A\underset{i}{\to} 1$ $[i\#]$ $110d110d1ABDC$
-        \item $A\underset{i}{\to} 1$ $[ii\#]$ $110d110d11BDC$
-        \item $B\underset{i}{\to} 0$ $[jii\#]$ $110d110d110DC$
-        \item $D\underset{i}{\to} d$ $[kjii\#]$ $110d110d110dC$
-        
-        \item $C\underset{\varepsilon}{\to} L$ $[kjii\#]$ $110d110d110dL$
-        \item $L\underset{\overline{k}}{\to} L$ $[jii\#]$ $110d110d110dL$
-        \item $L\underset{\overline{j}}{\to} L$ $[ii\#]$ $110d110d110dL$
-        \item $L\underset{\overline{i}}{\to} L$ $[i\#]$ $110d110d110dL$
-        \item $L\underset{\overline{i}}{\to} L$ $[\#]$ $110d110d110dL$
-        \item $L\underset{[\#]}{\to} \varepsilon$ $[\#]$ $110d110d110d$
-    \end{multicols}
-\end{enumerate}
-
-Por tanto existe una secuencia de derivaciones desde $S$ hasta la cadena $110d110d110d$, por lo que $G_{0,1}$ genera la cadena $110d110d110d$.
-
-Como se mencionó anteriormente las GIG son cerradas bajo transducción finita, por lo que $G_{0,1}$ permite describir $L_{S-SAT}$ usando el transductor $T_{SAT}$, el único inconveniente para este análisis es que luego de aplicar $T_{SAT}$ a la gramática, se obtiene un gramática ambigua y en estos casos el problema de la palabra para las GIG no es polinomial \cite{globalIndexLanguages}.
-
-
+En este capítulo se presentó una nueva estrategia para resolver el SAT usando teoría de lenguajes, la cual se basa en
+definir el lenguaje de todas las fórmulas satisfacibles. Además se presentó un primer acercamiento para definir $L_{S-SAT}$, mediante
+transducción finita lo cual demuestra que  el problema de la palabra para todos los formalismos que generen $L_{0,1}$ y sean cerrados bajo transducción
+finita, es NP-duro. En el próximo capítulo se presenta otra estrategia distinta para definir $L_{S-SAT}$, la cual se basa
+en definir una RCG que reconozca las fórmulas booleanas satisfacibles.
 
 \begin{thebibliography}{99}
     

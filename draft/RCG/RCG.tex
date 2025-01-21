@@ -1,0 +1,317 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc} % Permite escribir caracteres especiales directamente
+\usepackage[spanish]{babel} % Configura el idioma a español
+
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage[lmargin=2cm,rmargin=5cm]{geometry}
+\usepackage{multicol}
+
+\input{word-comments.tex}
+
+
+
+
+\title{Gramáticas de concatenación de rango}
+\author{Raudel Alejandro Gómez Molina}
+
+\begin{document}
+
+\maketitle
+
+% \chapter{Preliminares}
+% \label{chap:preliminaries}
+
+% \chapter{Gramáticas de concatenación de rango}
+% \label{chap:RCG}
+
+% \chapter{Lenguaje de las fórmulas booleanas satisfacibles empleando transducción finita}
+% \label{chap:LSATFT}
+
+% \chapter{Lenguaje de las fórmulas booleanas satisfacibles empleando gramáticas de concatenación de rango}
+% \label{chap:LSATRCG}
+
+
+En este capítulo se definen y analizan las gramáticas de concatenación de rango, las cuales se emplean en el
+capítulo \ref{chap:LSATRCG} para definir el lenguaje de todas las fórmulas booleanas satisfacibles.
+
+Las gramáticas de concatenación de rango (\textit{RCG}) \cite{mainRCGBib} son un formalismo de gramáticas desarrollado
+en 1988 como una propuesta de Pierre Boullier, un investigador en el campo de la lingüística computacional. Su
+objetivo principal era proporcionar un modelo más general y expresivo que las CFG para describir lenguajes.
+Las RCG fueron diseñadas con el fin analizar propiedades y características del lenguaje natural.
+
+A continuación se presentan las principales definiciones de las gramáticas de concatenación de rango.
+
+\section{Definiciones}
+
+\paragraph{Rango:} un rango es una tupla $(i, j)$ que representa un intervalo de posiciones en una cadena, donde $i$ y $j$ son enteros no negativos tales que $i \leq j$.
+
+\paragraph{Gramática de Concatenación de Rango Positiva:} una gramática de concatenación de rango positiva (\textit{PRCG}) se define como una 5-tupla:
+
+\[
+    G = (N, T, V, P, S),
+\]
+donde:
+
+\begin{itemize}
+    \item $N$: Es un conjunto finito de \textbf{predicados o símbolos no terminales}: Cada predicado tiene una \textbf{aridad}, que indica la dimensión del vector de cadenas que reconoce y cada cadena del vector es asociada a un argumento del predicado.
+    \item $T$: Es un conjunto finito de \textbf{símbolos terminales}.
+    \item $V$: Es un conjunto finito de \textbf{variables}.
+    \item $P$: Es un conjunto finito de \textbf{cláusulas}, de la forma:
+          \[
+              A(x_1, x_2, \ldots, x_k) \to B_1(y_{1,1}, y_{1,2}, \ldots, y_{1,m_1}) \ldots B_n(y_{n,1}, y_{n,2}, \ldots, y_{n,m_n}),
+          \]
+          donde $A, B_i \in N$, $x_i, y_{i,j} \in (V \cup T)^*$, y $k$ es la aridad de $A$.
+    \item $S \in N$: Es el \textbf{predicado inicial} de la gramática, el cual la \textbf{aridad} es igual a 1.
+\end{itemize}
+
+Por ejemplo, se define siguiente gramática que reconoce el lenguaje $L_{copy}$:
+
+\[
+    G_{copy} = (N, T, V, P, S),
+\]
+donde:
+
+\begin{itemize}
+    \item  N=$\{A,S\}$.
+    \item T=$\{a,b,c\}$.
+    \item V=$\{X,Y,Z\}$.
+    \item El conjunto de cláusulas $P$ es el siguiente:
+          \begin{enumerate}
+              \item $S(XY)\to A(X,Y)$
+              \item $A(XY,Z)\to Eq(X,Z)A(Y,Z)$
+              \item $A(\varepsilon,Z)\to \varepsilon$
+          \end{enumerate}
+    \item El símbolo inicial es $S$.
+\end{itemize}
+
+
+\paragraph{Gramática de Concatenación de Rango Simple:} las gramáticas de concatenación de rango simple (\textit{SRCG}) son un subconjunto de las RCG que restringen la forma de las cláusulas de producción.
+Una RCG $G$ es \textbf{simple} si los argumentos en el lado derecho de una cláusula son variables distintas, y todas estas variables (y no otras) aparecen una sola vez en los argumentos del lado izquierdo.
+Para cada CFG existe una SRCG equivalente que genera el mismo lenguaje \cite{mainRCGBib}.
+
+Por ejemplo una cláusulas de una SRCG pueden tener la siguiente estructura:
+\[
+    A(X_1, X_2, \ldots, X_k) \to B_1(X_1) \ldots B_n(X_n).
+\]
+
+Los predicados $B_i$ pueden tener más de un argumento siempre y cuando estos sean variables distintas en este caso la cantidad de predicados $B_i$ debe ser menor que $n$ ya que todas las variables en el lado derecho deben aparecer en el lado izquierdo de la cláusula y viceversa:
+\[
+    A(X_1, X_2, \ldots, X_k) \to B_1(X_1,X_n),B_2(X_2) \ldots B_{n-1}(X_{n-1}).
+\]
+
+Por ejemplo, se define siguiente gramática que reconoce el lenguaje $L^3_{copy}$:
+
+\[
+    G^3_{copy} = (N, T, V, P, S),
+\]
+donde:
+
+\begin{itemize}
+    \item  N=$\{A,S\}$.
+    \item T=$\{a,b,c\}$.
+    \item V=$\{X,Y,Z\}$.
+    \item El conjunto de cláusulas $P$ es el siguiente:
+          \begin{enumerate}
+              \item $S(XYZ)\to A(X,Y,Z)$
+              \item $A(aX,aY,aZ)\to A(X,Y,Z)$
+              \item $A(bX,bY,bZ)\to A(X,Y,Z)$
+              \item $A(cX,cY,cZ)\to A(X,Y,Z)$
+              \item $A(\varepsilon,\varepsilon,\varepsilon)\to \varepsilon$
+          \end{enumerate}
+    \item El símbolo inicial es $S$.
+\end{itemize}
+
+
+\paragraph{Sustitución de rango:} una sustitución de rango es un mecanismo que reemplaza una
+variable por un rango de la cadena. Por ejemplo dado el predicado $A(Xa)$ donde $X \in V \wedge a \in T$,
+si se instancia la cadena $baa$ en $A$, $X$ puede ser asociada con el rango $ba$ de la cadena original.
+
+En la próxima sección se describe el proceso de derivación de las RCG.
+\section{Proceso de derivación}
+
+La idea principal para realizar una derivación en las RCG se basa en dado un vector de cadenas, identificar para cada argumento del
+predicado izquierdo de una cláusula, todas las posibles sustituciones dentro del rango de la cadena correspondiente.
+Esto implica asociar los valores de las variables reconocidas en los argumentos del predicado izquierdo con los
+argumentos de los predicados derechos. A partir de esta asociación, el proceso de derivación continúa
+aplicándose en los predicados derechos.
+
+Por ejemplo, dada la cláusula $A(X,aYb)\to B(aXb,Y)$ , donde $X$ y $Y$ son variables y $a$ y $b$ son
+símbolos terminales, el predicado $A(a,abb)$ deriva como $B(aab,b)$, porque cuando $ X=a \wedge Y=b$,
+$a$ coincide con $X$ y $abb$ coincide con $aYb$.
+
+Las RCG a diferencia de las gramáticas anteriores no generan cadenas, su funcionamiento se basa en reconocer si
+una cadena pertenece o no al lenguaje.
+
+Un vector de cadenas se reconoce por un predicado si existe una secuencia de derivaciones
+que comienza en dicho predicado y termina en la cadena vacía.
+
+Por ejemplo, dada la siguiente cláusula $A(X_1,X_2,X_3)\to B_1(X_1)B_2(X_2)B_3(X_3)$, el vector $(w_1,w_2,w_3)$ es reconocido
+por $A$, si existe una secuencia de derivaciones para cada
+uno de los predicados $B_1(w_1)$, $B_2(w_2)$, $B_3(w_3)$ que derive en la cadena vacía.
+
+Ahora se presenta un ejemplo de reconocimiento de una cadena por $G^3_{copy}$: La cadena $abcabcabc$ se reconoce por $G^3_{copy}$, ya que se puede derivar de la siguiente manera:
+$$S(abcabcabc)\to A(abc,abc,abc)\to A(bc,bc,bc)\to A(c,c,c)\to A(\varepsilon,\varepsilon,\varepsilon)\to \varepsilon.$$
+
+Para mostrar un ejemplo de sustitución en rango sobre la cadena $w$ se define $w[i\dots j]$ como
+el rango que va desde el $i$-ésimo caracter hasta el $j$-ésimo con la cadena indexada en 0. Entonces
+si $w=abcabcabc$, al realizar el reconocimiento en rango sobre el predicado $S$ se pueden asociar
+las variables $X=ab$, $Y=ca$ $Z=bcabc$ a los rangos $w[0\dots 1]$, $w[1\dots 2]$, $w[3\dots 8]$ respectivamente, otra
+opción es asociar las variables $X=abca$, $Y=bc$ $Z=abc$ a los rangos $w[0\dots 3]$, $w[4\dots 5]$, $w[6\dots 8]$ respectivamente. De manera
+general se pueden hacer $(^8_3)$ sustituciones en rango distintas.
+
+En el primer paso de la derivación se toma la primera cláusula, la sustitución en rango asocia las variables $X=abc$, $Y=abc$ y $Z=abc$
+a los rangos $w[0\dots 2]$, $w[3\dots 5]$ y $w[6\dots 8]$, la sustitución en rango asocia las variables $X=bc$, $Y=bc$ y $Z=bc$ a los rangos $w[1\dots 2]$, $w[4\dots 5]$ y $w[7\dots 8]$
+respectivamente, derivando en el predicado $A(bc,bc,bc)$. En el tercer paso se toma la tercera cláusula,
+la sustitución en rango asocia las variables $X=c$, $Y=c$ y $Z=c$ a los rangos $w[2\dots 2]$, $w[5\dots 5]$ y
+$w[8\dots 8]$ respectivamente, derivando en el predicado $A(c,c,c)$.
+En el cuarto paso se toma la cuarta cláusula, la sustitución en rango asocia las variables
+$X=\varepsilon$, $Y=\varepsilon$ y $Z=\varepsilon$ respectivamente, derivando en el predicado
+$A(\varepsilon,\varepsilon,\varepsilon)$. Finalmente en el  último paso se toma la última cláusula
+que deriva en la cadena vacía, por lo que de esta manera se reconoce la cadena $abcabcabc$.
+
+A continuación se presentan las principales propiedades de las RCG.
+\section{Propiedades de las RCG}
+
+A continuación se describen las principales propiedades de las RCG \cite{propertiesRCGBib}:
+\begin{itemize}
+    \item \textbf{Cerradas bajo unión:} Dadas dos RCG $G_1$ y $G_2$, la unión de los lenguajes reconocidos por $G_1$ y $G_2$ se reconoce por una RCG \cite{mainRCGBib}.
+    \item \textbf{Cerradas bajo intersección:} Dadas dos RCG $G_1$ y $G_2$, la intersección de los lenguajes reconocidos por $G_1$ y $G_2$ es reconocida por una RCG \cite{mainRCGBib}.
+    \item \textbf{Cerradas bajo complemento:} Dada una RCG $G$, el complemento del lenguaje reconocido por $G$ se reconoce por una RCG \cite{mainRCGBib}.
+    \item \textbf{Cerradas bajo concatenación:} Dadas dos RCG $G_1$ y $G_2$, la concatenación de los lenguajes reconocidos por $G_1$ y $G_2$ se reconoce por una RCG \cite{mainRCGBib}.
+    \item \textbf{Cerradas bajo clausura de Kleene:} Dada una RCG $G$, la clausura de Kleene del lenguaje se reconoce por $G$ es reconocida por una RCG \cite{mainRCGBib}.
+    \item  \textbf{No cerradas bajo homomorfismo:} Dada una RCG $G$, el homomorfismo de un lenguaje reconocido por $G$ no es necesariamente se reconoce por una RCG \cite{propertiesRCGBib}.
+    \item  \textbf{No cerradas bajo transducción finita:} Dada una RCG $G$, la transducción finita de un lenguaje reconocido por $G$ no es necesariamente se reconoce por una RCG.
+          Esto es una consecuencia de la propiedad anterior ya que como se mencionó en el capítulo anterior un homomorfismo es un caso particular de un transductor finito.
+          Esta propiedad impide utilizar las RCG para definir el lenguaje de todas las fórmulas booleanas satisfacibles
+          mediante una transducción finita cuestión analizada en el capítulo \ref{chap:LSATRCG}.
+\end{itemize}
+
+
+En la siguiente sección se analiza el problema de la palabra para las RCG.
+
+\section{Problema de la palabra}
+
+En la mayoría de los casos el problema de la palabra para las RCG es polinomial y se resuelve
+mediante un algoritmo de memorización sobre las cadenas que son instanciadas en los rangos de los predicados
+de la RCG \cite{mainRCGBib}.  Como la cantidad máxima de rangos de la cadena es $n^2$ y la máxima aridad de un
+predicado es constante, este proceso de memorización cuenta con cantidad polinomial de estados, y tiene una
+complejidad de $O(|P|n^{2h(l+1)})$ donde $h$ es la máxima aridad en un predicado, $l$ es la máxima cantidad
+de predicados en el lado derecho de una cláusula y $n$ es la longitud de la cadena que se reconoce.
+
+Pero existen casos en los que el problema de la palabra no es polinomial \cite{propertiesRCGBib}.
+El ejemplo presentado en \cite{propertiesRCGBib} muestra una RCG que se enfoca en el problema de contar,
+en la siguiente sección se analiza otro caso en el que este problema no es polinomial.
+
+\subsection{Problema de la palabra no polinomial}
+
+El algoritmo de reconocimiento presentado en la sección anterior utiliza un proceso de memorización sobre los rangos de la cadena.
+La idea fundamental para esto y lo que acota la complejidad del algoritmo es que la cantidad de estados
+asociados a la memorización es igual a la cantidad de rangos de la cadena, el cual es polinomial con respecto
+a la longitud de la cadena.
+
+Ahora ¿qué pasaría si algún predicado de la gramática trabajara con rangos que no pertenecen a la cadena de entrada, es decir que son generados mediante
+el proceso de reconocimiento de la cadena de entrada? En este caso si se emplea el algoritmo anterior ya la complejidad no depende de la cantidad de rangos de la cadena de entrada
+porque pueden aparecer otros rangos que no pertenezcan a dicha cadena, que se generar mediante el reconocimiento de la cadena.
+
+Por ejemplo, a continuación se presenta una RCG que reconoce el lenguaje $L=\{w\,|\,w\in\{0,1\}\}$. Esta RCG no tiene uso real porque existe otra RCG equivalente que reconoce el
+mismo lenguaje, pero ilustra lo descrito en el párrafo anterior:
+\[
+    G = (N, T, V, P, S),
+\]
+donde:
+
+\begin{itemize}
+    \item  N=$\{A,B,Eq,S\}$.
+    \item T=$\{0,1\}$.
+    \item V=$\{X,Y\}$.
+    \item El conjunto de cláusulas $P$ es el siguiente:
+          \begin{enumerate}
+              \item $S(X)\to A(X,X)$
+              \item $A(1X,Y)\to B(X,0,Y)$
+              \item $A(1X,Y)\to B(X,1,Y)$
+              \item $A(0X,Y)\to B(X,1,Y)$
+              \item $A(0X,Y)\to B(X,0,Y)$
+              \item $B(1X,Y,Z)\to B(X,1Y,Z)$
+              \item $B(1X,Y,Z)\to B(X,0Y,Z)$
+              \item $B(0X,Y,Z)\to B(X,0Y,Z)$
+              \item $B(0X,Y,Z)\to B(X,1Y,Z)$
+              \item $B(\varepsilon,Y,Z)\to Eq(Y,Z)$
+          \end{enumerate}
+
+    \item El símbolo inicial es $S$.
+\end{itemize}
+
+El funcionamiento de la gramática anterior se basa en dada una cadena $w$ generar todas las posibles cadenas
+$q$, tales que $|w|=|q|$ y luego comprobar si $w = q$. Observe que como se dijo anteriormente está gramática
+no tiene caso de uso ya que para toda cadena $w$ siempre va a existir una cadena $q$ tal que $w=q$, por lo
+que se puede modelar con solamente la cláusula $S(X)\to \varepsilon$. Pero la complejidad del reconocimiento
+de $G$ es mayor que $2^n$ (con $n$ igual al tamaño de la cadena d entrada), ya que esta es la cantidad de
+rangos posibles que puede recibir el predicado $B$.  En el capítulo \ref{chap:LSATRCG} se presenta una RCG de
+este estilo, pero que sí tiene caso de uso en el problema de las satisfacibilidad booleana, en el cual se centra este trabajo.
+
+En la próxima sección se aborda el problema del vacío para las RCG.
+
+\section{Problema del vacío}
+
+El problema del vacío para una RCG es indecidible \cite{propertiesRCGBib}.
+La razón principal para esto es que como para toda CFG existe una RCG equivalente y como las RCG son cerradas
+bajo intersección existen RCG que describen la intersección de 2 lenguajes libres del contexto y determinar
+si dicha intersección es vacía es un problema indecidible \cite{propertiesRCGBib}.
+
+En el caso de las SRCG el problema del vacío es polinomial \cite{mainRCGBib}, esta propiedad es la que se usa en \cite{aSRCSAT}
+para determinar si el lenguaje generado por el autómata booleano y la SRCG es no vacío.
+
+En este capítulo se analizaron las principales definiciones y propiedades de las RCG, que son utilizadas en el capítulo \ref{LSATRCG}
+para definir una gramática que reconozca las fórmulas booleanas satisfacibles. En el próximo capítulo se presenta
+un primer enfoque para definir el lenguaje de todas las fórmulas booleanas satisfacibles y a esta idea se le da
+continuidad en el capítulo \ref{chap:LSATRCG}, mediante las RCG.
+
+\begin{thebibliography}{99}
+
+    \bibitem{mainRCGBib}
+    Boullier, Pierre.
+    \textit{Proposal for a Natural Language Processing Syntactic Backbone}.
+    Research Report RR-3342, INRIA, 1998.
+
+    \bibitem{propertiesRCGBib}
+    Boullier, Pierre.
+    \textit{A Cubic Time Extension of Context-Free Grammars}.
+    Research Report RR-3611, INRIA, 1999.
+
+    \bibitem{simpleMatrixLanguages}
+    Ibarra, Oscar H.
+    \textit{Simple matrix languages}.
+    \textit{Information and Control}, Vol. 17, No. 4, pp. 359-394, 1970.
+
+    \bibitem{globalIndexLanguages}
+    Castaño, José M.
+    \textit{Global Index Languages}.
+    Ph.D. Thesis, The Faculty of the Graduate School of Arts and Sciences, Brandeis University, 2004.
+
+    \bibitem{authomataTheory}
+    Hopcroft, John E., Motwani, Rajeev, y Ullman, Jeffrey D.
+    \textit{Introduction to Automata Theory, Languages, and Computation}.
+    3ª edición, Addison-Wesley, 2006. ISBN: 9780321455369.
+
+    \bibitem{aCFSAT}
+    Fernández Arias, Alina.
+    \textit{El problema de la satisfacibilidad booleana libre del contexto}.
+    Facultad de Matemática y Computación, Universidad de La Habana, 2007.
+
+    \bibitem{aSRCSAT}
+    Aguilera López, Manuel.
+    \textit{Problema de la Satisfacibilidad Booleana de Concatenación de Rango Simple}.
+    Facultad de Matemática y Computación, Universidad de La Habana, 2016.
+
+    \bibitem{aSMSAT}
+    Rodríguez Salgado, José Jorge.
+    \textit{Gramáticas Matriciales Simples. Primera aproximación para una solución al problema SAT}.
+    Facultad de Matemática y Computación, Universidad de La Habana, 2019.
+
+\end{thebibliography}
+
+
+\end{document}
