@@ -1,1 +1,73 @@
 \chapter*{Introducción}
+\label{chap:introduction}
+
+
+El problema de satisfacibilidad booleana (\textit{SAT}) es uno de los problemas más estudiados en la teoría de la computación y la lógica.
+Consiste en determinar si existe una asignación de valores verdaderos o falsos que satisfaga una fórmula booleana dada, compuesta
+por variables y operadores lógicos como conjunciones, disyunciones y negaciones. SAT surge en 1971 como el primer problema NP-completo demostrado por
+Stephen Cook,
+lo que significa que, en el peor de los casos, su resolución requiere tiempo exponencial respecto al
+tamaño de la entrada, pero también que muchos otros problemas pueden reducirse a él. Esto
+implica un especial interés por parte de la comunidad científica en la búsqueda de métodos eficientes para la solución
+del SAT.
+
+La teoría de lenguajes es una rama fundamental de la Ciencia de la Computación y la matemática que se
+enfoca en el estudio de los lenguajes formales. Estos lenguajes, definidos a través de gramáticas,
+autómatas y expresiones regulares, permiten modelar y analizar la estructura de los lenguajes naturales y
+artificiales. Su aplicación es amplia y abarca desde el diseño de compiladores y procesadores de lenguaje
+natural hasta la verificación de sistemas y la teoría de la computabilidad. Los lenguajes formales se
+clasifican en jerarquías, como la jerarquía de Chomsky, que los organiza según su complejidad y poder
+expresivo. Esta teoría proporciona las bases para entender cómo se pueden reconocer, generar y transformar
+cadenas de símbolos, lo que resulta esencial en el desarrollo de herramientas computacionales para
+el procesamiento de información. Además la teoría de lenguajes constituye la base de los problemas de la Ciencia
+de la Computación, ya que cualquier problema puede ser interpretado como un problema de la teoría de lenguajes.
+
+En este trabajo se vinculan las dos ramas de la computación descritas anteriormente, presentando un enfoque para resolver el SAT
+utilizando formalismos de teoría de lenguajes. Dicho enfoque resulta un tema no evidenciado en la literatura consultada
+y permite demostrar que una serie de problemas relacionados a la teoría de lenguajes pertenecen a la clase NP-completo.
+
+En trabajos anteriores que siguen la idea presentada en esta investigación se han mostrado estrategias para la solución
+de instancias específicas del SAT usando formalismos de teoría de lenguajes, lo que constituye una solución limitada en su alcance,
+aquí en cambio se presenta una alternativa que resuelve cualquier instancia del mismo, lo que constituye una solución
+cualitativamente superior. Esta sigue siendo una estrategia no eficiente pero que
+muestra un nuevo enfoque para resolver el SAT de forma general que puede abrir nuevas líneas de investigación en este tema.
+
+Para resolver cualquier instancia de SAT empleando formalismos de teoría de lenguajes se propone definir una codificación
+de una fórmula booleana en una cadena que pueda se pueda interpretar por algún formalismo de la teoría de lenguajes
+y usando dicha codificación se define el lenguaje de todas las fórmulas booleanas satisfacibles. Entonces si se desea
+determinar si una fórmula booleana es satisfacible es necesario si la cadena asociada a la  fórmula booleana pertenece o no al lenguaje de todas las fórmulas booleanas satisfacibles. Para construir el lenguaje
+de las fórmulas booleanas satisfacibles se propone utilizar 2 métodos: el primero utiliza una transductor finito y el segundo
+utiliza una gramática de concatenación de rango.
+
+El objetivo general de este trabajo es definir y construir el lenguaje de todas las fórmulas booleanas satisfacibles.
+
+Para cumplir el objetivo general se definen los siguientes objetivos específicos:
+
+\begin{itemize}
+    \item Estudiar el estado del arte referido a los formalismos de teoría de lenguajes y el SAT.
+    \item Establecer una representación del SAT como una cadena que pueda ser interpretada por un formalismo de la teoría de lenguajes.
+    \item Definir el lenguaje de todas las fórmulas booleanas satisfacibles.
+    \item Construir el lenguaje de todas las fórmulas booleanas satisfacibles utilizando un transductor finito.
+    \item Construir el lenguaje de todas las fórmulas booleanas satisfacibles utilizando gramáticas de concatenación de rango.
+\end{itemize}
+
+El presente trabajo está estructurado en 4 capítulos: en los 2 primeros se presentan los principales conceptos y definiciones
+que serán usados en el resto del trabajo y en los restantes 2 capítulos se define y construye el lenguaje de todas las fórmulas satisfacibles.
+
+En el capítulo \ref{chap:preliminaries} se presentan los principales conceptos y definiciones de la teoría de lenguajes y el SAT, los cuales
+son necesarios para la comprensión de los restantes capítulos. Además se realiza un análisis de 2 trabajos anteriores
+que muestran como solucionar instancias específicas del SAT utilizando un algoritmo polinomial.
+
+En el capítulo \ref{chap:RCG} se realiza un análisis detallado de las gramáticas de concatenación de rango, presentando las principales
+definiciones, proceso de derivación y análisis de la complejidad del algoritmo de reconocimiento.
+
+En el capítulo \ref{chap:LSATFT} se muestra como codificar una fórmula booleana mediante una cadena de símbolos y luego
+se analiza como interpretar una cadena como la asignación de valores para las variables de una fórmula booleana.
+Posteriormente se define el lenguaje de todas las fórmulas booleanas satisfacibles y se muestra como construir dicho
+lenguaje mediante un transductor finito. Para finalizar se demuestra que el problema de la palabra para todos los formalismo que cumplan ciertas propiedades,
+las cuales se definen en el capítulo \ref{chap:LSATFT}, es NP-Duro.
+
+En el capítulo \ref{chap:LSATRCG} se demuestra que no es necesario la construir el lenguaje de todas las fórmulas
+booleanas satisfacibles mediante transducción finita, ya que existe una gramática de concatenación de rango que reconoce
+este lenguaje. Por otro lado se demuestra que las gramáticas de concatenación de rango cubren todos los problemas de la clase NP-Completo.
+
