@@ -7,7 +7,7 @@ de rango. Además obtiene una gramática de concatenación de tango que reconoce
 que las RCG cubren todos los problemas que pertenecen a la clase NP y se deja como problema abierto
 obtener una RCG que permita reconocer todas las instancias de SAT que son solubles en tiempo polinomial.
 
-Para el desarrollo del capítulo primeramente se describe como reconocer el lenguaje $L_{0,1}$ mediante
+Para el desarrollo del capítulo primeramente se describe como reconocer el lenguaje $L_{0,1,d}$ mediante
 una gramática de concatenación de rango y a continuación se describe por qué no es posible usar las RCG
 para construir el lenguaje $L_{S-SAT}$ mediante una transducción finita de un lenguaje de concatenación de rango.
 Posteriormente se presenta una RCG que reconoce todas las fórmulas booleanas satisfacibles y se demuestra que
@@ -15,18 +15,18 @@ las RCG cubren todos los problemas en la clase NP. Por último se presenta una R
 problemas 2-SAT, pero que tiene el problema de la palabra no polinomial, esto significa una vía distinta
 para resolver el SAT, lo cual puede contribuir a encontrar otras instancias polinomiales del SAT.
 
-En la siguiente sección se describe una RCG que reconoce el lenguaje $L_{0,1}$.
+En la siguiente sección se describe una RCG que reconoce el lenguaje $L_{0,1,d}$.
 
-\section{$L_{0,1}$ como lenguaje de concatenación de rango}
+\section{$L_{0,1,d}$ como lenguaje de concatenación de rango}
 
-En esta sección se presenta una RCG que reconoce el lenguaje $L_{0,1}=\{(wd)^+\,|\,w\in\{0,1\}^+\}$,
-el cual sirve para la asignación de valores a las variables de un SAT. La gramática que reconoce $L_{0,1}$
+En esta sección se presenta una RCG que reconoce el lenguaje $L_{0,1,d}=\{(wd)^+\,|\,w\in\{0,1\}^+\}$,
+el cual sirve para la asignación de valores a las variables de un SAT. La gramática que reconoce $L_{0,1,d}$
 se basa en reconocer primeramente una cadena $w$, luego un caracter $d$ y después comprobar que las siguientes
 cadenas sean iguales a $w$ seguidas del caracter $d$.
 
-Para reconocer $L_{0,1}$ se define la gramática $G_{0,1}$ como sigue:
+Para reconocer $L_{0,1,d}$ se define la gramática $G_{0,1,d}$ como sigue:
 \[
-    G_{0,1} = (N, T, V, P, S),
+    G_{0,1,d} = (N, T, V, P, S),
 \]
 donde:
 
@@ -51,11 +51,11 @@ El predicado $Eq$ se define en \cite{mainRCGBib} y comprueba que dos cadenas sob
 Por otro lado el predicado $B$ recibe un patrón y una cadena y determina si algún prefijo de la cadena,
 que esté seguido de una $d$, es igual al patrón. Luego continúa la derivación del resto de la cadena en el
 predicado $B$ con el mismo patrón. Finalmente si la cadena que recibe $B$ es la cadena vacía entonces se
-deriva en la cadena vacía. Esto permite que $G_{0,1}$ reconozca el lenguaje $L_{0,1}$.
+deriva en la cadena vacía. Esto permite que $G_{0,1,d}$ reconozca el lenguaje $L_{0,1,d}$.
 
-A continuación se presenta un ejemplo de cómo $G_{0,1}$ reconoce la cadena $101\mathbf{d}101\mathbf{d}101\mathbf{d}$.
+A continuación se presenta un ejemplo de cómo $G_{0,1,d}$ reconoce la cadena $101\mathbf{d}101\mathbf{d}101\mathbf{d}$.
 
-\subsection{Ejemplo de reconocimiento de una cadena por $G_{0,1}$}
+\subsection{Ejemplo de reconocimiento de una cadena por $G_{0,1,d}$}
 
 En esta sección se describen las derivaciones que permiten reconocer la cadena $101\mathbf{d}101\mathbf{d}101\mathbf{d}$. Las derivaciones
 de la gramática son las siguientes:
@@ -79,27 +79,27 @@ variable en la sustitución en rango.
 \end{enumerate}
 
 Como para todos los predicados existe una sustitución en rango, en la que estos derivan en la cadena vacía
-entonces $101\mathbf{d}101\mathbf{d}101\mathbf{d}$ es reconocida por $G_{0,1}$.
+entonces $101\mathbf{d}101\mathbf{d}101\mathbf{d}$ es reconocida por $G_{0,1,d}$.
 
 A continuación se analiza por qué no es posible construir $L_{S-SAT}$ mediante una transducción finita usando
 una RCG
 
 \subsection{Construir $L_{S-SAT}$ mediante una transducción finita usando una RCG}
 
-Como se mostró en la sección anterior el lenguaje $L_{0,1}$ se reconoce mediante una RCG.  Siguiendo con la
+Como se mostró en la sección anterior el lenguaje $L_{0,1,d}$ se reconoce mediante una RCG.  Siguiendo con la
 idea expuesta en las secciones del capítulo \ref{chap:LSATFT}, donde se muestra cómo construir $L_{S-SAT}$
-mediante una transducción finita, se puede usar $G_{0,1}$ como formalismo para generar $L_{0,1}$.
+mediante una transducción finita, se puede usar $G_{0,1,d}$ como formalismo para generar $L_{0,1,d}$.
 Esto no es posible porque las RCG no son cerradas bajo transducción finita como se mencionó en el
 capítulo \ref{chap:RCG}.  Por ello no se puede asegurar que al aplicarle el transductor $T_{SAT}$ a
-la RCG que reconoce el lenguaje $L_{0,1}$ se obtenga una RCG. Por lo cual no se puede realizar el
+la RCG que reconoce el lenguaje $L_{0,1,d}$ se obtenga una RCG. Por lo cual no se puede realizar el
 análisis del problema de la palabra para el formalismo que se obtiene después de las transducción
 como se propuso en el capítulo \ref{chap:LSATFT}.
 
 Se pudiera analizar qué tipo de formalismo se obtiene al aplicar el transductor $T_{SAT}$ sobre
-la RCG que reconoce $L_{0,1}$ y realizar un análisis de la complejidad del problema de la palabra
+la RCG que reconoce $L_{0,1,d}$ y realizar un análisis de la complejidad del problema de la palabra
 para dicho formalismo.
 
-Otro aspecto a considerar sería investigar qué propiedades de las RCG limitan que estas no sean cerradas bajo transducción finita y dado esas propiedades identificadas comprobar si todavía es posible reconocer el lenguaje $L_{0,1}$.
+Otro aspecto a considerar sería investigar qué propiedades de las RCG limitan que estas no sean cerradas bajo transducción finita y dado esas propiedades identificadas comprobar si todavía es posible reconocer el lenguaje $L_{0,1,d}$.
 
 A continuación se muestra una RCG que reconoce el lenguaje $L_{S-SAT}$, lo cual demuestra que la transducción
 finita no es la única vía para construir este lenguaje.
@@ -109,7 +109,7 @@ finita no es la única vía para construir este lenguaje.
 En esta sección se presenta una RCG que reconoce las fórmulas booleanas satisfacibles. Esto permite demostrar
 que las RCG cubren todos los problemas de la clase NP.
 
-En la construcción de $L_{S-SAT}$ mediante una transducción finita se usa el lenguaje $L_{0,1}$ para generar
+En la construcción de $L_{S-SAT}$ mediante una transducción finita se usa el lenguaje $L_{0,1,d}$ para generar
 todas las posibles interpretaciones de cualquier fórmula booleana y con estas interpretaciones el transductor
 $T_{S-SAT}$ genera todas las posibles fórmulas booleanas satisfacibles.  En esta sección, en cambio,
 se presenta un RCG que reconoce las fórmulas booleanas satisfacibles, la cual se basa en generar, durante el
@@ -124,14 +124,14 @@ Para definir la gramática, se agrupan las cláusulas en 4 fases, en dependencia
           de las variables que satisfacen la primera cláusula. En esta fase se definen 2 estados: positivo (significa
           que la cadena de 0 y 1 generada ya satisface la primera cláusula) y negativo (significa que la cadena de 0 y 1
           generada aún no satisface la primera cláusulas). Estos estados se representan por los predicados $P$ y $N$, respectivamente.
-
+          
     \item \textbf{Tercera fase:} comprueba que la interpretación que se define en la fase anterior sea satisfacible para
           el resto de las cláusulas.
     \item \textbf{Cuarta fase:} define el algoritmo para determinar si una interpretación satisface una cláusula
           dada. En esta fase se definen 2 estados, positivo (significa que la interpretación ya satisface la cláusula
           actual) y negativo (significa que la interpretación aún no satisface la cláusula actual). Representados por
           los predicados $Cp$ y $Cn$ respectivamente.
-
+          
 \end{itemize}
 
 
@@ -156,7 +156,7 @@ A continuación se desglosa el conjunto de \textbf{cláusulas} $P$:
           \begin{enumerate}
               \item $S(X)\to A(X)$.
           \end{enumerate}
-
+          
     \item \textbf{Segunda fase:} El siguiente conjunto de cláusulas genera una cadena de 0 y 1 que asigna valores a las
           variables de la fórmula booleana, de forma que satisfagan la primera cláusula.
           \begin{multicols}{2}
@@ -167,7 +167,7 @@ A continuación se desglosa el conjunto de \textbf{cláusulas} $P$:
                   \item $A(bX)\to P(X,0)$
                   \item $A(cX)\to N(X,1)$
                   \item $A(cX)\to N(X,0)$
-
+                        
                   \item $P(aX,Y)\to P(X,Y1)$
                   \item $P(aX,Y)\to P(X,Y0)$
                   \item $P(bX,Y)\to P(X,Y1)$
@@ -175,7 +175,7 @@ A continuación se desglosa el conjunto de \textbf{cláusulas} $P$:
                   \item $P(cX,Y)\to P(X,Y1)$
                   \item $P(cX,Y)\to P(X,Y0)$
                   \item $P(dX,Y)\to B(X,Y)$
-
+                        
                   \item $N(aX,Y)\to P(X,Y1)$
                   \item $N(aX,Y)\to N(X,Y0)$
                   \item $N(bX,Y)\to N(X,Y1)$
@@ -184,35 +184,35 @@ A continuación se desglosa el conjunto de \textbf{cláusulas} $P$:
                   \item $N(cX,Y)\to N(X,Y0)$
               \end{enumerate}
           \end{multicols}
-
+          
           $A$ representa el predicado por donde inician las derivaciones de esta fase, $P$ representa que
           la cláusula ya tiene un valor de verdad positivo y $N$ representa que la cláusula de la fórmula
           booleana se encuentra aún con un valor de verdad negativo.  De $A$ se deriva a los predicados $P$
           y $N$ en dependencia del valor asignado, a la variable del literal que se encuentra al inicio del rango
           actual. El predicado $P$ deriva hacia sí mismo independientemente del símbolo, exceptuando el símbolo $d$, caso en el que se deriva en $B$ y se procede a la siguiente fase.
-
+          
     \item \textbf{Tercera fase:} El siguiente conjunto de cláusulas comprueba que la asignación de variables que se realiza en la fase anterior se verdadera
           para las restantes cláusulas.
           \begin{enumerate}[start=21]
               \item $B(X_1dX_2,Y)\to C(X_1,Y) B(X_2,Y)$
               \item $B(\varepsilon,Y)\to\varepsilon$
           \end{enumerate}
-
+          
           El predicado $B$ permite realizar la iteración sobre las cláusulas restantes mientras que el predicado $C$ comprueba que la cláusula de la fórmula booleana actual sea satisfacible, comportamiento que se encuentra definido en la cuarta fase.
-
+          
     \item \textbf{Cuarta fase:} En esta fase se define el comportamiento de $C$, que recibe una cláusula y una
           interpretación de las variables y comprueba que dicha interpretación sea verdadera para la cláusula analizada.
           \begin{enumerate}[start=23]
               \begin{multicols}{2}
                   \item $C(X,Y)\to Cn(X,Y)$
-
+                  
                   \item $Cn(aX,1Y) \to Cp(X,Y)$
                   \item $Cn(aX,0Y) \to Cn(X,Y)$
                   \item $Cn(bX,1Y) \to Cn(X,Y)$
                   \item $Cn(bX,0Y) \to Cp(X,Y)$
                   \item $Cn(cX,1Y) \to Cn(X,Y)$
                   \item $Cn(cX,0Y) \to Cn(X,Y)$
-
+                  
                   \item $Cp(aX,1Y) \to Cp(X,Y)$
                   \item $Cp(aX,0Y) \to Cp(X,Y)$
                   \item $Cp(bX,1Y) \to Cp(X,Y)$
@@ -222,12 +222,12 @@ A continuación se desglosa el conjunto de \textbf{cláusulas} $P$:
                   \item $Cp(\varepsilon,\varepsilon)\to \varepsilon$
               \end{multicols}
           \end{enumerate}
-
+          
           Observe que este funcionamiento es exactamente igual al de la primera fase con un predicado que representa un
           estado positivo ($Cp$) y un predicado que representa un estado positivo ($Cn$). Pero esta vez no se genera
           la cadena sino que se comprueba con un patrón, el cual se predefine en la segunda fase y pasa a las
           siguientes mediante las derivaciones de la gramática.
-
+          
 \end{itemize}
 
 A continuación se demuestra que el lenguaje que reconoce $G_{S-SAT}$ es exactamente igual al lenguaje que
@@ -256,55 +256,55 @@ A continuación se presenta la demostración la tarea que cumple de cada fase. P
           satisface a fórmula booleana asociada a $w$, la cual se denomina $F_w$ si y solo si $C(w,e)$ deriva
           en la cadena vacía primeramente suponga que $F_w$ es satisfacible por $e$, entonces se debe demostrar que
           existe una secuencia de derivaciones desde $C(w,e)$ hasta la cadena vacía.
-
+          
           Como $e$ satisface a $F_w$ existe una variable sin negar con valor un 1 o un variable negada con valor 0.
           Del predicado $C$ se deriva al predicado $Cn$, las únicas derivaciones de la gramática donde se deriva del
           predicado $Cn$ a $Cp$ es la combinación de una $a$ y un 1 o de una $b$ y un 0 y como $e$ satisface $F_w$ esta combinación existe.
           Por último, $Cp$ siempre deriva en sí mismo o en la cadena vacía por lo que queda demostrado que existe una secuencia de derivaciones desde $C(w,e)$ hasta la cadena vacía.
-
+          
           Para finalizar la demostración de la cuarta fase, es necesario probar que si $C(w,e)$ se reconoce entonces $e$ satisface a $F_w$. Por la estructura de la gramática,
           si existe una secuencia de derivaciones desde $C(w,e)$ hasta la cadena vacía entonces hay una derivación
           desde $Cn$ hacia $Cp$. Esta derivación solo es posible por una combinación de una $a$ y un 1 o de una $b$ y
           un 0, por lo tanto una de estas combinaciones existe. Por lo que existe una variable sin negar con valor 1 o
           una variable negada con valor 0 en $F_w$, lo cual implica que $e$ satisface $F_w$.
-
+          
     \item \textbf{Tercera fase:} Sean las cadenas $w$ y $e$, asociadas a una fórmula booleana y una interpretación de variables respectivamente, el predicado $B(w,e)$ y la cláusula $B(X_1dX_2,Y)\to C(X_1,Y) B(X_2,Y)$,
           para demostrar que $e$ satisface todas las cláusulas de $w$ se hará una inducción sobre la cantidad de cláusulas $n$ de la fórmula booleana asociada a $w$.
-
+          
           Para $n=1$ se cumple que, al realizar la sustitución en rango, los rangos asociados a las variables $X_1$ y $X_2$ son $w$ sin su último caracter y la cadena
           vacía respectivamente. Por tanto $B(w,e)$ se reconoce por la gramática si y solo si $C(X_1,e)$ se reconoce y
           esto solo es posible si $e$ satisface a $X_1$, por lo que se demuestra el caso base.
-
+          
           Una vez demostrado el caso base corresponde asumir para $n=k$ y demostrar para $k+1$.
-
+          
           En todas las posibles sustituciones en rango de $X_1$ y $X_2$, $C(X_1,e)$ solo se reconoce si $|X_1|=|e|$, entonces el caso de sustitución en rango que ocupa a la demostración
           es cuando $|X_1|=|e|$, porque para el resto de las sustituciones en rango $C(X_1,e)$ no se reconoce por la gramática.
           Como $e$ satisface todas las cláusulas de $w$ si y solo si satisface a la primera cláusula de $w$ y el resto de las cláusulas de $w$, que en este caso
           están asociadas a las variables $X_1$ y $X_2$ respectivamente. Precisamente $B(w,e)$ se reconoce si y solo si se reconoce $C(X_1,e)$ y $B(X_2,e)$. $C(X_1,e)$ se demuestra por la cuarta fase y $B(X_2,e)$ se demuestra por hipótesis de inducción, ya que $X_2$ tiene $k$ cláusulas.
-
+          
     \item \textbf{Segunda fase:} Sea la cadena $q$ asociada a una fórmula booleana y el predicado $A(q)$, para
           demostrar que durante el reconocimiento en esta fase se generan todas las cadenas que satisfacen a $q$ se
           utilizan 2 conjuntos: $W$ y $Q$. $W$ representa el conjunto de todas las cadenas de 0 y 1 que satisfacen la
           primera cláusula de la fórmula asociada a $q$ , denominada $F_{1q}$, y $E$, representa el conjunto de todas
           las cadenas $e$ tales que existe una secuencia de derivaciones desde $A(q)$ hasta $B(z_q,e)$, donde $z_q$
           esta conformada por todas las cláusulas de $q$ menos la primera.
-
+          
           Dadas estas definiciones es necesario demostrar que $W=E$, para ello se debe demostrar que $W$ es subconjunto de $E$ y $E$ es subconjunto de $W$.
-
+          
           Para demostrar que $W\subseteq E$, se toma una cadena $w$ tal que $w\in W$, es decir, $w$ satisface a $F_{1q}$. Por tanto en $F_{1q}$ existe una variable sin negar con valor 1 en $w$, o existe una variable negada con valor 0 en $w$, lo que representa una combinación de una $a$ y un 1 o de una $b$ y un 0 en una de las derivaciones de la segunda fase.
-
+          
           Por la estructura de la gramática del predicado $A$, solo hay derivaciones hacia $P$ con una de estas 2 combinaciones, el resto son hacia el predicado $N$ y del predicado $N$ solo hay derivaciones a $P$ con una de las combinaciones anteriores. Por tanto, como existe una combinación de una $a$ y un 1 o de una $b$ y un 0, existe una secuencia de derivaciones que lleva del predicado $A$ al predicado $P$ pasando por $N$ o sin pasar por $N$. Como el predicado $P$ solo tiene derivaciones hacia sí mismo o hacia $B(z_q,w)$ se cumple que $w\in E$.
-
+          
           Para demostrar que $Q\subseteq W$, se toma una cadena $e$ tal que $e\in E$, por lo que existe una secuencia de derivaciones desde $A(q)$ a $B(z_q,e)$. Por la estructura de la gramática solo se puede derivar al predicado $B$ desde el predicado $P$, y a su vez a este predicado solo se puede derivar mediante una combinación de una $a$ y un 1 o de una $b$ y un 0 en la gramática. Por tanto $F_{1q}$ tiene una variable sin negar con valor 1 en $e$ o una variable negada con valor 0 en $e$.  Entonces se cumple que $e$ satisface a $F_{1q}$ por lo que $e\in W$. Con esto se demuestra que $E=W$.
-
+          
     \item \textbf{Primera fase:} Sea la cadena $q$ asociada a una fórmula booleana y el predicado $S(q)$, para demostrar que el lenguaje que reconoce $G_{S-SAT}$ es exactamente igual al lenguaje que representa todas las fórmulas booleanas satisfacibles se define el lenguaje $L_{G_{S-SAT}}$ que representa el lenguaje de todas las cadenas que se reconocen por $G_{S-SAT}$. Entonces es necesario demostrar que $L_{S-SAT}=L_{G_{S-SAT}}$.
-
+          
           Para demostrar que $L_{S-SAT}\subseteq L_{G_{S-SAT}}$, sea una fórmula booleana satisfacible $F$ y sea $q$ su representación como cadena en el lenguaje $L_{FULL-SAT}$, entonces existe una cadena binaria $w$, con longitud igual a la cantidad de variables de $F$, que satisface a $F$.
-
+          
           Como $w$ satisface $F$ entonces $w$ pertenece al conjunto de cadenas que satisfacen a la primera cláusula de $F$. Esto significa que existe una secuencia de derivaciones desde el predicado $S(q)$ hasta $B(z_q,w)$ y como $w$ satisface todas las cláusulas de $F$ entonces $B(z_q,w)$ deriva en la cadena vacía por lo que $q$ se reconoce por $G_{S-SAT}$, lo cual implica que $L_{S-SAT}\subseteq L_{G_{S-SAT}}$.
-
+          
           Para completar la demostración es necesario demostrar que $ L_{G_{S-SAT}}\subseteq L_{S-SAT}$. Sea una cadena $q$ que se reconoce por $G_{S-SAT}$ y sea $F$ la fórmula booleana asociada a $q$, entonces existe una cadena binaria $w$ tal que existe una secuencia de derivaciones desde $A(q)$ a $B(z_q,w)$ y de $B(z_q,w)$ a la cadena vacía, por tanto $w$ satisface a la primera cláusula de $F$ y a las restantes también, luego $w$ satisface a $F$, por lo que $F$ es satisfacible. Esto implica que $L_{G_{S-SAT}}\subseteq L_{S-SAT}$ y con esto se demuestra que $L_{G_{S-SAT}}= L_{S-SAT}$.
-
+          
 \end{itemize}
 
 En la siguiente sección se presentan un ejemplo del reconocimiento de una cadena por $G_{S-SAT}$.
@@ -412,7 +412,7 @@ donde:
     \item El conjunto de cláusulas $P$ es el siguiente:
           \begin{enumerate}
               \begin{multicols}{2}
-
+                  
                   \item $S(X)\to A(X)$
                   \item $A(X_1dX_2)\to A_0(X_1) A(X_2)$
                   \item $A(\varepsilon)\to \varepsilon$

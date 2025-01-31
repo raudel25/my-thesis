@@ -31,8 +31,8 @@
 
 ## Estrategia para la solución del SAT usando el gramáticas de concatenación de rango
 
-- $L_{0,1}$ como lenguaje de concatenación de rango
+- $L_{0,1,d}$ como lenguaje de concatenación de rango
 - Solución del SAT usando el problema del vacío
 - Solución del SAT usando el problema de la palabra
 - Clases de problemas que reconocen las RCG
-- Instancias de SAT polinomiales empleando RCG 
+- Instancias de SAT polinomiales empleando RCG

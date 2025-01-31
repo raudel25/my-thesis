@@ -12,8 +12,18 @@
 \usepackage[lmargin=2cm, rmargin=5cm]{geometry}
 \input{word-comments.tex}
 
+\usepackage{amsthm}
+
+\newtheorem{theorem}{Teorema}
+\newtheorem{lemma}{Lema}
+\newtheorem{definition}{Definición}
+
+
 \title{Estrategia para la solución del SAT usando el problema de la palabra}
 \author{Raudel Alejandro Gómez Molina}
+
+\newcommand{\true}{\textit{true}}
+\newcommand{\false}{\textit{false}}
 
 \begin{document}
 
@@ -31,27 +41,27 @@
 % \chapter{Lenguaje de las fórmulas booleanas satisfacibles empleando gramáticas de concatenación de rango}
 % \label{chap:LSATRCG}
 
-En este capítulo se presenta  un lenguaje formal, llamado $L_{S-SAT}$, al cual pertenecen todos los problemas 
-SAT que son satisfacibles, y se muestra una forma de construirlo a partir de una transducción finita de una variante
-del lenguaje $L_{copy}$ sobre el alfabeto $\{a,b,c,d\}$. Este lenguaje 
-permitiría otra vía de solución para el SAT, que consiste en determinar si una fórmula dada pertenece a este 
-lenguaje. Esto se puede hacer resolviendo el problema de la palabra.
+En este capítulo se presenta el lenguaje $L_{S-SAT}$, al cual pertenecen todos los problemas SAT que son 
+satisfacibles, y se muestra una forma de construirlo a partir de una transducción finita de una variante 
+del lenguaje $L_{copy}$ sobre el alfabeto $\{0,1,d\}$. Este lenguaje permite resolver instancias del SAT resolviendo el problema de la palabra.  
 
-Para definir el lenguaje $L_{S-SAT}$ se presenta una vía para codificar una fórmula booleana mediante cadenas 
-sobre el alfabeto $\Sigma=\{a, b,c,d\}$, y para construirlo se utiliza una transducción finita del 
-alfabeto $\{0,1,d\}$ en $\Sigma$. 
+Para definir el lenguaje $L_{S-SAT}$ se presenta una vía para codificar una fórmula booleana mediante 
+cadenas sobre el alfabeto $\Sigma=\{a, b,c,d\}$, y para construirlo se utiliza una transducción finita 
+de una variante del lenguaje $L_{copy}$ sobre el alfabeto $\{0,1,d\}$.
 
-La estructura de este capítulo es la siguiente: en la sección \ref{sec:codsat} se muestra como codificar
-una fórmula booleana usando el alfabeto $\{a,b,c,d\}$. En la sección \ref{sec:intsat} se muestra como interpretar 
-las cadenas sobre el alfabeto $\{0,1,d\}$ como asignaciones de las variables. Finalmente, en la sección \ref{sec:tsat}
-se presenta un transductor finito que convierte cadenas del lenguaje $L_{FULL-SAT}$ que se define en la sección \ref{sec:intsat}
-en cadenas sobre el alfabeto $\{a,b,c,d\}$ que representan fórmulas booleanas satisfacibles. Seguidamente se 
-conjetura por qué la representación del lenguaje de las fórmulas booleanas satisfacibles, en 
-cualquier formalismo que lo genere usando la estrategia propuesta en este capítulo, tiene un tamaño $O(1)$, 
-lo que implica la que el problema de la palabra para estos formalismos que puedan generar el lenguaje, es NP-Duro.
+La estructura de este capítulo es la siguiente: en la sección \ref{sec:codsat} se muestra como codificar una 
+fórmula booleana cualquiera usando el alfabeto $\{a,b,c,d\}$. En la sección \ref{sec:intsat} se muestra 
+cómo interpretar las cadenas sobre el alfabeto $\{0,1,d\}$ como asignaciones de las variables. Finalmente, 
+en la sección \ref{sec:tsat} se presenta un transductor finito que convierte cadenas del lenguaje de todas las
+interpretaciones de las fórmulas booleanas en CNF
+$L_{0,1,d}$ que se define en la sección \ref{sec:intsat} en cadenas sobre el alfabeto $\{a,b,c,d\}$ que 
+representan fórmulas booleanas satisfacibles. Seguidamente se conjetura por qué la representación del 
+lenguaje de las fórmulas booleanas satisfacibles, en cualquier formalismo que lo genere usando la estrategia 
+propuesta en este capítulo, tiene un tamaño $O(1)$. Esto implica que el problema de la palabra para todos estos 
+formalismos es NP-Duro.
 
 
-A continuación se presenta cómo codificar una fórmula booleana mediante una cadena sobre el alfabeto $\{a,b,c,d\}$.
+A continuación se presenta cómo codificar una fórmula booleana cualquiera mediante una cadena sobre el alfabeto $\{a,b,c,d\}$.
 
 \section{Codificación de una fórmula booleana a una cadena}
 \label{sec:codsat}
@@ -60,11 +70,11 @@ Una fórmula booleana $F$, con $v$ variables en CNF tiene la siguiente estructur
 $$F=X_1 \wedge X_2 \wedge \ldots \wedge X_n$$
 donde cada cláusula $X_i$ es una disyunción de literales
 $$X_i=L_{i1} \vee L_{i2} \vee \ldots \vee L_{im},$$
-cada literal $L_{ij}$ es una variable booleana o su negación y $m\leq v$. 
+cada literal $L_{ij}$ es una variable booleana o su negación. También se asume que $m\leq v$. 
 
-Si se tiene una fórmula booleana $F$ en forma normal conjuntiva se puede considerar que cada una de las 
-$v$ variables de la fórmula aparece en cada cláusula de $F$ en uno de tres posibles estados: la variable 
-aparece sin negar, la variable aparece negada, o la variable no aparece.
+Si se tiene una fórmula booleana $F$ en forma normal conjuntiva se puede considerar que cada una de 
+las $v$ variables de la fórmula aparece en cada cláusula de $F$ en uno de tres posibles estados: 
+sin negar, aparece negada, o  no aparece.
 
 Por ejemplo, en la primera cláusula de la siguiente fórmula booleana en $CNF$ con 3 variables:
 $$F=(x_1 \vee \neg x_2) \wedge (\neg x_1 \vee x_2 \vee x_3) \wedge (x_1 \vee \neg x_2 \vee x_3)$$
@@ -73,79 +83,83 @@ la variable $x_1$ aparece sin negar, la variable $x_2$ aparece negada, y la vari
 
 El hecho de que se pueda asumir que en todas las cláusulas aparecen todas variables permite representar una cláusula de una una fórmula con $v$ variables como una cadena de $v$ símbolos, donde el símbolo en la posición $i$ indica el estado de la variable $x_i$ en la cláusula.
 
-En este trabajo se propone usar los símbolos $a$, $b$ y $c$ para indicar el estado de una variable en una cláusula:
+En este trabajo se propone usar los símbolos $a$, $b$ y $c$ para indicar el estado de una variable en una cláusula, usando el siguiente convenio:
 
 \begin{itemize}
-    \item $a$: la variable aparece sin negar,
-    \item $b$: la variable aparece negada, y
-    \item $c$: la variable no aparece.
+    \item $a$: indica que la variable aparece sin negar.
+    \item $b$: indica que la variable aparece negada.
+    \item $c$: indica que la variable no aparece.
 \end{itemize}
 
 Con este convenio, la primera cláusula de $F$ se puede representar mediante la cadena $abc$.
 
 Si se agrega un nuevo símbolo (por ejemplo $d$) que indique el final de una cláusula, una fórmula lógica con $v$ variables y $k$ cláusulas se puede representar mediante $k$ bloques de longitud $v$, donde cada bloque está formado por los símbolos $a$, $b$, o $c$, y cada bloque se separa del siguiente por el símbolo $d$.
 
-Con este convenio, la fórmula $F$ se representa mediante la cadena:
-$$abc\mathbf{d}baa\mathbf{d}aba\mathbf{d}$$
-donde los símbolos $\mathbf{d}$ aparecen en negrita para facilitar la interpretación de la cadena como fórmula en forma normal conjuntiva.
+Con este convenio, la fórmula
+$$ F=(x_1 \vee \neg x_2) \wedge (\neg x_1 \vee x_2 \vee x_3) \wedge (x_1 \vee \neg x_2 \vee x_3)$$
+se representa mediante la cadena:
+$$abc\mathbf{d}baa\mathbf{d}aba\mathbf{d},$$
+donde los símbolos $\mathbf{d}$ aparecen en negrita para facilitar la interpretación de la cadena como fórmula 
+en forma normal conjuntiva.
 
-Solo resta definir el proceso inverso, es decir, dada una cadena determinar la fórmula booleana en CNF que representa dicha cadena.
 Para que una cadena $w$ pueda ser interpretada como una fórmula booleana debe cumplir con las siguientes condiciones:
-tener $n$ bloques separados por $d$, cada bloque de las misma longitud $v$ y en cada bloque solo pueden ser usados los caracteres
-$a$, $b$, $c$. Entonces la cadena $w$ puede ser interpretada por como una fórmula booleana con $n$ cláusulas y $v$ variables y la estructura
-de las cláusula depende de los caracteres correspondiente al bloque de $a$, $b$ y $c$ asociado a dicha cláusula.
+tener $n$ bloques separados por $d$, cada bloque de la misma longitud $v$ y en cada bloque solo pueden se pueden usar los caracteres
+$a$, $b$ y $c$. Entonces la cadena $w$ se interpreta como una fórmula booleana con $n$ cláusulas y $v$ variables, donde la estructura
+de cada cláusula depende de los caracteres correspondiente al bloque de $a$, $b$ y $c$ que se asocia a dicha cláusula.
 
-Por ejemplo la cadena $acc\mathbf{d}aba\mathbf{d}cba\mathbf{d}$, se puede interpretar como la siguiente fórmula booleana:
+Por ejemplo la cadena $w=acc\mathbf{d}aba\mathbf{d}cba\mathbf{d}$, tiene 3 bloques separados por $d$, los cuales son $acc$, $aba$ y $cba$, los 3 tienen tamaño 3 y solo tienen los caracteres $a$, $b$ y $c$.
+Por tanto  $w$ se puede interpretar como la siguiente fórmula booleana:
 $$(x_1)\wedge(x_1\vee \neg x_2 \vee x_3) \wedge (\neg x_2\vee x_3)$$
 
-Entonces una vez definida la transformación de una fórmula booleana en una cadena se puede definir el lenguaje
-de todas las fórmulas booleanas en CNF:
-$$L_{FULL-SAT}=\{w\,|\,\exists F : t_{SAT}(F)=w\},$$
-donde $F$ es una fórmula booleana en CNF y $t_{SAT}(x)$ es una función que recibe una fórmula booleana y devuelve
-su representación mediante los estados $a$, $b$ y $c$ y el separador $d$.
+Una vez definida la transformación de una fórmula booleana en una cadena, se puede definir el lenguaje de todas las fórmulas booleanas en CNF:
+\[
+    L_{FULL-SAT} = \{ w_1dw_2d\dots w_nd \mid w_i \in \{a, b,c\}^+ \text{ y } |w_i| = |w_j| \, \forall i, j \}
+\]
 
-Seguidamente se muestra como interpretar una cadena como la asignación de los valores de las variables de una fórmula
-booleana.
+Seguidamente, se muestra cómo interpretar una cadena que pertenece a una variante 
+del lenguaje $L_{copy}$ sobre el alfabeto $\{0,1,d\}$ como la asignación de los valores de las variables de una fórmula booleana.
 
-\section{Interpretar una cadena como asignaciones de variables para una fórmula booleana}
+\section{El lenguaje $L_{0,1,d}$ como asignación de los valores de las variables de una fórmula booleana}
 \label{sec:intsat}
 
-En esta sección se muestra como dada una cadena $q$ y una cadena $f\in L_{FULL-SAT}$, interpretar 
-la cadena $w$ como la asignación de los valores de las variables para la fórmula booleana que representa
-la cadena $f$.
+En esta sección se muestra cómo interpretar una cadena $w$ como la asignación de valores para las variables 
+de una fórmula booleana representada por la cadena $f\in L_{FULL-SAT}$.
 
-Para que la cadena $e$ pueda ser interpretada como una asignación de valores para $f$, es necesario al igual
-que en la codificación anterior poder distinguir los valores asignados a cada cláusula, esto se logra mediante
-el caracter $d$, y para representar los valores de las variables asignados a cada cláusula se utilizan 
-cadenas binarias. Para cada cadena binaria se le asocia el valor del $i$-ésimo caracter al valor de la $i$-ésima
-variable de la cláusula, si este caracter es un 1 se le asocia un valor de \textit{true} (verdadero) y si el 
-caracter es un 0 se le asocia el valor de \textit{false} (falso).
+El lenguaje $L_{0,1,d}$ se define como:
+$$L_{0,1,d}=\{(wd)^+\,|\,w\in\{0,1\}^+\}.$$
 
-Otra restricción importante es que la cadena
-binaria debe ser la misma para cada cláusula lo que mantiene la invariante de que a todas las instancias de la misma
-variable le corresponde el mismo valor y la longitud de la cadena binaria debe ser exactamente igual al número de 
-variables de la fórmula booleana.
+$L_{0,1,d}$ contiene cadenas sobre el alfabeto $\{0,1,d\}$, que representan una cadena binaria concatenada con una $d$,
+repetida varias veces.
+
+Para que la cadena $w\in L_{0,1,d}$ pueda ser interpretada como una asignación de valores para $f\in L_{FULL-SAT}$, 
+es necesario, al igual que en la codificación anterior de $L_{FULL-SAT}$, poder distinguir los valores asignados 
+a cada cláusula. Esto se logra mediante el caracter $d$ ($w$ contiene la misma cantidad de $d$ que la cadena $f$), y para representar los valores de las variables asignados a cada cláusula se utilizan 
+cadenas binarias de igual longitud que el número de variables de la fórmula booleana.
+
+Para cada cadena binaria se le asocia el valor del $i$-ésimo caracter al valor de la $i$-ésima variable de la 
+cláusula, si este caracter es un 1 se le asocia un valor de \true{} (verdadero) y si el caracter es un 0 
+se le asocia el valor de \false{} (falso). Como todas las cadenas binarias son iguales
+se garantiza que a dos instancias de la misma variable en dos cláusulas distintas se les asigne el 
+mismo valor.
+
 
 Por ejemplo, si $e=101\mathbf{d}101\mathbf{d}101\mathbf{d}$ y $f=abc\mathbf{d}cbb\mathbf{d}acc\mathbf{d}$, fórmula booleana:
 $$(x_1\vee\neg x_2)\wedge (\neg x_2 \vee \neg x_3)\wedge (x_1),$$
 se evalúa de la siguiente manera:
 $$(true\vee\neg false)\wedge (\neg false \vee \neg true)\wedge (true).$$
 
-Entonces, se puede definir el lenguaje de todas las interpretaciones de las fórmulas booleanas representas en la codificación
-de $L_{FULL-SAT}$ como:
-$$L_{0,1}=\{(wd)^+\,|\,w\in\{0,1\}^+\}.$$
-
-En la próxima sección se define el lenguaje $L_{S-SAT}$.
+En la próxima sección se define el lenguaje $L_{S-SAT}$ que contiene todas las fórmulas booleanas satisfacibles.
 
 \section{Definición de $L_{S-SAT}$}
 
-El lenguaje de todas las fórmulas booleanas en CNF que son satisfacibles se define como $L_{S-SAT}=\{w\,|\,w \in L_{FULL-SAT} \}$, 
-donde $L_{FULL-SAT}$ representa el lenguaje de todas las fórmulas booleanas en CNF y $w$ representa una fórmula booleana satisfacible.
+El lenguaje de todas las fórmulas booleanas en CNF que son satisfacibles se define como $$L_{S-SAT}=\{w \mid \exists e\,f_{SAT}(e,w),\,e\in L_{0,1,d}\text{ y }w \in L_{FULL-SAT} \},$$ donde $L_{FULL-SAT}$ representa el lenguaje de todas las fórmulas booleanas en CNF y $f_{SAT}(e,w)$
+es una función que recibe las cadenas $e$ y $w$, las cuales representan una interpretación y una fórmula booleana, en la codificación
+presentada en las dos secciones anteriores, respectivamente, y comprueba que cuando se evalúe los valores de las variables
+que representa $e$ sobre la fórmula booleana que representa $w$, dicha fórmula booleana se evalúe con valor \true{}.
 
-En la próxima sección se presenta una vía para construir $L_{S-SAT}$ usando transducción finita.
 
 En la próxima sección se demuestra que $L_{S-SAT}$ no es un lenguaje libre del contexto, por lo que el formalismo que lo
-genere necesariamente debe pertenecer a las gramáticas dependientes del contexto o las gramáticas irrestrictas.
+genere necesariamente debe pertenecer a las gramáticas dependientes del contexto o a las gramáticas irrestrictas.
 
 \subsection{Demostración de que $L_{S-SAT}$ no es un lenguaje libre del contexto}
 
@@ -153,70 +167,75 @@ En esta sección se demuestra que el lenguaje $L_{S-SAT}$ no es libre del contex
 libres del contexto \cite{authomataTheory}. 
 
 El lema del bombeo establece que si $L$ es un lenguaje libre del contexto
-existe una constante $n$ tal que para toda cadena $q\in L$, $w$ puede escribirse de la forma $q=uvwxy$ tal que:
+existe una constante $n$ tal que para toda \comment{\comment{cadena $q\in L$}{que tengan una longitud mayor que una constante... ¿no?.}}{en \cite{authomataTheory} dicen exactamente esto}, $w$ puede escribirse de la forma $q=uvwxy$ tal que:
 $|vwx|\leq n$, $vx\neq \varepsilon$ y $\forall i\geq 0\,uv^iwx^iy\in L$ \cite{authomataTheory}.
 
-Suponga que $L_{S-SAT}$ es un lenguaje libre del contexto y la constante es $n$, entonces se cumple que 
+Suponga que $L_{S-SAT}$ es un lenguaje libre del contexto y la constante es $n$, entonces se cumple que la fórmula
+$$(x_1)\wedge(x_2)\wedge\ldots\wedge(x_{n+2})$$ es satisfacible y tiene $n+2$ variables, por lo que la cadena
 $$q=a\underbrace{c\ldots c}_{n+1}\mathbf{d}ca\underbrace{c\ldots c}_{n}\mathbf{d}\ldots \underbrace{c\ldots c}_{n}ac\mathbf{d}\underbrace{c\ldots c}_{n+1}a\mathbf{d},$$
-pertenece a $L_{S-SAT}$, ya que la fórmula 
-$$(x_1)\wedge(x_2)\wedge\ldots\wedge(x_{n+2})$$ es satisfacible. Por tanto existen $u$, $v$, $w$, $x$ y $y$ con $vx\neq \varepsilon$ y $|vwx|\leq n$
-tales que $q=uvwxy$. 
+pertenece a $L_{S-SAT}$ y cada subcadena determinada por las $d$ tiene $n+2$ caracteres. 
 
-Como $|vwx|\leq n$ y cada cláusula tiene $n+2$ caracteres se cumple que $vwx$ tiene caracteres a lo sumo en 2 cláusulas,
-por tanto la cadena $uv^2wx^2y$ tiene una o dos cláusulas con más caracteres que las restantes y esto contradice el hecho 
-de que $uv^2wx^2y\in L_{S-SAT}$. Entonces, se cumple que $L_{S-SAT}$ no es un lenguaje libre del contexto.
+Por tanto existen $u$, $v$, $w$, $x$ y $y$ con $vx\neq \varepsilon$ y $|vwx|\leq n$
+tales que $q=uvwxy$.
 
-Seguidamente se muestra como construir $L_{S-SAT}$ mediante una transducción finita.
+Como $|vwx|\leq n$ y cada cláusula tiene $n+2$ caracteres se cumple que $vwx$ tiene a lo sumo una $d$, porque entre dos caracteres $d$ hay como mínimo $n+2$ caracteres. Entonces pueden darse 2 casos: $v$ o $x$
+contienen una $d$ o, ninguno de las 2 contiene una $d$.
 
-\subsection{Construcción del $L_{S-SAT}$ usando transducción finita}
+En el primer caso cuando se bombea $v$ y $x$ en la cadena $uv^2wx^2y$ se agrega una cláusula más y la cláusula
+que se agrega tiene un tamaño menor o igual a $n$, por lo que $uv^2wx^2y\notin L_{S-SAT}$, ya que hay una cláusula
+con menos caracteres que las demás.
+
+En el segundo caso cuando se bombea $v$ y $x$ en la cadena $uv^2wx^2y$
+se agrega al menos un caracter a la cláusula a la que pertenecía $v$ o al menos un caracter a la cláusula a la que pertenecía $x$.
+Si $v$ y $x$ pertenecían a la misma cláusula en $uvwxy$ entonces hay una cláusula en $uv^2wx^2y$ que tiene más caracteres que las restantes cláusulas,
+en caso contrario hay una o dos cláusulas en $uv^2wx^2y$ que tienen más caracteres que las restantes cláusulas, entonces $uv^2wx^2y\notin L_{S-SAT}$.
+
+En los dos casos se cumple que $uv^2wx^2y\notin L_{S-SAT}$ por lo tanto se cumple que $L_{S-SAT}$ no es un lenguaje libre del contexto.
+
+
+\comment{\notaparaelautor{¿y cómo usaste el hecho de que la cadena es satisfacible? porque a lo mejor las cadenas que corresponden a fórmulas satisfacibles tienen alguna caracerística especial que sí hagan que sean libres del contexto...}}{No hace falta para que la formula sea satisfacible tiene q cumplir que todas las cláusulas tengan la misma longitud y q la formula sea satisfacible. Supongamos que es libre del contexto entonces no puede cumplir la primera condicion}
+
+Seguidamente se muestra como construir $L_{S-SAT}$ mediante una transducción finita del lenguaje $L_{0,1,d}$.
+
+\section{Construcción del $L_{S-SAT}$ usando transducción finita}
 
 La idea para definir $L_{S-SAT}$ es construir un transductor finito, denominado $T_{SAT}$, que acepte como 
-entrada cadenas $w\in L_{0,1}$ y devuelva cadenas de $f\in L_{FULL-SAT}$ tales que al evaluar $w$ en $f$, $f$
-es verdadera. 
+entrada cadenas $w\in L_{0,1,d}$ y devuelva cadenas de $f\in L_{FULL-SAT}$ tales que al evaluar $w$ en $f$ (como se describió en la sección \ref{sec:intsat}), $f$ es verdadera.
 
-Se define $L_{S-SAT}$ como el lenguaje de todas las transducciones $e$ que se obtienen del transductor 
-$T_{SAT}$, a partir del lenguaje de cadenas de entrada $L_{0,1}$. 
-
-$$L_{S-SAT} = \{e\,|\,\exists w \in L_{0,1} \wedge e \in T_{SAT}(w) \}.$$
+Se define $L_{S-SAT}$ como el lenguaje de todas las transducciones $e$ que se obtienen del transductor
+$T_{SAT}$, a partir del lenguaje de cadenas de entrada $L_{0,1,d}$.
+$$L_{S-SAT} = \{e\,|\,\exists w \in L_{0,1,d} \text{ y } e \in T_{SAT}(w) \}.$$
 
 En la siguiente sección se define el transductor $T_{SAT}$.
 
-\section{Transductor $T_{SAT}$}
+\subsection{Transductor $T_{SAT}$}
 \label{sec:tsat}
 
-En esta sección se define el transductor finito $T_{SAT}$ (Figura \ref{fig:transducer_sat}), el cual se usa para construir $L_{S-SAT}$, mediante 
-una transducción finita.
+En esta sección se define el transductor finito $T_{SAT}$ (Figura \ref{fig:transducer_sat}), el cual se usa para construir $L_{S-SAT}$, mediante una transducción finita del lenguaje $L_{0,1,d}$.
 
-Para ello se construye el transductor $T_{CLAUSE}$ (Figura \ref{fig:transducer_clause}) que dada una cadena binaria $w$
-genera todas las posibles cláusulas sobre el alfabeto $\{a,b,c,d\}$ que sean satisfacibles por $w$. 
+Primero, se construye el transductor $T_{CLAUSE}$ (Figura \ref{fig:transducer_clause}) que dada una cadena binaria $w$, genera todas las posibles cláusulas satisfacibles por los valores de las variables que determina la cadena de entrada.
 
-La idea detrás de $T_{CLAUSE}$ es construir un transductor que genere todas las posibles cláusulas satisfacibles 
-por los valores de las variables que determina la cadena de entrada. Este transductor tiene 3 estados: el 
-estado inicial, el estado positivo (representa que la cláusula generada ya es satisfacible) y el estado 
-negativo (representa que la cláusula generada aún no es satisfacible). Las transiciones entre los estados 
-se realizan dependiendo del caracter que se lee y el caracter que se escribe y además dependiendo si la asignación
-que se realiza en el momento de leer o de escribir satisface la cláusula o no.
+Este transductor tiene 3 estados: el estado inicial, el estado positivo (representa que la cláusula generada ya se evalúa con un valor de verdad positivo) y el estado negativo (representa que la cláusula generada aún no se evalúa con un valor de verdad positivo) para los caracteres que se leyeron hasta el momento. Las transiciones entre los estados se realizan dependiendo de si la asignación que se realiza en el momento de leer o de escribir satisface la cláusula generada o no.
 
 A continuación de describe el funcionamiento de cada estado del transductor $T_{CLAUSE}$:
 \begin{itemize}
-    \item Estado $q_0$: representa el estado inicial. Si la entrada es un 1 el transductor puede escribir $a$,
-          $b$ y $c$, si escribe $a$ pasa al estado positivo, si escribe $b$ pasa al estado negativo y si escribe $c$
-          permanece en el mismo estado. Por otro lado si la entrada es un 0 cuando se escribe $a$ pasa al estado 
-          negativo y cuando se escribe una $b$ pasa al estado positivo, mientras que cuando se escribe $c$
-          permanece en el mismo estado.
+    \item Estado $q_0$: representa el estado inicial.
+          Si se lee  un 1 y se escribe una $a$, se pasa al estado positivo, ya que se genera una variable sin negar a la cual se le da valor \true{}.
+          Si se lee  un 1 y se escribe una $b$, se pasa al estado negativo, ya que se genera una variable negada a la cual se le da valor \true{}.
+          Si se lee  un 1 y se escribe una $c$, se mantiene en el mismo estado, ya que se genera una variable que no esta en la cláusula a la cual se le da valor \true{}.
+          Si se lee  un 0 y se escribe una $a$, se pasa al estado negativo, ya que se genera una variable sin negar a la cual se le da valor \false{}.
+          Si se lee  un 0 y se escribe una $b$, se pasa al estado positivo, ya que se genera una variable negada a la cual se le da valor \false{}.
+          Si se lee  un 0 y se escribe una $c$, se mantiene en el mismo estado, ya que se genera una variable que no esta en la cláusula a la cual se le da valor \false{}.
           
-    \item Estado $q_p$ (estado positivo de $T_{CLAUSE}$): representa que para los valores asignados a las
-          variables se obtiene un valor de verdad positivo.  Como la fórmula se encuentra ya en un estado positivo 
-          lo que significa que al menos un literal se evaluó positivo, no importa la entrada y lo que el transductor 
-          escriba se mantiene en el mismo estado. Este estado es el estado de aceptación para el transductor lo cual 
-          significa que la cláusula se evalúa con un valor de verdad positivo.
+    \item Estado $q_p$ (estado positivo de $T_{CLAUSE}$): representa que para los valores asignados a las variables se obtiene un valor de verdad positivo.  Como la fórmula se encuentra ya en un estado positivo lo que significa que al menos un literal se evaluó positivo, no importa la entrada y lo que el transductor escriba se mantiene en el mismo estado. Este estado es el estado de aceptación para el transductor lo cual significa que la cláusula se evalúa con un valor de verdad positivo.
           
-    \item Estado $q_n$ (estado negativo de $T_{CLAUSE}$): representa que para los valores asignados a las variables
-          hasta el momento se obtiene un valor de verdad negativo. Si la entrada es un 1 el transductor puede 
-          escribir $a$, $b$ y $c$. Si escribe $a$ pasa al estado positivo, si escribe $b$ pasa al estado negativo y 
-          si escribe $c$ permanece en el mismo estado. Por otro lado si la entrada es un 0 cuando se escribe $a$ pasa 
-          al estado negativo y cuando se escribe una $b$ pasa al estado positivo, mientras que cuando se escribe $c$
-          permanece en el mismo estado.
+    \item Estado $q_n$ (estado negativo de $T_{CLAUSE}$): representa que para los valores asignados a las variables hasta el momento se obtiene un valor de verdad negativo.
+          Si se lee  un 1 y se escribe una $a$, se pasa al estado positivo, ya que se genera una variable sin negar a la cual se le da valor \true{}.
+          Si se lee  un 1 y se escribe una $b$, se mantiene en el mismo estado, ya que se genera una variable negada a la cual se le da valor \true{}.
+          Si se lee  un 1 y se escribe una $c$, se mantiene en el mismo estado, ya que se genera una variable que no esta en la cláusula a la cual se le da valor \true{}.
+          Si se lee  un 0 y se escribe una $a$, mantiene en el mismo estado, ya que se genera una variable sin negar a la cual se le da valor \false{}.
+          Si se lee  un 0 y se escribe una $b$, se pasa al estado positivo, ya que se genera una variable negada a la cual se le da valor \false{}.
+          Si se lee  un 0 y se escribe una $c$, se mantiene en el mismo estado, ya que se genera una variable que no esta en la cláusula a la cual se le da valor \false{}.
           
 \end{itemize}
 
@@ -297,29 +316,25 @@ Se define la función de transición $\delta$ de la siguiente manera:
             
         \end{tikzpicture}
     \end{otherlanguage}
-    \caption{Transductor $T_{CLAUSE}$.}
+    \caption{Representación gráfica del Transductor $T_{CLAUSE}$.}
     \label{fig:transducer_clause} % Esto es para referenciar la figura en el texto
 \end{figure}
 
-Para definir $T_{SAT}$ mediante $T_{CALUSE}$, la idea es modificar $T_{CALUSE}$ para que cuando se genere 
-una cláusula y termine en el estado positivo se continue leyendo los valores de la cadena de entrada que 
-son necesarios para generar la próxima cláusula. Lo anterior se logra definiendo $q_0$ como el estado de 
-aceptación y agregando una transición del estado $q_p$ al estado $q_0$ que lea una $d$ y escriba una $d$, 
-de esta manera cuando una cláusula se genera con un valor de verdad positivo se pasa a generar la siguiente 
-cláusula desde el estado inicial. 
+Siguiendo la idea de $T_{CALUSE}$ se puede construir $T_{SAT}$ mediante una modificación de $T_{CALUSE}$.
+Esta modificación funciona de la siguiente manera: cuando se genera una cláusula y el transductor termina en el estado positivo se continua leyendo los valores de la cadena de entrada (ya que la cadena de entrada esta conformada por varias cláusulas separadas mediante el caracter $d$) que son necesarios para generar la próxima cláusula. 
 
-La construcción anterior tiene una dificultad y es que el transductor genera la cadena vacía, y la cadena
-vacía representa una fórmula booleana con 0 variables, por lo que no tiene sentido que se considere en $L_{S-SAT}$. Para 
-solucionar lo anterior se pueden tomar 2 transductores $T_{CLAUSE}$ y unirlos mediante una transición, 
-esta idea se expone a continuación.
+La modificación de $T_{CALUSE}$ se logra definiendo $q_0$ como el estado de aceptación y agregando una transición 
+del estado $q_p$ al estado $q_0$ que lea una $d$ y escriba una $d$. De esta manera, cuando una cláusula se genera 
+con un valor de verdad positivo se comienza a generar la siguiente cláusula desde el estado inicial.
 
-Para definir el transductor $T_{SAT}$ (Figura \ref{fig:transducer_sat}) se toman 2 transductores 
-$T_{CLAUSE}$ ($T_1$ y $T_2$ respectivamente) y se concatenan añadiendo una transición del estado 
-estado positivo de $T_1$ $q_{p_1}$ al estado inicial de $T_2$ $q_{0_2}$ con el símbolo $d$
-(tanto de lectura como de escritura) y además se agrega una transición del estado del estado 
-estado positivo de $T_2$ $q_{p_2}$ al estado $q_{0_2}$ con el símbolo $d$ (tanto de lectura como de escritura).
-Para terminar se define el estado inicial y el estado final de $T_{SAT}$, los cuales serían el estado inicial de $T_1$
-$q_{0_1}$ y el estado inicial de $T_2$ $q_{0_2}$, respectivamente.
+Esta modificación de $T_{CALUSE}$ tiene una dificultad y es que el transductor genera la cadena vacía, y la cadena vacía representa una fórmula booleana con 0 variables, por lo que no tiene sentido que se considere en $L_{S-SAT}$. Para solucionar esto se pueden concatenar 2 transductores $T_{CLAUSE}$ y unirlos mediante una transición, esta idea se expone a continuación.
+
+Para definir el transductor $T_{SAT}$ (Figura \ref{fig:transducer_sat}) se concatenan 2 transductores $T_{CLAUSE}$ ($T_1$ y $T_2$
+respectivamente) y  se definen los estados: $q_{0_1}$, $q_{p_1}$ y $q_{n_1}$ estado inicial, positivo y negativo
+de $T_1$, respectivamente, y los estados $q_{0_2}$, $q_{p_2}$ y $q_{n_2}$ estado inicial, positivo y negativo
+de $T_2$, respectivamente. $T_1$ y $T_2$ se concatenan añadiendo una transición de $q_{p_1}$ a  $q_{0_2}$ con el símbolo $d$
+(tanto de lectura como de escritura) y además se agrega una transición de $q_{p_2}$ a $q_{0_2}$ con el símbolo $d$ (tanto de 
+lectura como de escritura).  Para terminar se define el estado inicial y el estado final de $T_{SAT}$, los cuales serían $q_{0_1}$ y $q_{0_2}$, respectivamente.
 
 
 
@@ -361,88 +376,139 @@ $q_{0_1}$ y el estado inicial de $T_2$ $q_{0_2}$, respectivamente.
             
         \end{tikzpicture}
     \end{otherlanguage}
-    \caption{Transductor $T_{SAT}$.}
+    \caption{Representación gráfica del Transductor $T_{SAT}$.}
     \label{fig:transducer_sat} % Esto es para referenciar la figura en el texto
 \end{figure}
 
 A continuación se presenta la demostración de que la construcción de $L_{S-SAT}$ mediante una transducción finita reconoce todas las fórmulas satisfacibles.
 
 \section{Demostración de que la construcción de $L_{S-SAT}$ mediante una transducción finita
-  reconoce todas las fórmulas satisfacibles}
+  genera todas las fórmulas satisfacibles}
 
-La idea de la demostración es probar que para cualquier cadena binaria $w$, $T_{CLAUSE}(w)$ es el conjunto de 
-todas las cláusulas que son satisfacibles por $w$. Después demostrar que si $e=(wd)^n \wedge w\in\{0,1\}^*$, $T_{SAT}(e)$ contiene todas 
-las fórmulas de $n$ cláusulas satisfacibles por la cadena $w$ donde  y por último demostrar que:
-$$L_{S-SAT} = \{e\,|\,\exists w \in L_{0,1} \wedge e \in T_{SAT}(w) \}.$$
+\begin{theorem}
+    \label{teo:tsat}
+    Una cadena $w$ pertenece al lenguaje generado por la transducción finita del lenguaje $L_{0,1,d}$
+    mediante el transductor $T_{SAT}$, si y solo si la fórmula booleana asociada a la cadena $w$ es satisfacible:
+    $$L_{S-SAT} = \{e\,|\,\exists w \in L_{0,1,d} \text{ y } e \in T_{SAT}(w) \}.$$
+\end{theorem}
 
-Para demostrar que dada una cadena binaria $w$, $T_{CLAUSE}(w)$ es el conjunto de todas las 
-cláusulas que son satisfacibles por $w$ primero suponga que $q\in T_{CLAUSE}(w)$. 
-Esto significa que el transductor terminó en el estado $q_p$ en el proceso que generó $q$ y como empezó 
-en el estado $q_0$ ocurrió una transición desde $q_0$ a $q_p$ o desde $q_n$ a $q_p$. Esto solo es posible 
-si el transductor leyó un 1 y escribió una a o si leyó un 0 y escribió una b. Lo cual significa que en la fórmula booleana que representa $q$
-hay una variable sin negar a la cual se le asigna un 1 o una variable negada a la 
-que se le asigna un 0, por lo tanto se cumple que $w$ satisface la fórmula booleana que representa $q$.
+A continuación, se presentan algunas definiciones que serán usadas en la demostración del Teorema \ref{teo:tsat}:
 
-Sea una fórmula booleana $F$ satisfacible por $w$, cuya representacion en $L_{FULL-SAT}$ es $q$,  se cumple que 
-en $F$ hay una variable sin negar a la cual se le asigna un 1 en $w$
-o una variable negada a la cual se le asigna un 0 en $w$. Sin pérdida de la generalidad se asume que la primera variable que cumple lo anterior es la $i$-ésima.  
+\begin{definition}
+    Se dice que se asignan los valores de una cadena binaria $w$ a una fórmula booleana $F$, cuando $w$ tiene la misma longitud
+    que el número de variables de $F$. Además si el $i$-ésimo caracter de $w$ es un 1 a la $i$-ésima variable de $F$ se le asigna
+    el valor \true{} y si el $i$-ésimo caracter de $w$ es un 0 a la $i$-ésima variable de $F$ se le asigna
+    el valor \false{}.
+\end{definition}
 
-Si se hace el reconocimiento de los primeros $i-1$ caracteres de la cadena de entrada por $T_{CLAUSE}$ se pueden
-tomar las transiciones de tal manera que los primeros $i-1$ caracteres de la cadena generada sean iguales a los primeros $i-1$ caracteres de $q$. 
-Dado este punto solo es posible que el transductor esté en el estado $q_0$ o $q_n$, pero como se cumple que la 
-$i$-ésima variable está sin negar y se le asigna un 1 en $w$ o está negada y se le asigna un 0 en $w$, entonces se puede 
-tomar la opción de leer un 1 y escribir una a o leer un 0 y escribir una b según corresponda. 
-De esta manera, según en el estado en que se encuentre el autómata, se pasa al estado $q_p$.
+\begin{definition}
+    Se dice que una cadena binaria $w$ satisface una fórmula booleana $F$ si cuando se asignan los valores de $w$ a $F$, se obtiene un valor de verdad positivo.
+\end{definition}
 
-Luego se toman las restantes transiciones de manera que la cadena generada sea $q$ y se mantiene en el mismo 
-estado ya que $q_p$ solo tiene transiciones hacia sí mismo. De esta manera se demuestra que $T_{CLAUSE}(w)$
-es el conjunto de todas las cláusulas que son satisfacibles por $w$.
+\begin{definition}
+    Se dice que una cadena binaria $w$ satisface a una cadena $e\in L_{FULL-SAT}$ si $w$ satisface la fórmula booleana asociada a $e$. 
+\end{definition}
 
-Para demostrar que $T_{SAT}(e)$ contiene todas las fórmulas satisfacibles por la cadena $e=(wd)^n$ donde 
-$w\in\{0,1\}^*$ se hará una inducción sobre $n$. Se define los conjuntos $A_{w,n}$ como el conjunto 
-formado por todas las cadenas que representan fórmulas booleanas de $n$ cláusulas satisfacibles por 
-$w$ y $B_w$ el conjunto formado por todas las cadenas que representan las cláusulas que son satisfacibles 
-por $w$. El caso base $n=1$ se demuestra porque la transducción se realiza solo sobre el primer transductor 
-$T_{CLAUSE}$ que conforma a $T_{SAT}$ y como se demostró anteriormente $T_{CLAUSE}(w)$ contiene todas cláusulas satisfacibles por $w$.  
+Para la demostración del teorema \ref{teo:tsat} se presentan los siguientes lemas:
 
-Una vez demostrado el caso base corresponde asumir para $n=k$ y se demuestra para $n=k+1$. 
+\begin{lemma}
+    \label{lem:clause}
+    Dada una cadena binaria $w$, $T_{CLAUSE}(w)$ es el conjunto de todas las cadenas que representan cláusulas que son satisfacibles por $w$.
+\end{lemma}
 
-Se cumple que 
-el conjunto de todas las fórmulas booleanas satisfacibles por $w$ con $k+1$ cláusulas es equivalente 
-al conjunto que forman todas las fórmulas booleanas satisfacibles por $w$ con $k$ cláusulas concatenadas con todas 
-las cláusulas satisfacibles por $w$:
-$$A_{w,k+1}=\{xyd\,|\,x\in A_{w,k} \wedge y\in B_w\}.$$
+\begin{lemma}
+    \label{lem:sat}
+    Dada una cadena $e=(wd)^n$, con $w\in\{0,1\}^*$, $T_{SAT}(e)$ contiene todas las cadenas que representan fórmulas de $n$ cláusulas satisfacibles por la cadena $w$.
+\end{lemma}
+
+
+Seguidamente, se demuestra el lema \ref{lem:clause}.
+
+\subsection{Demostración del Lema \ref{lem:clause}}
+
+Para demostrar que dada una cadena binaria $w$, $T_{CLAUSE}(w)$ es el conjunto de todas las cláusulas que son 
+satisfacibles por $w$, primero suponga que $q\in T_{CLAUSE}(w)$.  Esto significa que el transductor terminó en 
+el estado $q_p$ en el proceso que generó $q$ y como empezó en el estado $q_0$ ocurrió una transición desde 
+$q_0$ a $q_p$ o desde $q_n$ a $q_p$. Esto solo es posible si el transductor leyó un 1 y escribió una $a$ o si leyó un 0 y 
+escribió una $b$. Entonces, cuando se le asignan los valores de $w$ a las variables de la fórmula booleana que 
+representa $q$ hay una variable sin negar con valor \true{} o una variable negada con valor \false{}, por lo tanto, 
+se cumple que $w$ satisface la fórmula booleana que representa $q$.
+
+Sea una fórmula booleana $F$ satisfacible por una cadena binaria $w$, cuya representación en $L_{FULL-SAT}$ es $q$, entonces se cumple que 
+cuando se le asignan los valores de $w$ a las variables de $F$, hay una variable sin negar con valor \true{} o una variable negada con valor \false{}. Sin pérdida de la generalidad se asume que la primera variable que cumple 
+lo anterior es la $i$-ésima.  
+
+Como en cada estado para cada símbolo que se lee existe una transición que escribe una $a$, una $b$ o una $c$;
+si se hace el reconocimiento de los primeros $i-1$ caracteres de la cadena de entrada por $T_{CLAUSE}$
+se pueden seguir las transiciones entre los estados del transductor de tal manera que los primeros $i-1$
+caracteres de la cadena generada sean iguales a los primeros $i-1$ caracteres de $q$. 
+
+Dado este punto solo es posible que el transductor esté en el estado \comment{\comment{$q_0$}{¿de q0 no se sale siempre con el primer símbolo?}}{puede que $i$ sea 0 o puede q los primeros $i-1$ caracteres sean $c$ } o $q_n$, pero como se cumple que la $i$-ésima variable está sin negar y con valor \true{} o está negada y con valor \false{}, entonces se puede tomar la opción de leer un 1 y escribir una a o leer un 0 y escribir una b según corresponda.  De esta manera, según en el estado en que se encuentre el autómata, se pasa al estado $q_p$.
+
+Luego se toman las restantes transiciones de manera que la cadena generada sea $q$ y se mantiene en el mismo estado ya que $q_p$ solo tiene transiciones hacia sí mismo. De esta manera se demuestra el Lema \ref{lem:clause}. 
+
+En la próxima sección se demuestra el Lema \ref{lem:sat}.
+
+\subsection{Demostración del Lema \ref{lem:sat}}
+
+Para demostrar que $T_{SAT}(e)$ contiene todas las fórmulas satisfacibles por la cadena $e=(wd)^n$
+donde $w\in\{0,1\}^*$ se hará una inducción sobre $n$. Se definen los conjuntos $A_{w,n}$ como el 
+conjunto formado por todas las cadenas que representan fórmulas booleanas de $n$ cláusulas satisfacibles 
+por $w$ y $B_w$ el conjunto formado por todas las cadenas que representan las cláusulas que son satisfacibles 
+por \comment{\comment{$w$}{¿w con d o sin d? ¿qué significa que una cláusula sea satisfacible por una cadena w que tenga d?}}{$w$ es una cadena binaria sin $d$}. 
+
+El caso base $n=1$ se demuestra porque la transducción se realiza solo sobre el primer transductor $T_{CLAUSE}$
+que conforma a $T_{SAT}$, ya que en la cadena de entrada solo hay una $d$ y como se demostró anteriormente $T_{CLAUSE}(w)$ contiene todas cláusulas satisfacibles
+\comment{por $w$}{¿w con d o sin d? ¿qué significa que una cláusula sea satisfacible por una cadena formada por 0 y 1?}, Lema \ref{lem:clause}. \notaparaelautor{No me convence que se demostró el caso base :-(. Hay muchas cosas en el aire :-(.}
+
+Una vez demostrado el caso base corresponde se asume que el Lema \ref{lem:sat} es cierto para $n=k$ y se demuestra para $n=k+1$. 
+
+El conjunto de todas las fórmulas booleanas satisfacibles por \comment{\comment{ $w$ con $k+1$}{la longitud de w (y la cantidad de d) determinan la cantidad de cláusulas que puede tener una fórmula para que w la satisfaga, a no ser que w no tenga d entonces no sé de qué estamos hablando.}}{$w$ es un cadena binaria sin $d$} cláusulas es equivalente al conjunto que forman todas las fórmulas booleanas satisfacibles por $w$ con $k$ cláusulas concatenadas con todas las cláusulas satisfacibles por $w$:
+$$A_{w,k+1}=\{xyd\,|\,x\in A_{w,k} \text{ e } y\in B_w\}.$$
 Además por la estructura de $T_{SAT}$ se cumple que el conjunto de todas las cadenas
 generadas por $T_{SAT}((wd)^{k+1})$ es igual al conjunto de todas las cadenas 
 generadas por $T_{SAT}((wd)^{k})$ concatenadas con todas las cadenas generadas por $T_{CLAUSE}(w)$:  
-$$T_{SAT}((wd)^{k+1})=\{xyd\,|\,x\in T_{SAT}((wd)^{k}) \wedge y\in T_{CLAUSE}(w)\}.$$
+$$T_{SAT}((wd)^{k+1})=\{xyd\,|\,x\in T_{SAT}((wd)^{k}) \text{ e } y\in T_{CLAUSE}(w)\}.$$
 
-Por hipótesis de inducción se cumple que $A_{w,k}=T_{SAT}((wd)^{k})$ y además se cumple que $B_w=T_{CLAUSE}(w)$, lo cual implica que $A_{w,k+1}=T_{SAT}((wd)^{k+1})$.
+Por hipótesis de inducción se cumple que $A_{w,k}=T_{SAT}((wd)^{k})$ y además se cumple que $B_w=T_{CLAUSE}(w)$, lo cual implica que $A_{w,k+1}=T_{SAT}((wd)^{k+1})$, por lo tanto se demuestra el Lema \ref{lem:sat}.
 
-Para concluir el tercer paso de la demostración, sea una cadena $e$ tal que existe $w$, donde $w \in L_{0,1} \wedge e \in T_{SAT}(w)$ entonces 
-se cumple que la fórmula booleana asociada a $e$ es satisfacible por $w$. Ahora sea $F$ una fórmula 
-booleana satisfacible y sea $e$ su cadena asociada, por tanto existe $w\in L_{0,1}$ tal que $w$ satisface a $F$, luego se cumple que $e\in T_{SAT}(w)$. Por tanto se cumple que:
-$$L_{S-SAT} = \{e\,|\,\exists w \in L_{0,1} \wedge e \in T_{SAT}(w) \}.$$
+A continuación se demuestra el Teorema \ref{teo:tsat}
 
-A continuación de demuestra que el problema de la palabra de cualquier formalismo que genere el lenguaje $L_{0,1}$, sea cerrado bajo transducción finita y su representación luego de la transducción sea $O(1)$, es NP-Duro
+\subsection{Demostración del Teorema \ref{teo:tsat}}
 
+Para concluir la demostración del Teorema \ref{teo:tsat}, sea una cadena $e$ tal que existe $w$, donde $w \in L_{0,1,d}$ y $e \in T_{SAT}(w)$ entonces 
+se cumple que la fórmula booleana asociada a $e$ es satisfacible por $w$, por el Lema \ref{lem:sat}. Ahora sea $F$ una fórmula 
+booleana satisfacible y sea $e$ su cadena asociada, por tanto existe $w\in L_{0,1,d}$ tal que $w$ satisface a $F$, luego se cumple que $e\in T_{SAT}(w)$, por el Lema \ref{lem:sat}. Por tanto se cumple que:
+$$L_{S-SAT} = \{e\,|\,\exists w \in L_{0,1,d} \text{ y } e \in T_{SAT}(w) \}.$$
 
-\subsection{Demostración de que el problema de la palabra de cualquier formalismo que genere el lenguaje $L_{0,1}$, sea cerrado bajo transducción finita y su representación luego de la transducción sea $O(1)$, es NP-Duro}
+Una consecuencia directa del Teorema \ref{teo:tsat} es que el problema de la palabra de cualquier formalismo que genere el lenguaje $L_{0,1,d}$ y sea cerrado bajo transducción finita, es NP-Duro.
 
-Para realizar la demostración suponga que existe un formalismo $G$ que genera $L_{0,1}$, es cerrado bajo transducción finita y su representación 
-luego de la transducción es $O(1)$. 
-Sea $G'$ el formalismo que resulta de aplicarle el transductor $T_{SAT}$ a $G$, entonces determinar 
-si una cadena $w$ pertenece al lenguaje generado por $G'$, es equivalente a saber si la fórmula
-booleana a la cual representa $w$ es satisfacible. Por tanto como la representación de $G'$ es $O(1)$
-entonces el problema de la palabra para $G'$ es NP-Duro, porque tiene una reducción directa al problema
-de la satisfacibilidad booleana.
+Para demostrar el planteamiento del párrafo anterior, suponga que existe un formalismo $G$ que genera $L_{0,1,d}$, 
+que es cerrado bajo transducción finita. 
+
+Sea $G'$ el formalismo que resulta de aplicarle el transductor $T_{SAT}$ a $G$. Entonces determinar si una cadena 
+$w$ pertenece al lenguaje generado por $G'$, es equivalente a saber si la fórmula booleana a la cual representa 
+$w$ es satisfacible. Por tanto el problema de la palabra para 
+$G'$ es NP-Duro, porque tiene una reducción directa al problema de la satisfacibilidad booleana. 
+
+Una restricción importante en la demostración anterior es que la representación de $G'$ tiene que tener tamaño O(1),
+porque si no el problema de la palabra de $G'$ puede depender además de la cantidad de estados (en el caso de
+la representación mediante una máquina abstracta) o de la cantidad de producciones, símbolos terminales y no terminales
+(en el caso de la representación mediante una  gramática).
+
+Se conjetura que cualquier formalismo $G$ que genere el lenguaje $L_{0,1,d}$, tiene tamaño O(1) en su representación
+y como el transductor $T_{SAT}$ tiene una cantidad de estados $O(1)$, entonces $G'$ tiene que tener tamaño O(1) en su representación.
+
+Todo formalismo que genera el lenguaje $L_{copy}$ tiene tamaño O(1) en su representación según la literatura consultada.
+El lenguaje $L_{0,1,d}$ es un subconjunto del lenguaje $L_{copy}$, razón que apoya la conjetura anterior.
 
 En este capítulo se presentó una estrategia para resolver el SAT usando teoría de lenguajes que se basa en 
 definir y construir el lenguaje de todas las fórmulas satisfacibles. Además se presentó un primer acercamiento 
 para construir $L_{S-SAT}$, mediante transducción finita lo cual demuestra que el problema de la palabra para 
-todos los formalismos que generen $L_{0,1}$ y sean cerrados bajo transducción finita, es NP-duro. 
-En el próximo capítulo se presenta otra estrategia distinta para definir $L_{S-SAT}$, la cual se 
-basa en definir una RCG que reconozca las fórmulas booleanas satisfacibles. 
+todos los formalismos que generen $L_{0,1,d}$ y sean cerrados bajo transducción finita, es NP-duro.  En el próximo 
+capítulo se argumenta que la estrategia presentada en este para construir $L_{S-SAT}$ no es la única, porque se 
+construye una RCG que reconoce el lenguaje $L_{S-SAT}$, y los lenguajes de concatenación de rango no son 
+cerrados bajo transducción finita.
 
 
 \begin{thebibliography}{99}
