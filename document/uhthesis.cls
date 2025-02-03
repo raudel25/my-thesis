@@ -54,7 +54,7 @@
   \renewcommand{\chaptermark}[1]{\markboth{\small \ \chaptername\ \thechapter. \ #1}{}}
   \fancyhead[L]{\slshape \leftmark}
   \fancyhead[R]{\thepage}
-
+  
 \fi
 \renewcommand{\headheight}{28pt}
 
@@ -198,9 +198,9 @@
   \begin{flushright}}%
     {\end{flushright}}
 
-\newtheorem{theorem}{Teorema}[chapter]
-\newtheorem{definition}{Definición}[chapter]
-\newtheorem{lemma}{Lema}[chapter]
+% \newtheorem{theorem}{Teorema}[chapter]
+% \newtheorem{definition}{Definición}[chapter]
+% \newtheorem{lemma}{Lema}[chapter]
 
 
 \AtBeginDocument{%

@@ -28,23 +28,23 @@ cadenas del lenguaje $L_{0,1,d}$, las cuales representan todas las posibles inte
 booleanas en CNF y genera cadenas del lenguaje $L_{FULL-SAT}$, tales que la fórmula booleana asociada a estas
 cadenas es satisfacible.
 
-Posteriormente se demostró que el problema de la palabra para todo formalismo que genere
-el lenguaje $L_{0,1,d}$ y sea cerrado bajo transducción finita, es NP-Duro. Esta demostración se apoya en la conjetura
+El problema de la palabra para todo formalismo que genere
+el lenguaje $L_{0,1,d}$ y sea cerrado bajo transducción finita, es NP-Duro, teniendo en cuenta la conjetura
 de que cualquier formalismo que genere el lenguaje $L_{0,1,d}$, tiene tamaño $O(1)$ en su representación.
 
-En el capítulo \ref{chap:LSATRCG}, se presentó una RCG que reconoce el lenguaje $L_{0,1,d}$ y se argumentó porque no es posible
+Se presentó una RCG que reconoce el lenguaje $L_{0,1,d}$ y se argumentó por qué no es posible
 usar esta gramática para construir $L_{S-SAT}$ mediante transducción finita, ya que las RCG no son cerradas bajo transducción finita.
 
-Siguiendo la idea de las RCG y el SAT, se construyó una RCG que reconoce el lenguaje $L_{S-SAT}$, esto permitió demostrar
+Se construyó una RCG que reconoce el lenguaje $L_{S-SAT}$, lo que permitió demostrar
 que no es necesario construir $L_{S-SAT}$ mediante transducción finita. La gramática que se construyó tiene el problema
 de la palabra no polinomial, y constituye un ejemplo de una RCG donde el algoritmo de reconocimiento es no polinomial.
 Además al obtener una RCG que reconoce $L_{S-SAT}$, se demostró que las RCG cubren todos los problemas de la clase NP,
 ya que las RCG cubren todos los problemas en P \cite{mainRCGBib} y existe una reducción polinomial del SAT a todo problema en NP \cite{authomataTheory}.
 
-Las estrategias presentadas en los capítulos \ref{chap:LSATFT} y \ref{chap:LSATRCG} constituyen una vía diferente
-para resolver el SAT y aunque el problema de la palabra para el formalismo que se construyó es no polinomial
+Las estrategias presentadas constituyen una vía diferente
+para resolver el SAT, y aunque el problema de la palabra para el formalismo que se construyó es no polinomial,
 este acercamiento puede contribuir a nuevas líneas de investigación para la búsqueda de algoritmos eficientes que permitan
-resolver el SAT.   
+resolver el SAT.
 
 \begin{thebibliography}{99}
 
