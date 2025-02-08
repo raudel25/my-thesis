@@ -1,0 +1,117 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc} % Permite escribir caracteres especiales directamente
+\usepackage[spanish]{babel} % Configura el idioma a español
+
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage[lmargin=2cm,rmargin=5cm]{geometry}
+
+\input{word-comments.tex}
+
+
+\title{Conclusiones y Recomendaciones}
+\author{Raudel Alejandro Gómez Molina}
+
+\begin{document}
+
+\maketitle
+
+En este trabajo se presentó una estrategia para resolver el SAT usando teoría de lenguajes que se basa en 
+codificar una fórmula booleana mediante una cadena sobre el alfabeto $\{a,b,d,c\}$ y definir el lenguaje de 
+todas las fórmulas booleanas satisfacibles $L_{S-SAT}$. A partir de este lenguaje, para determinar si una 
+fórmula booleana es satisfacible solo es necesario verificar si la cadena asociada a dicha fórmula pertenece 
+a $L_{S-SAT}$.
+
+Además de definir el lenguaje $L_{S-SAT}$ se propuso una forma para construirlo utilizando una transducción 
+finita de una variante del lenguaje $Copy$. 
+
+En el capítulo \ref{chap:LSATFT}, se construyó $L_{S-SAT}$ mediante el transductor finito $T_{SAT}$ que 
+recibe cadenas del lenguaje $L_{0,1,d}$, las cuales representan todas las posibles interpretaciones para 
+fórmulas booleanas en CNF y genera cadenas sobre el alfabeto $\{a,b,c,d\}$, tales que cuando se interpretan 
+como fórmulas booleanas son satisfacibles por las cadena de $L_{0,1,d}$ que la generó. 
+
+Por la forma en que se construyó el lenguaje $L_{S-SAT}$ se tiene que el problema de la palabra para todo 
+formalismo que genere el lenguaje $L_{0,1,d}$ y sea cerrado bajo transducción finita, es NP-Duro, asumiendo como válida 
+la conjetura de que cualquier formalismo que genere el lenguaje $L_{0,1,d}$, tiene tamaño $O(1)$ en su 
+representación.
+
+También se construyó una RCG que reconoce el lenguaje $L_{S-SAT}$, lo que permitió demostrar que no es 
+necesario construir $L_{S-SAT}$ mediante transducción finita. La gramática que se construyó tiene el 
+problema de la palabra no polinomial, y constituye un ejemplo de una RCG donde el algoritmo de reconocimiento 
+es no polinomial.  Además, al obtener una RCG que reconoce $L_{S-SAT}$, se demostró que las 
+RCG reconocen todos los problemas de la clase NP.
+
+Las estrategias presentadas constituyen una vía diferente para resolver el SAT, y aunque el problema de 
+la palabra para el formalismo que se construyó es no polinomial, este acercamiento puede contribuir a nuevas 
+líneas de investigación para la búsqueda de algoritmos eficientes que permitan resolver el SAT.
+
+A partir del trabajo realizado se proponen como temas para investigaciones futuras los
+siguientes:
+
+\begin{itemize}
+      \item Buscar un formalismo que genere el lenguaje $L_{0,1,d}$, que sea cerrado bajo transducción finita, y analizar el problema de la palabra para el formalismo que se obtiene después de aplicarle el transductor $T_{SAT}$. En la literatura
+            consultada \cite{globalIndexLanguages} para la realización de este trabajo se encontró un formalismo que cumple las propiedades anteriores.
+      \item Demostrar que cualquier formalismo que genere $L_{0,1,d}$ tiene un tamaño $O(1)$ en su representación.
+      \item Analizar qué tipo de formalismo se obtiene al aplicarle el transductor $T_{SAT}$ a la RCG que reconoce el lenguaje $L_{0,1,d}$.
+      \item Analizar qué propiedades limitan que las RCG no sean cerradas bajo transducción finita, construir un formalismo basado en las RCG que sea cerrado bajo transducción finita y comprobar si este formalismo es capaz de describir el lenguaje $L_{0,1,d}$.
+      \item Construir una RCG que reconozca fórmulas booleanas satisfacibles, donde cada cláusula tiene a lo sumo dos literales (2-SAT), y que tenga el problema de la palabra polinomial.
+\end{itemize}
+
+
+
+\begin{thebibliography}{99}
+      
+      \bibitem{mainRCGBib}
+      Boullier, Pierre.
+      \textit{Proposal for a Natural Language Processing Syntactic Backbone}.
+      Research Report RR-3342, INRIA, 1998.
+      
+      \bibitem{propertiesRCGBib}
+      Boullier, Pierre.
+      \textit{A Cubic Time Extension of Context-Free Grammars}.
+      Research Report RR-3611, INRIA, 1999.
+      
+      \bibitem{simpleMatrixLanguages}
+      Ibarra, Oscar H.
+      \textit{Simple matrix languages}.
+      \textit{Information and Control}, Vol. 17, No. 4, pp. 359-394, 1970.
+      
+      \bibitem{globalIndexLanguages}
+      Castaño, José M.
+      \textit{Global Index Languages}.
+      Ph.D. Thesis, The Faculty of the Graduate School of Arts and Sciences, Brandeis University, 2004.
+      
+      \bibitem{authomataTheory}
+      Hopcroft, John E., Motwani, Rajeev, y Ullman, Jeffrey D.
+      \textit{Introduction to Automata Theory, Languages, and Computation}.
+      3ª edición, Addison-Wesley, 2006. ISBN: 9780321455369.
+      
+      \bibitem{aCFSAT}
+      Fernández Arias, Alina.
+      \textit{El problema de la satisfacibilidad booleana libre del contexto}.
+      Facultad de Matemática y Computación, Universidad de La Habana, 2007.
+      
+      \bibitem{aSRCSAT}
+      Aguilera López, Manuel.
+      \textit{Problema de la Satisfacibilidad Booleana de Concatenación de Rango Simple}.
+      Facultad de Matemática y Computación, Universidad de La Habana, 2016.
+      
+      \bibitem{aSMSAT}
+      Rodríguez Salgado, José Jorge.
+      \textit{Gramáticas Matriciales Simples. Primera aproximación para una solución al problema SAT}.
+      Facultad de Matemática y Computación, Universidad de La Habana, 2019.
+      
+\end{thebibliography}
+
+
+% Posibles conclusiones
+% - teorica
+% - como las gramáticas de concatenacion de rango constituyen un nuevo enfoque en la solucion del satisfacibilidad
+
+% Posibles recomendaciones
+% - por que via del transductor Full-SAT pueden desarrollarse nuevas investigaciones
+
+
+\end{document}

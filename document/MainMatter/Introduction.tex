@@ -1,74 +1,88 @@
 \chapter*{Introducción}
 
-El problema de satisfacibilidad booleana (\textit{SAT}) es uno de los problemas más estudiados en la teoría de la computación y la lógica.
-Consiste en determinar si existe una asignación de valores verdaderos o falsos que satisfaga una fórmula booleana dada, compuesta
-por variables y operadores lógicos como conjunciones, disyunciones y negaciones. SAT surge en 1971 como el primer problema NP-completo demostrado por
-Stephen Cook,
-lo que significa que, en el peor de los casos, su resolución requiere tiempo exponencial respecto al
-tamaño de la entrada, pero también que muchos otros problemas pueden reducirse a él. Esto
-implica un especial interés por parte de la comunidad científica en la búsqueda de métodos eficientes para la solución
-del SAT.
+El problema de satisfacibilidad booleana (\textit{SAT}) \cite{authomataTheory} es uno de los problemas más estudiados en 
+la teoría de la computación y la lógica \cite{biere2021handbook}.  Consiste en determinar si existe una asignación 
+de valores verdaderos o falsos que satisfaga una fórmula booleana dada, compuesta por variables y operadores 
+lógicos como conjunciones, disyunciones y negaciones. SAT surge en 1971 como el primer problema NP-completo 
+demostrado por Stephen Cook \cite{Cook1971}, lo que significa que, en el peor de los casos, su resolución 
+requiere tiempo exponencial respecto al tamaño de la entrada, pero también que muchos otros problemas pueden 
+reducirse a él. Esto implica un especial interés por parte de la comunidad científica en la búsqueda de 
+métodos eficientes para la solución del SAT \cite{biere2021handbook}.
 
-La teoría de lenguajes es una rama fundamental de la Ciencia de la Computación y la matemática que se
-enfoca en el estudio de los lenguajes formales. Estos lenguajes, definidos a través de gramáticas,
-autómatas y expresiones regulares, permiten modelar y analizar la estructura de los lenguajes naturales y
-artificiales. Su aplicación es amplia y abarca desde el diseño de compiladores y procesadores de lenguaje
-natural hasta la verificación de sistemas y la teoría de la computabilidad.
+La teoría de lenguajes es una rama fundamental de la Ciencia de la Computación y la matemática que se enfoca 
+en el estudio de los lenguajes formales \cite{authomataTheory}. Estos lenguajes, definidos a través de 
+gramáticas, autómatas y expresiones regulares, permiten modelar y analizar la estructura de los lenguajes 
+naturales y artificiales. Su aplicación es amplia y abarca desde el diseño de compiladores y procesadores de 
+lenguaje natural hasta la verificación de sistemas y la teoría de la computabilidad \cite{authomataTheory}.
 
-Los lenguajes formales se
-clasifican en jerarquías, como la jerarquía de Chomsky, que los organiza según su complejidad y poder
-expresivo. Esta teoría proporciona las bases para entender cómo se pueden reconocer, generar y transformar
-cadenas de símbolos, lo que resulta esencial en el desarrollo de herramientas computacionales para
-el procesamiento de información. Además, la teoría de lenguajes constituye la base de los problemas de la Ciencia
-de la Computación, ya que cualquier problema puede ser interpretado como un problema de la teoría de lenguajes.
+Los lenguajes formales se clasifican en jerarquías, como la jerarquía de Chomsky \cite{hunter2020chomsky}, 
+que los organiza según su complejidad y poder expresivo. Esta teoría proporciona las bases para 
+entender cómo se pueden reconocer, generar y transformar cadenas de símbolos, lo que resulta esencial 
+en el desarrollo de herramientas computacionales para el procesamiento de información. Además, 
+la teoría de lenguajes constituye la base de los problemas de la Ciencia de la Computación, ya que 
+cualquier problema puede ser interpretado como un problema de la teoría de lenguajes \cite{authomataTheory}.
 
-En este trabajo se vinculan las dos ramas de la computación descritas anteriormente, presentando un enfoque para resolver el SAT
-utilizando formalismos de teoría de lenguajes. Dicho enfoque resulta un tema no evidenciado en la literatura consultada
-y permite demostrar que una serie de problemas relacionados a la teoría de lenguajes pertenecen a la clase NP-completo.
+En este trabajo se vinculan las dos ramas de la computación descritas anteriormente, presentando 
+un enfoque para resolver el SAT utilizando formalismos de teoría de lenguajes. Dicho enfoque resulta un 
+tema no evidenciado en la literatura consultada y permite demostrar que una serie de problemas 
+relacionados a la teoría de lenguajes pertenecen a la clase NP-completo.
 
-En estudios anteriores, que siguen la idea presentada en esta investigación, se han mostrado estrategias para la solución
-de instancias específicas del SAT, usando formalismos de teoría de lenguajes, lo que constituye una solución limitada en su alcance.
-En cambio, en este trabajo se presenta una alternativa que resuelve cualquier instancia del mismo, lo que, a criterio del autor, resulta una solución
-cualitativamente superior. Esta sigue siendo una estrategia no eficiente, pero que
-muestra un nuevo enfoque para resolver el SAT de forma general, y permite abrir nuevas líneas de investigación en este tema.
+En estudios anteriores realizados en la facultad de Matemática y Computación de la Universidad de La Habana \cite{aCFSAT,aSRCSAT}, 
+se propone resolver variantes específicas del SAT utilizando el problema del vacío de varios tipos de 
+gramáticas. En cambio, en este trabajo se propone resolver variantes del SAT mediante el problema de la 
+palabra. 
 
-Para resolver cualquier instancia de SAT empleando formalismos de teoría de lenguajes se propone definir una codificación
-de una fórmula booleana en una cadena que se pueda interpretar por algún formalismo de la teoría de lenguajes
-y usando dicha codificación se define el lenguaje de todas las fórmulas booleanas satisfacibles. Entonces si se desea
-determinar si una fórmula booleana es satisfacible es necesario determinar si la cadena asociada a la  fórmula booleana pertenece o no al lenguaje de todas las fórmulas booleanas satisfacibles.
+Para ello se propone una codificación de una fórmula booleana cualquiera en forma normal conjuntiva usando 
+cadenas sobre el alfabeto $\{a,b,c,d\}$ y usando dicha codificación se define el lenguaje de todas las fórmulas 
+booleanas satisfacibles. Entonces si se desea determinar si una fórmula booleana es satisfacible 
+solo hay que determinar si la cadena asociada a la fórmula booleana pertenece o no a este lenguaje.
 
-Para construir el lenguaje
-de las fórmulas booleanas satisfacibles se propone utilizar 2 métodos: el primero utiliza un transductor finito y el segundo
-utiliza una gramática de concatenación de rango.
+Las gramáticas de concatenación de rango (RCG) \cite{mainRCGBib} son un formalismo de
+gramáticas desarrollado en 1988 como una propuesta de Pierre Boullier, su objetivo principal era
+proporcionar un modelo más general y expresivo que las gramáticas libres del contexto para describir lenguajes.
 
-A partir de lo expuesto anteriormente se formula como objetivo general de de este trabajo: definir y construir el lenguaje de todas las fórmulas booleanas satisfacibles.
+Un transductor finito es un autómata finito que, además de reconocer cadenas de entrada, produce una salida asociada a cada transición \cite{finite_transducer}.
+
+Además de definir el lenguaje de todas las fórmulas booleanas satisfacibles, se proponen dos vías para 
+construirlo. La primera utiliza un transductor finito y la segunda utiliza una gramática de concatenación de rango.
+
+El objetivo general de este trabajo es definir y construir el lenguaje de todas las fórmulas booleanas satisfacibles.
 
 Para cumplir el objetivo general se definen los siguientes objetivos específicos:
 
 \begin{itemize}
       \item Estudiar el estado del arte referido a los formalismos de teoría de lenguajes y el SAT.
-      \item Establecer una representación del SAT como una cadena que pueda ser interpretada por un formalismo de la teoría de lenguajes.
+      \item Establecer una representación de cualquier SAT como una cadena que pueda ser interpretada por un formalismo de la teoría de lenguajes.
       \item Definir el lenguaje de todas las fórmulas booleanas satisfacibles.
-      \item Construir el lenguaje de todas las fórmulas booleanas satisfacibles utilizando un transductor finito.
-      \item Construir el lenguaje de todas las fórmulas booleanas satisfacibles utilizando gramáticas de concatenación de rango.
+      \item Construir el lenguaje de todas las fórmulas booleanas satisfacibles utilizando una transducción finita de una variante del lenguaje $Copy$.
+      \item Construir el lenguaje de todas las fórmulas booleanas satisfacibles  utilizando gramáticas de concatenación de rango y sin usar la transducción finita.
+      \item Analizar las implicaciones computacionales.
 \end{itemize}
 
-Para dar cumplimiento a los objetivos trazados, el trabajo se ha estructurado en 4 capítulos: en los 2 primeros se presentan los principales conceptos y definiciones
-que serán utilizados en el resto de la investigación y en los restantes 2 capítulos se define y construye el lenguaje de todas las fórmulas booleanas satisfacibles.
+Las implicaciones computacionales del último punto son: que para todo problema en la clase NP, existe una gramática
+de concatenación de rango que lo reconoce como lenguaje formal, pero el algoritmo de reconocimiento es no 
+polinomial, lo cual a efectos prácticos no constituye una mejora para la solución de los problemas.
 
-En el capítulo \ref{chap:preliminaries} se presentan los principales conceptos y definiciones de la teoría de lenguajes y el SAT, los cuales
-son necesarios para la comprensión de los restantes capítulos. Además, se realiza un análisis de 2 trabajos anteriores
-que muestran cómo solucionar instancias específicas del SAT utilizando un algoritmo polinomial.
+Este trabajo se ha estructurado en 4 capítulos: en los 2 primeros se presentan los principales conceptos y 
+definiciones que serán utilizados en el resto de la investigación y en los dos últimos se define y construye 
+el lenguaje de todas las fórmulas booleanas satisfacibles, y se analizan algunas de sus propiedades.
 
-En el capítulo \ref{chap:RCG} se realiza un análisis detallado de las gramáticas de concatenación de rango, presentando las principales
-definiciones, proceso de derivación y análisis de la complejidad del algoritmo de reconocimiento.
+En el capítulo \ref{chap:preliminaries} se presentan los conceptos y definiciones de la teoría de lenguajes y 
+el SAT, que serán usados los restantes capítulos. Además, se realiza un análisis de 2 trabajos anteriores 
+que muestran cómo solucionar instancias específicas del SAT utilizando el problema del vacío para gramáticas 
+libres del contexto y para gramáticas de concatenación de rango simple.
 
-En el capítulo \ref{chap:LSATFT} se muestra cómo codificar una fórmula booleana mediante una cadena de símbolos y luego
-se analiza cómo interpretar una cadena como la asignación de valores para las variables de una fórmula booleana.
-Posteriormente, se define el lenguaje de todas las fórmulas booleanas satisfacibles y se muestra cómo construir dicho
-lenguaje mediante un transductor finito. Para finalizar, se demuestra que el problema de la palabra, para todos los formalismo que cumplan ciertas propiedades,
-las cuales se definen en el capítulo \ref{chap:LSATFT}, es NP-Duro.
+En el capítulo \ref{chap:RCG} se presentan las gramáticas de concatenación de rango: las principales definiciones, 
+su proceso de derivación y un análisis de la complejidad del algoritmo de reconocimiento.
 
-En el capítulo \ref{chap:LSATRCG} se demuestra que no es necesario construir el lenguaje de todas las fórmulas
-booleanas satisfacibles mediante transducción finita, ya que existe una gramática de concatenación de rango que reconoce
-este lenguaje. Por otro lado, se demuestra que las gramáticas de concatenación de rango cubren todos los problemas de la clase NP-Completo.
+En el capítulo \ref{chap:LSATFT} se muestra cómo codificar una fórmula booleana mediante una cadena de símbolos 
+y luego se analiza cómo interpretar una cadena como la asignación de valores para las variables de una fórmula 
+booleana.  Posteriormente, se define el lenguaje de todas las fórmulas booleanas satisfacibles y se muestra 
+cómo construir dicho lenguaje mediante un transductor finito. Para finalizar, se demuestra que el problema de 
+la palabra para todos los formalismo que generen una variante del lenguaje \textit{Copy} y sean cerrados bajo
+transducción finita, es NP-Duro.
+
+En el capítulo \ref{chap:LSATRCG} se demuestra que no es necesario construir el lenguaje de todas las 
+fórmulas booleanas satisfacibles mediante transducción finita, ya que existe una gramática de concatenación 
+de rango que reconoce este lenguaje. Por otro lado, se demuestra que las gramáticas de concatenación de rango 
+reconocen todos los problemas de la clase NP-Completo.
