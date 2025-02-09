@@ -9,11 +9,13 @@
 \usepackage[lmargin=2cm,rmargin=5cm]{geometry}
 \usepackage{multicol}
 
-\usepackage{amsthm}
-\newtheorem{definition}{Definición}
-
 
 \input{word-comments.tex}
+
+\usepackage{amsthm}
+\newtheorem{theorem}{Teorema}
+\newtheorem{lemma}{Lema}
+\newtheorem{definition}{Definición}
 
 
 
@@ -77,16 +79,16 @@ al primer argumento de $B$ se le asigna la cadena $aa$, al segundo $de$ y al ter
 El predicado $B(aX, XY, abZ)$ se puede usar para ilustrar como funciona la asignación de valores a las variables.
 Por ejemplo, como $X$ es una variable y se tiene que $aX=aa$, entonces el único valor que puede tomar $X$ es $X=a$. 
 Algo similar ocurre en el caso del tercer elemento del vector: como $abZ=abcc$, para que se cumpla esa igualdad, 
-el único valor posible para Z es $Z=cc$. En el caso del segundo argumento las variables $X$ e $Y$ deben tomar valores 
+el único valor posible para Z es $Z=cc$. En el caso del segundo argumento, las variables $X$ e $Y$ deben tomar valores 
 de forma que se cumpla la igualdad $XY=de$, y eso se puede hacer de tres formas: $X=d$, $Y=e$; $X=de$, $Y=\varepsilon$; 
 y $X=\varepsilon$, $Y=de$. 
 
-Por otro lado si el predicado $B(aX, XY, abZ)$ recibe el vector $[bb,de,abcc]$, entonces cuando se tiene que $aX=bb$,
+Por otro lado, si el predicado $B(aX, XY, abZ)$ recibe el vector $[bb,de,abcc]$, entonces cuando se tiene que $aX=bb$,
 $X$ no puede tomar ningún valor porque el no terminal de $b$ no coincide con el no terminal $a$ que se encuentra como 
 prefijo del argumento $aX$.
 
 A las producciones de esta gramática se les denomina cláusulas. La parte izquierda de la producción 
-siempre está formada por un único no terminal y en en la parte derecha, pueden existir no terminales 
+siempre está formada por un único no terminal y en en la parte derecha, puede existir cualquier cantidad de no terminales 
 con sus respectivos argumentos, o la cadena vacía. Un ejemplo de cláusula puede ser la siguiente:
 $$A(XYZ,W)\to B(X)C(XY,Z)D(W).$$
 
@@ -147,13 +149,13 @@ $$D(d)\to \varepsilon.$$
 
 La forma general de estas producciones es $A(X_1,\ldots, X_n)\rightarrow \varepsilon$.
 
-Un no terminal reconoce un vector de cadenas, si existe una asignación de las variables 
+Un no terminal reconoce un vector de cadenas si existe una asignación de las variables 
 en sus argumentos que en algún momento derivan en la cadena vacía. En el caso de $B(ab)\to \varepsilon$, 
 el no terminal $B$ reconoce la cadena $ab$.
 
 Si se tiene un conjunto de producciones de la forma:
 \begin{enumerate}
-    \item $A(abcd)\to B(ab)C(\varepsilon,cab)D(d)$
+    \item $A(abc,d)\to B(ab)C(\varepsilon,cab)D(d)$
     \item $B(ab)\to \varepsilon$
     \item $C(\varepsilon,cab)\to \varepsilon$
     \item $D(d)\to \varepsilon$
@@ -161,17 +163,14 @@ Si se tiene un conjunto de producciones de la forma:
 Entonces el no terminal A reconoce el vector $[abc,d]$, porque con la asignación de valores $X=ab$, $Y=\varepsilon$, $Z=c$ y $W=d$, $A$ derivaría en $B(ab)C(\varepsilon,cab)D(d)$,
 y cada uno de los predicados $B(ab)$, $C(\varepsilon,cab)$ y $D(d)$ deriva en la cadena vacía.
 
-Un predicado no reconoce un vector de cadenas, cuando para ninguna asignación de variables se deriva en la cadena vacía.
-
-Con la idea anterior se puede hablar del concepto de rango, que es un par de índices $i$ y $j$, tales que $i\leq j$, estos
-representan la subcadena de la cadena de entrada que comienza en el $i$-ésimo caracter y termina en el $j$-ésimo caracter.
+Un predicado no reconoce un vector de cadenas cuando para ninguna asignación de variables se deriva en la cadena vacía.
 
 Dadas estas nociones, a continuación se presentan las principales definiciones de las gramáticas de concatenación de rango.
 
 \section{Definiciones}
 
-En esta sección se define el concepto de rango, sustitución de rango, gramática de concatenación de rango \footnote{En la literatura este tipo de RCG se toma com gramática de concatenación de rango positiva, pero como es la única que
-se usa en este trabajo se le llama solo gramática de concatenación de rango} y gramática de concatenación de rango simple.
+En esta sección se define el concepto de rango, sustitución de rango, gramática de concatenación de rango \footnote{En la literatura este tipo de RCG se toma como gramática de concatenación de rango positiva, pero como es la única que
+    se usa en este trabajo se le llama solo gramática de concatenación de rango.} y gramática de concatenación de rango simple.
 
 \begin{definition}
     Un \textbf{rango} es una tupla $(i, j)$ que representa un intervalo de posiciones en una cadena, donde $i$ y $j$ son enteros no negativos tales que $i \leq j$.    
@@ -226,6 +225,7 @@ donde:
 
 Las RCG, a diferencia de las gramáticas definidas en la sección \ref{sec:grammars} del capítulo \ref{chap:preliminaries} no generan cadenas, su funcionamiento se basa en reconocer si una cadena pertenece o no al lenguaje.
 
+
 \begin{definition}
     Una \textbf{sustitución de rango} es un mecanismo que reemplaza una variable por un 
     rango de la cadena, respetando la estructura del argumento que se asocia a la cadena que se reconoce. 
@@ -263,12 +263,9 @@ cada variable del predicado izquierdo.
 A partir de los valores de las variables obtenidos en el paso anterior se construyen vectores de cadenas con los que se 
 instancian las variables de los predicados del lado derecho de la cláusula.
 
-Por ejemplo, se tiene la cláusula $A(X,aYb)\to B(aXb,Y)$ , donde $X$ e $Y$ son variables y $a$ y $b$ son símbolos 
-terminales. Cuando $A$ recibe el vector $[a,abb]$, el primer argumento de $A$ recibe $a$ y el segundo recibe $abb$. 
-El primer argumento de $A$ es $X$ y el segundo es $aYb$, por lo que $X=a$ y $aYb=abb$. En este caso la única sustitución 
-de rango posible es  $X=a$ y $Y=b$, con estos valores se construyen los vectores con los que se instancia la parte derecha 
-que serían $aXb$ = $aab$ y $Y$=b. Con este vector el predicado $B$ se instancia como $B(aab,b)$, y por tanto, 
-el predicado $A(a,abb)$ deriva como $B(aab,b)$.
+A modo de ejemplo se puede considerar la producción $A(X,aYb)\to B(aXb,Y)$, donde $X$ e $Y$ son variables y $a$ y $b$ son símbolos terminales.
+
+Cuando $A$ recibe el vector $[a,abb]$, el primer argumento de $A$ recibe $a$ y el segundo recibe $abb$.  El primer argumento de $A$ es $X$ y el segundo es $aYb$, por lo que $X=a$ y $aYb=abb$. En este caso la única sustitución de rango posible es $X=a$ y $Y=b$. Con estos valores se construyen los vectores con los que se instancia la parte derecha, que serían $aXb$ = $aab$ y $Y$=b. Con este vector el predicado $B$ se instancia como $B(aab,b)$, y por tanto, el predicado $A(a,abb)$ deriva como $B(aab,b)$.
 
 
 Un vector de cadenas se reconoce por un predicado $A$ si existe una secuencia de derivaciones que comienza en $A$ y termina en la cadena vacía.
@@ -295,32 +292,48 @@ A continuación se muestran estas derivaciones paso a paso.
 \end{itemize}
 
 
-A continuación se presentan las propiedades de las RCG que demuestran
-que las RCG no son cerradas bajo transducción finita, esto no permite construir el lenguaje de todas las fórmulas
-satisfacibles mediante una transducción finita usando una RCG, lo anterior se analiza en el capítulo \ref{chap:LSATRCG}.
+A continuación se presentan algunas propiedades de las RCG relevantes para este trabajo.
 
 \section{Propiedades de las RCG}
 
-La principal idea detrás de la creación de las RCG, fue crear un formalismo modular, esto significa que las principales
-operaciones sobre conjuntos: unión, intersección y complemento son cerradas para dicho formalismo \cite{mainRCGBib}. 
-Esta precisamente es la limitación de las CFG que se propone suplir con las RCG para el procesamiento del lenguaje
-natural \cite{mainRCGBib}. 
+La motivación fundamental detrás de la creación de las RCG fue crear un formalismo modular. Esto significa que las principales operaciones sobre conjuntos: unión, intersección y complemento son cerradas para dicho formalismo \cite{mainRCGBib}.  Esta es precisamente la limitación de las CFG que se propone suplir con las RCG para el procesamiento del lenguaje natural \cite{mainRCGBib}.
 
-En esta sección se describen las principales propiedades de las RCG que demuestran que las RCG no son cerradas 
-bajo transducción finita. Además en esta sección se presenta el problema de la palabra 
+En esta sección se describen las principales propiedades que demuestran que las RCG son un formalismo
+modular, además de las propiedades que demuestran que las RCG no son cerradas 
+bajo transducción finita. En esta sección también se presenta el problema de la palabra 
 para las RCG, el cual se emplea en el capítulo \ref{chap:LSATRCG} para determinar si una fórmula booleana es satisfacible.
 
-Las RCG \textbf{no son cerradas bajo homomorfismo}, dada una RCG $G$, el homomorfismo de un lenguaje que se reconoce por $G$ necesariamente no se reconoce por una RCG \cite{propertiesRCGBib}.
+\begin{theorem}
+    \label{teo:RCGset}
+    Las RCG \textbf{son cerradas bajo unión, intersección y complemento}, la unión y la intersección de 2 RCG da como resultado un formalismo que pertenece a las RCG, mientras
+    que el formalismo resultante del complemento de una RCG es también una RCG.
+\end{theorem}
 
-Las RCG \textbf{no son cerradas bajo transducción finita}, dada una RCG $G$, la transducción finita de un lenguaje que se reconoce por $G$ necesariamente no se reconoce por una RCG. Esto es una consecuencia de la propiedad anterior porque un homomorfismo es un transductor finito de un solo estado y tantas transiciones hacia el mismo estado como transformaciones de símbolos en el homomorfismo.
+La demostración del Teorema \ref{teo:RCGset} se realiza en \cite{mainRCGBib}.
 
-En este trabajo se propone una forma para construir el lenguaje de todos los SAT satisfacibles mediante un formalismo que sea capaz de generar una variante de $L_{copy}$, que se llamará $L_{01d}$, y sea cerrado bajo transducción finita. Sin embargo, esta forma de construir el lenguaje es solo suficiente y no necesaria porque existen formalismos que no son cerrados bajo transducción finita (como las RCG) que también describen el lenguaje.
+\begin{theorem}
+    \label{teo:RCGh}
+    Las RCG \textbf{no son cerradas bajo homomorfismo}, dada una RCG $G$, el homomorfismo de un lenguaje que se reconoce por $G$ necesariamente no se reconoce por una RCG.    
+\end{theorem}
+
+La demostración del Teorema \ref{teo:RCGh} se realiza en \cite{propertiesRCGBib}.
+
+\begin{theorem}
+    \label{teo:RCGt}
+    Las RCG \textbf{no son cerradas bajo transducción finita}, dada una RCG $G$, la transducción finita de un lenguaje que se reconoce por $G$ necesariamente no se reconoce por una RCG.    
+\end{theorem}
+
+La demostración del Teorema \ref{teo:RCGt} es una consecuencia del Teorema \ref{teo:RCGh} porque un homomorfismo es un transductor finito de un solo estado y tantas transiciones hacia el mismo estado como transformaciones de símbolos en el homomorfismo.
+
+En este trabajo se propone una forma para construir el lenguaje de todos los SAT satisfacibles usando un formalismo que sea capaz de generar una variante de $L_{copy}$, que se llamará $L_{01d}$, y sea cerrado bajo transducción finita. Sin embargo, esta forma de construir el lenguaje es solo suficiente y no necesaria para construir el lenguaje de todas las fórmulas booleanas satisfacibles porque existen formalismos que no son cerrados bajo transducción finita (como las RCG) que también describen el lenguaje.
+
+
 A continuación se describe el problema de la palabra para las RCG.
 
 
 En \cite{mainRCGBib} se menciona que en la mayoría de los casos el problema de la palabra para las RCG es polinomial y se resuelve mediante un algoritmo de memorización sobre las cadenas asignadas a los argumentos de los predicados de la RCG.  Como la cantidad máxima de rangos de la cadena es $n^2$ y la máxima aridad de un predicado es constante, este proceso de memorización cuenta con una cantidad polinomial de estados, y tiene una complejidad de $O(|P|n^{2h(l+1)})$ donde $h$ es la máxima aridad en un predicado, $l$ es la máxima cantidad de predicados en el lado derecho de una cláusula y $n$ es la longitud de la cadena que se reconoce.
 
-Sin embargo, existen casos en los que el problema de la palabra no es polinomial, en la siguiente sección se analiza un caso en el que este problema no es polinomial.
+Sin embargo, existen casos en los que el problema de la palabra no es polinomial. En la siguiente sección se analiza un caso en el que este problema no es polinomial.
 
 \subsection{Problema de la palabra no polinomial para las RCG}
 
@@ -363,10 +376,9 @@ cantidad de cadenas posibles que puede recibir el segundo argumento del predicad
 ambigua y en cada derivación de $B$ existen 2 posibles decisiones, se añade un 1 delante al valor de la $Y$ o 
 se añade un $0$.
 
-En el capítulo \ref{chap:LSATRCG} se presenta una RCG que reconoce fórmulas booleanas satisfacibles, pero es ambigua, 
-con el problema de la palabra no polinomial. 
+En el capítulo \ref{chap:LSATRCG} se presenta una RCG que reconoce fórmulas booleanas satisfacibles, que al ser ambigua la complejidad del problema de la palabra es no polinomial.
 
-En este capítulo se analizaron las principales definiciones y propiedades de las RCG, que son utilizadas en el capítulo \ref{LSATRCG} para definir una gramática que reconozca las fórmulas booleanas satisfacibles.  En el próximo capítulo se presenta un primer enfoque para definir el lenguaje de todas las fórmulas booleanas satisfacibles y a esta idea se le da continuidad en el capítulo \ref{chap:LSATRCG}, mediante las RCG.
+En este capítulo se analizaron las principales definiciones y propiedades de las RCG, que se usan en el capítulo \ref{chap:LSATRCG} para definir una gramática que reconozca las fórmulas booleanas satisfacibles.  En el próximo capítulo se presenta un primer enfoque para definir el lenguaje de todas las fórmulas booleanas satisfacibles y a esta idea se le da continuidad en el capítulo \ref{chap:LSATRCG}, mediante las RCG.
 
 \begin{thebibliography}{99}
     

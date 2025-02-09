@@ -13,7 +13,10 @@
 \input{word-comments.tex}
 
 \usepackage{amsthm}
+\newtheorem{theorem}{Teorema}
+\newtheorem{lemma}{Lema}
 \newtheorem{definition}{Definición}
+
 
 \parskip=5pt
 
@@ -37,25 +40,23 @@
 % \label{chap:LSATRCG}
 
 En este capítulo se presentan las principales definiciones y conceptos que serán usados en el resto del trabajo, además
-se analizan los trabajos anteriores que exponen estrategias de solución del problema de la satisfacibilidad
+se analizan las investigaciones anteriores que exponen estrategias de solución del problema de la satisfacibilidad
 booleana  mediante formalismos de la teoría de lenguajes.
 
 \section{Teoría de Lenguajes}
 
-En esta sección se presentan los principales conceptos de teoría de lenguajes que sirven de base al contenido de los 
-capítulos y secciones posteriores, ya que en este trabajo se presentan estrategias para la solución del problema
-de la satisfacibilidad empleando mecanismos de la teoría de lenguajes.
+En esta sección se presentan los principales conceptos de teoría de lenguajes que sirven de base al contenido de los capítulos y secciones posteriores.
 
 \subsection{Conceptos básicos, operaciones y problemas relacionados con lenguajes}
 
-Los conceptos básicos de la teoría de lenguajes formales son alfabeto, cadena y lenguaje. Un alfabeto, denotado 
+Los conceptos básicos de la teoría de lenguajes formales son: alfabeto, cadena y lenguaje. Un alfabeto, denotado 
 como $\Sigma$, es un conjunto finito y no vacío de símbolos; una cadena es una sucesión finita de símbolos del alfabeto y 
 un lenguaje es un conjunto de cadenas definido sobre un alfabeto. Por ejemplo, el 
 alfabeto $\Sigma=\{1,0\}$ está formado por los símbolos 0 y 1, $11$ y $101$ son cadenas sobre el alfabeto $\Sigma$ y un ejemplo de lenguaje
 es  el conjunto de cadenas de 0 y 1 que terminan en 1.
 
 El símbolo $\varepsilon$, representa la cadena vacía. Si se tiene una cadena $w$, por convenio  $w^n$ representa la cadena
-resultante de concatenar $w$ $n$ veces. si $\Sigma$ es un alfabeto, $\Sigma^{+}$ representa a todas las cadenas de uno o más 
+resultante de concatenar $w$ $n$ veces. Si $\Sigma$ es un alfabeto, $\Sigma^{+}$ representa a todas las cadenas de uno o más 
 símbolos que se pueden formar sobre $\Sigma$ y  $\Sigma^*$  representa la unión de $\Sigma^{+}$ y $\{\varepsilon\}$.
 
 Existen varias operaciones que pueden realizarse usando alfabetos, cadenas y lenguajes. Seguidamente se presentan algunas de ellas.
@@ -71,13 +72,13 @@ construir el lenguaje de todas las fórmulas booleanas satisfacibles.
   \]
   tal que:
   \begin{enumerate}
-    \item Para cada \( a \in \Sigma \), \( h(a) \) es una cadena en \( \Gamma^* \).
-    \item Si $w=a_1a_2\ldots a_n$ es una cadena entonces
+    \item Para cada \( a \in \Sigma \), \( h(a) \) es una cadena en \( \Gamma^* \), y
+    \item si $w=a_1a_2\ldots a_n$ es una cadena entonces
           $$h(w)=h(a_1)h(a_2)\ldots h(a_n).$$
   \end{enumerate}
 \end{definition}
 
-Por ejemplo si sobre el alfabeto $\Sigma=\{a,b\}$, se define el homomorfismo $h$, tal que $h(a)=0$ y $h(b)=11$, entonces
+Por ejemplo, si sobre el alfabeto $\Sigma=\{a,b\}$ se define el homomorfismo $h$, tal que $h(a)=0$ y $h(b)=11$, entonces
 $h(ab)=011$.
 
 El lenguaje que se obtiene como resultado de aplicarle un homomorfismo $h$, sobre todas las cadenas de un lenguaje $L$ se define como:
@@ -86,7 +87,7 @@ Por ejemplo el lenguaje que se obtiene de aplicarle el homomorfismo anterior al 
 $$L_h=\{0^n1^{2n}\mid n\in \mathbb{N}\}.$$
 
 Una vez que se tiene definido un lenguaje es posible responder preguntas como si una cadena dada pertenece al lenguaje, o si el lenguaje es vacío o contiene algún elemento.
-Estos problemas se usan en los capítulos \ref{chap:LSATFT} y \ref{cap:LSATRCG} para determinar si una fórmula booleana
+Estos problemas se usan en los capítulos \ref{chap:LSATFT} y \ref{chap:LSATRCG} para determinar si una fórmula booleana
 es satisfacible y en los trabajos \cite{aCFSAT} y \cite{aSRCSAT} para determinar si una fórmula booleana con ciertas restricciones es 
 satisfacible o no.
 
@@ -138,9 +139,9 @@ y termina con la cadena $w$.
 
 El lenguaje generado por una gramática \(G\) se denota como:
 \[
-  L(G) = \{ w \in \Sigma^* \mid S \overset{*}{\to} w \},
+  L(G) = \{ w \in \Sigma^* \mid S \overset{+}{\to} w \},
 \]
-donde \(\overset{*}{\to}\) indica una derivación uno o más pasos.
+donde \(\overset{+}{\to}\) indica una derivación uno o más pasos.
 
 A continuación se presenta la jerarquía de Chomsky, que clasifica a los lenguajes formales de acuerdo con su poder de generación.
 
@@ -158,13 +159,13 @@ Todo lenguaje generado por una gramática dependiente del contexto se denomina \
 Todo lenguaje dependiente del contexto es también un lenguaje recursivamente enumerable. 
 
 El lenguaje de todas las fórmulas booleanas satisfacibles necesariamente es un lenguaje dependiente del contexto o un lenguaje
-recursivamente enumerable, este resultado se demuestra en el capítulo \ref{chap:LSATFT}.
+recursivamente enumerable. Este resultado se demuestra en el capítulo \ref{chap:LSATFT}.
 
 A continuación le siguen las \textbf{Gramáticas libres del contexto} (\textit{CFG}). En estas cada regla tiene la forma: \(A \to \beta\), donde \(A \in N\) y \(\beta \in (N \cup \Sigma)^*\).
 Todo lenguaje generado por una gramática libre del contexto se denomina \textbf{lenguaje libre del contexto}.
 Todo lenguaje libre del contexto es también un lenguaje dependiente del contexto. Este tipo de lenguajes permite describir 
 muchas de las propiedades que generalizan las gramáticas de concatenación de rango, las cuales se explican en el capítulo
-\ref{chap:RCG}. Además en \cite{aCFSAT} se usa una CFG para resolver instancias del problema de la satisfacibilidad booleana.
+\ref{chap:RCG}. Además, en \cite{aCFSAT} se usa una CFG para resolver instancias del problema de la satisfacibilidad booleana.
 
 El último tipo en la jerarquía son las \textbf{Gramáticas regulares}. En estas las reglas de producción tienen la forma:
 \[
@@ -172,20 +173,18 @@ El último tipo en la jerarquía son las \textbf{Gramáticas regulares}. En esta
 \]
 donde \(A, B \in N\) y \(a \in \Sigma\).
 Todo lenguaje generado por una gramática regular se denomina \textbf{lenguaje regular}.
-Todo lenguaje regular es un lenguaje libre del contexto. Está categoría de lenguajes está relacionada con los autómatas
-finitos, los cuales se usan para definir un transductor finito, el cual se usa en el capítulo \ref{chap:LSATFT} para 
+Todo lenguaje regular es un lenguaje libre del contexto. Esta categoría de lenguajes está relacionada con los autómatas
+finitos, los cuales se usan para definir un transductor finito, que se usa en el capítulo \ref{chap:LSATFT} para 
 generar todas las fórmulas booleanas satisfacibles.
 
 Un lenguaje $A$ es más expresivo que un lenguaje $B$ si todas las cadenas que pertenecen a $B$ también pertenecen a $A$ y existen cadenas 
 que pertenecen a $A$ que no pertenecen a $B$, por ejemplo los lenguajes libres del contexto son más expresivos que los lenguajes regulares \cite{authomataTheory}. 
 
 La diferencia entre los lenguajes de la jerarquía de Chomsky se puede ilustrar con el lenguaje \textit{Copy} sobre un alfabeto $\Sigma$, que se define como 
-$L_{copy}=\{w^+\,|\,w\in Z^*\}$. El lenguaje $L_{copy}$ se usa en los  capítulos \ref{chap:LSATFT} y 
-\ref{chap:LSATRCG} para construir el lenguaje de las fórmulas booleanas satisfacibles. 
+$L_{copy}=\{w^+\,|\,w\in Z^*\}$. 
+
 Si se toma un caso particular de $L_{copy}$, al cual se le llama $L_{copy}^n=\{w^n\,|\,w\in Z^*\}$, se cumple que 
 $L_{copy}^1$ es un lenguaje regular, mientras $L_{copy}^k\,\forall\,k\geq 2$ es un lenguaje dependiente del contexto \cite{authomataTheory}. 
-Una variante del lenguaje $L_{copy}$ se utiliza en el capítulo \ref{chap:LSATFT} para
-sea una asignación de valores, generar todas las fórmulas booleanas satisfacibles por dichos valores.
 
 En la próxima sección se presentan los autómatas asociados a cada elemento de la jerarquía de Chomsky. 
 
@@ -194,20 +193,16 @@ En la próxima sección se presentan los autómatas asociados a cada elemento de
 Un autómata es una máquina abstracta que procesa cadenas de símbolos de un alfabeto finito y determina si una 
 cadena pertenece a un lenguaje \cite{authomataTheory}.
 
-Cada gramática de la jerarquía de Chomsky tiene un autómata equivalente: los lenguajes recursivamente enumerables 
-se reconocen por una Máquina de Turing \cite{authomataTheory}, los lenguajes dependientes del contexto
-se reconocen por una Máquina de Turing linealmente acotada \cite{authomataTheory}, los lenguajes libres del contexto 
-se reconocen por un Autómata de pila \cite{authomataTheory} y  los lenguajes regulares se reconocen por un Autómata 
-regular \cite{authomataTheory}.
+Cada gramática de la jerarquía de Chomsky tiene un autómata equivalente: los lenguajes recursivamente enumerables se reconocen por una Máquina de Turing \cite{authomataTheory}, los lenguajes dependientes del contexto se reconocen por una Máquina de Turing linealmente acotada \cite{authomataTheory}, los lenguajes libres del contexto se reconocen por un Autómata de pila \cite{authomataTheory} y los lenguajes regulares se reconocen por un Autómata regular \cite{authomataTheory}.
 
-En este trabajo se utilizan los autómatas regulares, a partir de los cuales se puede construir un transductor finito, 
-que se usa en el capítulo \ref{chap:LSATFT} a partir de una asignación de valores a un conjunto de variables binarias para generar 
-todas las fórmulas booleanas satisfacibles por dichos valores.
+A continuación se presentan los autómatas finitos.
 
-\subsection{Autómata regular}
+\subsection{Autómata finito}
+
+En esta sección se definen los principales conceptos de los autómatas finitos.
 
 \begin{definition}
-  Un \textbf{autómata regular} \cite{authomataTheory}, también conocido como autómata finito, es un modelo matemático que permite reconocer si una cadena pertenece a un lenguaje regular y se define como una 5-tupla $$\mathcal{A} = (Q, \Sigma, \delta, q_0, F),$$ donde:
+  Un \textbf{autómata finito} \cite{authomataTheory} es un modelo matemático que permite reconocer si una cadena pertenece a un lenguaje regular y se define como una 5-tupla $$\mathcal{A} = (Q, \Sigma, \delta, q_0, F),$$ donde:
   
   \begin{itemize}
     \item $Q$: Es un conjunto finito de \textbf{estados}.
@@ -221,8 +216,7 @@ todas las fórmulas booleanas satisfacibles por dichos valores.
 
 El autómata comienza en el estado inicial $q_0$ y procede a leer el primer símbolo de la cadena.  En cada paso, la función de transición $\delta$ determina, a partir del símbolo actual de la cadena, el siguiente estado al que debe pasar el autómata.  Si al finalizar la lectura del último símbolo de la cadena, el autómata se encuentra en un estado de aceptación $q \in F$, entonces la cadena se acepta; en caso contrario, se rechaza.
 
-A continuación se presenta una extensión de los autómatas finitos, que se usa en el capítulo \ref{chap:LSATFT}
-para sea una asignación de valores de las variables, generar todas las fórmulas booleanas satisfacibles por dichos valores.
+Los autómatas finitos se pueden generalizar con el concepto de transductor finito, que se presenta a continuación.
 
 \subsection{Transductor finito}
 
@@ -242,7 +236,7 @@ que se conoce como transducción de la primera. A continuación se describe este
     \item \(Q\) es el conjunto finito de \textbf{estados}.
     \item \(\Sigma\) es el \textbf{alfabeto} de entrada.
     \item \(\Gamma\) es el \textbf{alfabeto} de salida.
-    \item \(\delta: Q \times \Sigma \to Q \times \Gamma^*\) es la \textbf{función de transición}, que mapea una combinación de estado actual y símbolo de entrada a un nuevo estado y una salida.
+    \item \(\delta: Q \times \Sigma \to Q \times \Gamma^*\) es la \textbf{función de transición}, que le asigna a una combinación de estado actual y símbolo de entrada a un nuevo estado y un símbolo de salida.
     \item \(q_0 \in Q\) es el \textbf{estado inicial}.
     \item \(F \subseteq Q\) es el \textbf{conjunto de estados finales}.
   \end{itemize}
@@ -289,24 +283,34 @@ el conjunto de todas las cadenas $w$, tales que existe una cadena $e$ para la cu
 que genera $T$ con la cadena $e$:
 $$L_T=\{w\mid \exists e: w\in T(e) \text{ y }e\in L\}.$$
 
-En la siguiente sección se presentan algunas propiedades de los lenguajes libres del contexto, 
-las cuales se usan en el capítulo \ref{chap:LSATFT} para demostrar que el lenguaje 
-de todas las fórmulas booleanas satisfacibles no es un lenguaje
-libre del contexto.
+En la siguiente sección se presentan algunas propiedades de los lenguajes libres del contexto que son relevantes para este trabajo.
 
 \section{Propiedades de los lenguajes libres del contexto}
 
-En esta sección se presenta el lema del bombeo para lenguajes libres del contexto y se menciona que los lenguajes 
-libres del contexto son cerrados bajo homomorfismo.
+En esta sección se presenta el lema del bombeo para lenguajes libres del contexto y se menciona que los lenguajes libres del contexto son cerrados bajo homomorfismo.
 
-El lema del bombeo establece que si $L$ es un lenguaje libre del contexto
-existe una constante $n$ tal que para toda cadena $t\in L$, donde $|t|\geq n$, puede escribirse de la forma $t=uvwxy$ tal que:
-$|vwx|\leq n$, $vx\neq \varepsilon$ y $\forall i\geq 0\,uv^iwx^iy\in L$ \cite{authomataTheory}.
+El lema del bombeo es una herramienta
+que permite determinar si un lenguaje no es libre del contexto. Además,
+el hecho de que los lenguajes libres del contexto sean cerrados bajo homomorfismo permiten
+demostrar que muchos lenguajes no son libres del contexto.
 
-Los \textbf{lenguajes libres del contexto son cerrados bajo homomorfismo} \cite{authomataTheory}, esto
-implica que dado un lenguaje $L$ libre del contexto y un homomorfismo $h$, entonces el lenguaje
-$\{h(t)\mid t\in L\}$ es un lenguaje libre del contexto.
+\begin{theorem}
+  \label{teo:lemBom}
+  El lema del bombeo establece que si $L$ es un lenguaje libre del contexto
+  existe una constante $n$ tal que para toda cadena $t\in L$, donde $|t|\geq n$, puede escribirse de la forma $t=uvwxy$ tal que:
+  $|vwx|\leq n$, $vx\neq \varepsilon$ y $\forall i\geq 0\,uv^iwx^iy\in L$.  
+\end{theorem}
 
+La demostración del Teorema \ref{teo:lemBom} se realiza en \cite{authomataTheory}.
+
+\begin{theorem}
+  \label{teo:CFLh}
+  Los \textbf{lenguajes libres del contexto son cerrados bajo homomorfismo}, esto
+  implica que dado un lenguaje $L$ libre del contexto y un homomorfismo $h$, entonces el lenguaje
+  $\{h(t)\mid t\in L\}$ es un lenguaje libre del contexto.  
+\end{theorem}
+
+La demostración del Teorema \ref{teo:CFLh} se realiza en \cite{authomataTheory}.
 
 Todas las operaciones con lenguajes y los problemas relacionados con ellos tienen una dificultad y para medir esta dificultad
 se utiliza un marco teórico llamado complejidad computacional, el cual se presenta en la próxima sección. Esta definición
@@ -336,9 +340,7 @@ máximo de un arreglo son $O(n)$, ya que necesitan realizar una cantidad $n$ de 
 con la cantidad de elementos del arreglo.
 
 Se dice que un algoritmo tiene un tiempo polinomial si puede ejecutarse en una complejidad de $O(n^k)$, donde $n$ es el tamaño de la entrada del algoritmo y $k$
-es una constante.
-
-La complejidad computacional de un problema se define como la complejidad del algoritmo más eficiente que lo resuelve en el peor caso.
+es una constante. La complejidad computacional de un problema se define como la complejidad del algoritmo más eficiente que lo resuelve en el peor caso.
 
 
 En la próxima sección se presenta una clasificación de los problemas de acuerdo a su complejidad computacional.
@@ -346,7 +348,7 @@ En la próxima sección se presenta una clasificación de los problemas de acuer
 \label{sec:problemsCategory}
 
 Los problemas computacionales \cite{authomataTheory} se agrupan en diferentes clases según los recursos 
-necesarios para resolverlos. En este trabajo se emplean las clases P, NP, NP-completo y NP-Duro.
+necesarios para resolverlos. En este trabajo se emplean las clases P, NP, NP-Completo y NP-Duro.
 
 \begin{definition}
   Un problema pertenece a la clase \textbf{P} si puede resolverse en tiempo polinomial \cite{authomataTheory}.
@@ -357,7 +359,7 @@ necesarios para resolverlos. En este trabajo se emplean las clases P, NP, NP-com
 \end{definition}
 
 \begin{definition}
-  Un problema pertenece a la clase \textbf{NP-Completo}, si pertenece a NP y además es tan difícil como cualquier otro problema en NP. Esto significa que cualquier problema en NP puede reducirse a este problema en tiempo polinómico \cite{authomataTheory}.
+  Un problema pertenece a la clase \textbf{NP-Completo}, si pertenece a NP y además es tan difícil como cualquier otro problema en NP. Esto significa que cualquier problema en NP puede reducirse a este problema en tiempo polinomial \cite{authomataTheory}.
 \end{definition}
 
 \begin{definition}
@@ -400,17 +402,17 @@ A continuación se presentan los principales elementos del SAT: variables, liter
 \end{itemize}
 
 \begin{definition}  
-  El problema de la \textbf{satisfacibilidad booleana}, o SAT, consiste en determinar si existe una asignación de valores \( true \) o \( false \) a las variables de una fórmula booleana tal que la fórmula completa sea verdadera. 
+  El problema de la \textbf{satisfacibilidad booleana}, o SAT, consiste en determinar si existe una asignación de valores \( true \) o \( false \) a las variables de una fórmula booleana, tal que la fórmula completa sea verdadera. 
 \end{definition}
 
 Una fórmula booleana en CNF es satisfacible si existe una asignación de valores a las variables tal que todas las cláusulas de la fórmula sean verdaderas simultáneamente.
-Si existe tal asignación, la fórmula es \textit{satisfacible}. Si no existe tal asignación, la fórmula es \textit{insatisfacible}.
+Si existe tal asignación, la fórmula es \textit{satisfacible}. Si no existe tal asignación, la fórmula no es \textit{satisfacible}.
 
 \subsection{SAT como problema NP-Completo y variantes polinomiales}
 
-El SAT es el primer problema demostrado como NP-Completo \cite{authomataTheory} y juega un rol central en la teoría de la complejidad computacional. Se define en la clase NP porque, dada una asignación de valores a las variables de la fórmula booleana, se puede verificar en tiempo polinomial si dicha asignación satisface la fórmula.
+El SAT es el primer problema demostrado como NP-Completo \cite{authomataTheory} y juega un rol central en la teoría de la complejidad computacional. Se define en la clase NP porque dada una asignación de valores a las variables de la fórmula booleana, se puede verificar en tiempo polinomial si dicha asignación satisface la fórmula.
 
-Además, la prueba de que SAT es NP-Completo fue una de las contribuciones principales de Stephen Cook en 1971 \cite{Cook1971}, marcando el inicio de la teoría de la NP-completitud.
+Además, la prueba de que SAT es NP-Completo fue una de las contribuciones principales de Stephen Cook en 1971 \cite{Cook1971}, marcando el inicio de la teoría de la NP-Completitud.
 
 Un SAT con exactamente $n$ variables distintas en cada cláusula se denomina $n$-SAT. Para el problema 2-SAT existe una solución polinomial que determina si la fórmula booleana es satisfacible o no \cite{2satbib}, pero para el problema 3-SAT no se conoce ningún algoritmo polinomial que permita
 determinar si una fórmula booleana es satisfacible o no \cite{authomataTheory}.
@@ -443,7 +445,7 @@ Para determinar si la fórmula es satisfacible o no, se comprueba si el lenguaje
 
 El autómata finito diseñado en \cite{aCFSAT}, se denominó \textbf{autómata booleano}. La idea detrás de este es representar las reglas de la lógica proposicional en las transiciones entre los estados de un autómata finito, donde cada estado del autómata representa un valor de verdad positivo o negativo que significa que hasta ese momento (solo tomando las instancias de las variables asociadas a los caracteres reconocidos) la fórmula se evalúa positiva o negativa respectivamente \cite{aCFSAT}.
 
-En \cite{aSRCSAT} se generaliza la idea de \cite{aCFSAT}, pero esta vez el autómata booleano asociado a la fórmula booleana se intersecta con una gramática de concatenación de rango simple \cite{mainRCGBib}, lo cual permite ampliar el conjunto de fórmulas booleanas que pueden resolverse usando esta estrategia. Las gramáticas concatenación de rango simple son un caso particular de las gramáticas de concatenación de rango, y estas se presentan en el próximo capítulo, porque se usan en el capítulo \ref{cap:LSATRCG} para construir una gramática que 
+En \cite{aSRCSAT} se generaliza la idea de \cite{aCFSAT}, pero esta vez el autómata booleano asociado a la fórmula booleana se intersecta con una gramática de concatenación de rango simple \cite{mainRCGBib}, lo cual permite ampliar el conjunto de fórmulas booleanas que pueden resolverse usando esta estrategia. Las gramáticas concatenación de rango simple son un caso particular de las gramáticas de concatenación de rango, y estas se presentan en el próximo capítulo, porque se usan en el capítulo \ref{chap:LSATRCG} para construir una gramática que 
 describa el lenguaje de las fórmulas booleanas satisfacibles.
 
 En el presente trabajo se sigue otro enfoque para resolver el SAT usando teoría de lenguajes: en vez de resolver el problema del vacío para el lenguaje de todas las interpretaciones que hacen verdadera a una fórmula dada, se construye el lenguaje de todas las fórmulas booleanas satisfacibles y para determinar si un SAT es satisfacible se comprueba si pertenece a ese lenguaje.
