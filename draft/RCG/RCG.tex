@@ -64,7 +64,7 @@ Cada argumento de los predicados puede estar formado por variables y terminales.
 
 Por convenio, las variables se denotan por letras mayúsculas del final del alfabeto, y a los terminales, como es 
 usual, con letras minúsculas. Con este convenio, el siguiente predicado: $B(aX, XY, abZ)$, tiene aridad 3. Su 
-primer argumento está formado por el terminal a y la variable $X$. El segundo argumento por la concatenación 
+primer argumento está formado por el terminal $a$ y la variable $X$. El segundo argumento por la concatenación 
 de las variables $X$ e $Y$. El tercer argumento está formado por la concatenación de los terminales $a$, $b$ y 
 la variable $Z$. 
 
@@ -88,7 +88,7 @@ $X$ no puede tomar ningún valor porque el no terminal de $b$ no coincide con el
 prefijo del argumento $aX$.
 
 A las producciones de esta gramática se les denomina cláusulas. La parte izquierda de la producción 
-siempre está formada por un único no terminal y en en la parte derecha, puede existir cualquier cantidad de no terminales 
+siempre está formada por un único no terminal y en la parte derecha, puede existir cualquier cantidad de no terminales 
 con sus respectivos argumentos, o la cadena vacía. Un ejemplo de cláusula puede ser la siguiente:
 $$A(XYZ,W)\to B(X)C(XY,Z)D(W).$$
 
@@ -137,8 +137,7 @@ En la Figura \ref{fig:xyz_eaxmple} se muestran los posibles valores que pueden t
 \end{figure}
 
 A partir de esta  asignación se construyen los vectores con los que se evalúan los no terminales 
-de su parte derecha: $B(X)C(Y,ZX)D(W)$. Como $X=ab$, $Y=\varepsilon$, $Z=c$ y $W=d$, la parte derecha se evaluaría con los vectores
-: $[ab]$, $[\varepsilon, cab]$, $[d]$ y como resultado se tiene la derivación $B(ab)C(\varepsilon,cab)D(d)$.
+de su parte derecha: $B(X)C(Y,ZX)D(W)$. Como $X=ab$, $Y=\varepsilon$, $Z=c$ y $W=d$, la parte derecha se evaluaría con los vectores: $[ab]$, $[\varepsilon, cab]$, $[d]$ y como resultado se tiene la derivación $B(ab)C(\varepsilon,cab)D(d)$.
 
 El proceso de asignar los vectores a los argumentos, identificar los valores de las variables e instanciar las partes derechas se repite en cada uno de los predicados del lado derecho de la cláusula.
 
@@ -179,8 +178,7 @@ En esta sección se define el concepto de rango, sustitución de rango, gramáti
 Por ejemplo, si los índices son indexados en 0, para la cadena $abcd$, el rango $(1,2)$, representa la subcadena $bc$.
 
 \begin{definition}
-    Una \textbf{gramática de concatenación de rango} se define como una 5-tupla
-    :
+    Una \textbf{gramática de concatenación de rango} se define como una 5-tupla:
     \[
         G = (N, T, V, P, S),
     \]
@@ -231,7 +229,7 @@ Las RCG, a diferencia de las gramáticas definidas en la sección \ref{sec:gramm
     rango de la cadena, respetando la estructura del argumento que se asocia a la cadena que se reconoce. 
 \end{definition}
 
-Por ejemplo, dado el predicado $A(Xa)$ donde $X \in V$ y $a \in T$, la estructura el argumento de $A$ es una variable $X$ seguida del terminal $a$. Si el no terminal $A$ recibe la cadena $baa$, $X$ se puede asociar con el rango $ba$ de la cadena original porque si $X=ba$, entonces $Xa=baa$.
+Por ejemplo, dado el predicado $A(Xa)$ donde $X \in V$ y $a \in T$, la estructura del argumento de $A$ es una variable $X$ seguida del terminal $a$. Si el no terminal $A$ recibe la cadena $baa$, $X$ se puede asociar con el rango $ba$ de la cadena original porque si $X=ba$, entonces $Xa=baa$.
 
 Por otro lado, la variable $X$ no puede tomar el valor $baa$, porque ningún caracter de la cadena de entrada coincidiría 
 con el terminal $a$. De manera similar, $X$ tampoco puede tomar el valor $b$ porque el valor que se asigna a $X$ no permite que el argumento $Xa$ cubra la cadena completa.
@@ -287,8 +285,7 @@ A continuación se muestran estas derivaciones paso a paso.
     \item \textbf{Tercer paso:} En la tercera cláusula $A(bX,bY,bZ)\to A(X,Y,Z)$, existe una sustitución de rango que asocia las
           variables $X$, $Y$, $Z$ a los valores $X=c$, $Y=c$ y $Z=c$. Con estos valores se deriva en el predicado $A(c,c,c)$.
     \item \textbf{Cuarto paso:} En la cuarta cláusula $A(cX,cY,cZ)\to A(\varepsilon,\varepsilon,\varepsilon)$, existe una sustitución de rango que asocia las variables $X$, $Y$, $Z$ a los valores $X=\varepsilon$, $Y=\varepsilon$ y $Z=\varepsilon$. Con estos valores se deriva en el predicado $A(\varepsilon,\varepsilon,\varepsilon)$.
-    \item \textbf{Quinto paso:} Finalmente en el último paso se toma la última
-          cláusula $A(\varepsilon,\varepsilon,\varepsilon)\to \varepsilon$ que deriva en la cadena vacía, por lo que de esta manera se reconoce la cadena $abcabcabc$.
+    \item \textbf{Quinto paso:} Finalmente en el último paso se toma la última cláusula $A(\varepsilon,\varepsilon,\varepsilon)\to \varepsilon$ que deriva en la cadena vacía, por lo que de esta manera se reconoce la cadena $abcabcabc$.
 \end{itemize}
 
 
@@ -369,7 +366,7 @@ donde:
 
 Para procesar una cadena $w$, la gramática anterior genera todas las posibles cadenas $q$, tales que $|w|=|q|$ y luego comprueba si $w = q$.
 
-Esta gramática no tiene caso de uso ya que para toda cadena $w$ siempre va a existir una cadena $q$ tal que $w=q$, 
+Esta gramática no tiene caso de uso, ya que para toda cadena $w$ siempre va a existir una cadena $q$ tal que $w=q$, 
 por lo que se puede modelar con solamente la cláusula $S(X)\to \varepsilon$. Sin embargo, la complejidad del 
 reconocimiento de $G$ es mayor que $2^n$ (con $n$ igual al tamaño de la cadena de entrada), ya que esta es la 
 cantidad de cadenas posibles que puede recibir el segundo argumento del predicado $B$, porque la gramática es 
@@ -379,6 +376,7 @@ se añade un $0$.
 En el capítulo \ref{chap:LSATRCG} se presenta una RCG que reconoce fórmulas booleanas satisfacibles, que al ser ambigua la complejidad del problema de la palabra es no polinomial.
 
 En este capítulo se analizaron las principales definiciones y propiedades de las RCG, que se usan en el capítulo \ref{chap:LSATRCG} para definir una gramática que reconozca las fórmulas booleanas satisfacibles.  En el próximo capítulo se presenta un primer enfoque para definir el lenguaje de todas las fórmulas booleanas satisfacibles y a esta idea se le da continuidad en el capítulo \ref{chap:LSATRCG}, mediante las RCG.
+
 
 \begin{thebibliography}{99}
     

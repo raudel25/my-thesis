@@ -134,18 +134,19 @@
   abstract = {New algorithms for deciding whether a (propositional) Horn formula is satisfiable are presented. If the Horn formula A contains K distinct propositional letters and if it is assumed that they are exactly P1,…, PK, the two algorithms presented in this paper run in time O(N), where N is the total number of occurrences of literals in A. By representing a Horn proposition as a graph, the satisfiability problem can be formulated as a data flow problem, a certain type of pebbling. The difference between the two algorithms presented here is the strategy used for pebbling the graph. The first algorithm is based on the principle used for finding the set of nonterminals of a context-free grammar from which the empty string can be derived. The second algorithm is a graph traversal and uses a “call-by-need” strategy. This algorithm uses an attribute grammar to translate a propositional Horn formula to its corresponding graph in linear time. Our formulation of the satisfiability problem as a data flow problem appears to be new and suggests the possibility of improving efficiency using parallel processors.}
 }
 
-@article{xorsatbib,
-  author   = {Valiant, Leslie G.},
-  title    = {The Complexity of Enumeration and Reliability Problems},
-  journal  = {SIAM Journal on Computing},
-  volume   = {8},
-  number   = {3},
-  pages    = {410-421},
-  year     = {1979},
-  doi      = {10.1137/0208032},
-  url      = {https://doi.org/10.1137/0208032},
-  eprint   = {https://doi.org/10.1137/0208032},
-  abstract = { The class of \$\# P\$-complete problems is a class of computationally eqivalent counting problems (defined by the author in a previous paper) that are at least as difficult as the \$NP\$-complete problems. Here we show, for a large number of natural counting problems for which there was no previous indication of intractability, that they belong to this class. The technique used is that of polynomial time reduction with oracles via translations that are of algebraic or arithmetic nature. }
+@InProceedings{xorsatbib,
+author="Han, Cheng-Shen
+and Jiang, Jie-Hong Roland",
+editor="Madhusudan, P.
+and Seshia, Sanjit A.",
+title="When Boolean Satisfiability Meets Gaussian Elimination in a Simplex Way",
+booktitle="Computer Aided Verification",
+year="2012",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="410--426",
+abstract="Recent research on Boolean satisfiability (SAT) reveals modern solvers' inability to handle formulae in the abundance of parity (xor) constraints. Although xor-handling in SAT solving has attracted much attention, challenges remain to completely deduce xor-inferred implications and conflicts, to effectively reduce expensive overhead, and to directly generate compact interpolants. This paper integrates SAT solving tightly with Gaussian elimination in the style of Dantzig's simplex method. It yields a powerful tool overcoming these challenges. Experiments show promising performance improvements and efficient derivation of compact interpolants, which are otherwise unobtainable.",
+isbn="978-3-642-31424-7"
 }
 
 @inproceedings{boullier1999chinese,
@@ -191,5 +192,4 @@
   year      = {2021},
   publisher = {IOS Press}
 }
-
 
