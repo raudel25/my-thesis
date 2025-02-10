@@ -17,7 +17,7 @@ del lenguaje $L_{copy}$ sobre el alfabeto $\{0,1,d\}$. Este lenguaje permitiría
 
 Para definir el lenguaje $L_{S-SAT}$ se presenta una vía para codificar una fórmula booleana mediante cadenas sobre el alfabeto $\Sigma=\{a, b,c,d\}$, y para construirlo se utiliza una transducción finita del lenguaje $L_{0,1,d}$, que es una variante del lenguaje $L_{copy}$ sobre el alfabeto $\{0,1,d\}$.
 
-La estructura de este capítulo es la siguiente: en la sección \ref{sec:codsat} se muestra cómo codificar una fórmula booleana cualquiera usando el alfabeto $\{a,b,c,d\}$ y se define el lenguaje $L_{S-SAT}$.  En la sección \ref{sec:LSATCFL} se demuestra que $L_{S-SAT}$ no es un lenguaje libre del contexto.  En la sección \ref{sec:intsat} se muestra cómo interpretar las cadenas sobre el alfabeto $\{0,1,d\}$ como asignaciones de las variables. Finalmente, en la sección \ref{sec:tsat} se presenta un transductor finito que convierte cadenas del lenguaje $L_{0,1,d}$ en cadenas sobre el alfabeto $\{a,b,c,d\}$ que representan fórmulas booleanas satisfacibles. Seguidamente se conjetura por qué la representación del lenguaje de las fórmulas booleanas satisfacibles, en cualquier formalismo que lo genere usando la estrategia propuesta en este capítulo, tiene un tamaño $O(1)$. Esto implica que el problema de la palabra para todos estos formalismos es NP-Duro.
+La estructura de este capítulo es la siguiente: en la sección \ref{sec:codsat} se muestra cómo codificar una fórmula booleana cualquiera usando el alfabeto $\{a,b,c,d\}$ y se define el lenguaje $L_{S-SAT}$.  En la sección \ref{sec:LSATCFL} se demuestra que $L_{S-SAT}$ no es un lenguaje libre del contexto.  En la sección \ref{sec:intsat} se muestra cómo interpretar las cadenas sobre el alfabeto $\{0,1,d\}$ como asignaciones de las variables. Finalmente, en la sección \ref{sec:tsat} se presenta un transductor finito que convierte cadenas del lenguaje $L_{0,1,d}$ en cadenas sobre el alfabeto $\{a,b,c,d\}$ que representan fórmulas booleanas satisfacibles. Seguidamente, se conjetura por qué la representación del lenguaje de las fórmulas booleanas satisfacibles, en cualquier formalismo que lo genere usando la estrategia propuesta en este capítulo, tiene un tamaño $O(1)$. Esto implica que el problema de la palabra para todos estos formalismos es NP-Duro.
 
 
 A continuación se presenta cómo codificar una fórmula booleana cualquiera mediante una cadena sobre el alfabeto $\{a,b,c,d\}$.
@@ -35,7 +35,6 @@ Si se tiene una fórmula booleana $F$ en forma normal conjuntiva se puede consid
 
 Por ejemplo, en la primera cláusula de la siguiente fórmula booleana en CNF con 3 variables:
 $$F=(x_1 \vee \neg x_2) \wedge (\neg x_1 \vee x_2 \vee x_3) \wedge (x_1 \vee \neg x_2 \vee x_3)$$
-
 la variable $x_1$ aparece sin negar, la variable $x_2$ aparece negada, y la variable $x_{3}$ no aparece.
 
 El hecho de que se pueda asumir que en todas las cláusulas aparecen todas variables permite representar una cláusula de una fórmula con $v$ variables como una cadena de $v$ símbolos, donde el símbolo en la posición $i$ indica el estado de la variable $x_i$ en la cláusula.
@@ -64,7 +63,7 @@ Para que una cadena $e$ se pueda interpretar como una fórmula booleana debe cum
 tener $n$ bloques separados por $d$, cada bloque de la misma longitud $v$ y cada bloque solo debe estar formado por los caracteres
 $a$, $b$ y $c$. 
 
-Una cadena $e$ que cumpla con estas características  se puede interpretar como una fórmula booleana con $n$ cláusulas y $v$ variables, donde la estructura de cada cláusula depende de los caracteres correspondiente al bloque de $a$, $b$ y $c$ que se asocia a dicha cláusula.
+Una cadena $e$ que cumpla con estas características  se puede interpretar como una fórmula booleana con $n$ cláusulas y $v$ variables, donde la estructura de cada cláusula depende de los caracteres correspondientes al bloque de $a$, $b$ y $c$ que se asocia a dicha cláusula.
 
 Por ejemplo, la cadena $w=acc\mathbf{d}aba\mathbf{d}cba\mathbf{d}$, tiene 3 bloques separados por $d$, los cuales son $acc$, $aba$ y $cba$, los 3 tienen tamaño 3 y solo tienen los caracteres $a$, $b$ y $c$.
 Por tanto  $w$ se puede interpretar como la siguiente fórmula booleana:
@@ -89,7 +88,7 @@ en CNF, el cual se define a continuación.
 \end{definition}
 
 Por ejemplo, la fórmula $$x_1\wedge x_2 \wedge x_3,$$ es satisfacible por los valores $x_1=true$, $x_2=true$ y $x_3=true$, por lo que la 
-cadena $acc\mathbf{d}cac\mathbf{d}cca\mathbf{d}$ pertenece a $L_{S-SAT}$. Por otro lado la fórmula $$x_1\wedge x_2 \wedge \neg x_1,$$
+cadena $acc\mathbf{d}cac\mathbf{d}cca\mathbf{d}$ pertenece a $L_{S-SAT}$. Por otro lado, la fórmula $$x_1\wedge x_2 \wedge \neg x_1,$$
 no es satisfacible para ninguna asignación de los valores de sus variables, por lo que la cadena $ac\mathbf{d}ca\mathbf{d}bc\mathbf{d}$
 no pertenece a $L_{S-SAT}$.
 
@@ -137,7 +136,7 @@ A continuación se demuestra el Lema \ref{lem:Lh}.
     es satisfacible por los valores $x_1=true$, $x_2=true$, $\ldots$, $x_n=true$, y además la cadena $e=(a^nd)^k$ es la codificación de $F$ en $L_{FULL-SAT}$. Por tanto $e\in L_{S-SAT}$ y $h(e)=t$, lo cual implica que $t\in L_h$. Luego se cumple que $\{(1^nd)^+\mid n\in \mathbb{N}\}\subseteq L_h$ y por tanto $\{(1^nd)^+\mid n\in \mathbb{N}\}= L_h$.
 \end{proof}
 
-Seguidamente se demuestra el Lema \ref{lem:LhCFL}.
+Seguidamente, se demuestra el Lema \ref{lem:LhCFL}.
 
 \begin{proof}[Demostración del Lema \ref{lem:LhCFL}] \
     
@@ -209,13 +208,13 @@ $$F_e=(x_1\vee\neg x_2)\wedge (\neg x_2 \vee \neg x_3)\wedge (x_1),$$
 $r$ se puede interpretar como la asignación de valores a las variables de $F_e$ de la 
 siguiente manera: $x_1=true$, $x_2=false$ y $x_3=true$, y la fórmula booleana se evalúa con valor \true{}.
 
-Seguidamente se muestra cómo construir $L_{S-SAT}$ mediante una transducción finita del lenguaje $L_{0,1,d}$.
+Seguidamente, se muestra cómo construir $L_{S-SAT}$ mediante una transducción finita del lenguaje $L_{0,1,d}$.
 
 \section{Construcción del $L_{S-SAT}$ usando transducción finita}
 
 En esta sección se construye el lenguaje $L_{S-SAT}$ mediante un transductor finito.
 
-La idea para la construcción de $L_{S-SAT}$ es construir un transductor finito, denominado $T_{SAT}$, que acepte como entrada cadenas $r\in L_{0,1,d}$ y devuelva cadenas $e\in L_{FULL-SAT}$ tales que al evaluar $r$ en $e$ (como se describió en la sección \ref{sec:intsat}), $e$ sea verdadera.
+La idea para la construcción de $L_{S-SAT}$ es construir un transductor finito, denominado $T_{SAT}$, que acepte como entrada, cadenas $r\in L_{0,1,d}$ y devuelva cadenas $e\in L_{FULL-SAT}$ tales que al evaluar $r$ en $e$ (como se describió en la sección \ref{sec:intsat}), $e$ sea verdadera.
 
 Se construye $L_{S-SAT}$ como el lenguaje de todas las transducciones $e$ que se obtienen del transductor $T_{SAT}$, a partir del lenguaje de cadenas de entrada $L_{0,1,d}$.
 $$L_{S-SAT} = \{e\,|\,\exists r \in L_{0,1,d} \text{ y } e \in T_{SAT}(r) \}.$$
@@ -247,7 +246,7 @@ A continuación se describe el funcionamiento de cada estado del transductor $T_
     \item Estado $q_n$ (estado negativo de $T_{CLAUSE}$): representa que para los valores ya asignados a las variables se obtiene un valor de verdad negativo.  Si se lee un 1 y se escribe una $a$, se pasa al estado positivo, ya que se genera una variable sin negar a la cual se le asigna el valor \true{}.  Si se lee un 1 y se escribe una $b$, se mantiene en el mismo estado, ya que se genera una variable negada a la cual se le asigna el valor \true{}.  Si se lee un 1 y se escribe una $c$, se mantiene en el mismo estado, ya que se genera una variable (con valor \true) que no está en la cláusula. Si se lee un 0 y se escribe una $a$, se mantiene en el mismo estado, ya que se genera una variable sin negar a la cual se le asigna el valor \false{}.  Si se lee un 0 y se escribe una $b$, se pasa al estado positivo, ya que se genera una variable negada a la cual se le asigna el valor \false{}.  Si se lee un 0 y se escribe una $c$, se mantiene en el mismo estado, ya que se genera una variable (con valor \false) que no está en la cláusula.
 \end{itemize}
 
-Seguidamente se define $T_{CLAUSE}$.
+Seguidamente, se define $T_{CLAUSE}$.
 
 \[
     T_{CLAUSE} = (Q, {\Sigma}, \Gamma, \delta, q_{0}, F),
@@ -262,7 +261,7 @@ donde:
     \item \(F={q_p}\) conjunto de estados finales.
 \end{itemize}
 
-Seguidamente se define la función de transición $\delta$, con cada una de las transiciones para cada estado.
+A continuación se define la función de transición $\delta$, con cada una de las transiciones para cada estado.
 
 Las transiciones para el estado $q_0$ son las siguientes:
 \begin{multicols}{2}
@@ -448,7 +447,7 @@ Para finalizar la demostración se prueba que la transducción de $L_{0,1,d}$ me
 genera todas las cadenas $e\in L_{FULL-SAT}$, tales que $e$ representa una fórmula booleana 
 satisfacible.
 
-Seguidamente, se demuestra el Lema \ref{lem:clause}.
+A continuación se demuestra el Lema \ref{lem:clause}.
 
 \begin{proof}[Demostración del Lema \ref{lem:clause}] \
     
@@ -469,10 +468,10 @@ Seguidamente, se demuestra el Lema \ref{lem:clause}.
     
     Luego de reconocer los primeros $i-1$ caracteres solo es posible que el transductor esté en el estado $q_0$ o $q_n$, pero como se cumple que la $i$-ésima variable está sin negar y con valor \true{} o está negada y con valor \false{}, entonces se puede tomar la opción de leer un 1 y escribir una $a$ o leer un 0 y escribir una $b$ según corresponda.  De esta manera, según el estado en que se encuentre el autómata, se pasa al estado $q_p$.
     
-    A partir de este punto, se realizan las restantes transiciones de manera que la cadena generada sea $q$ y el transductor se mantiene en el mismo estado ya que $q_p$ solo tiene transiciones hacia sí mismo. De esta manera se demuestra el Lema \ref{lem:clause}. 
+    A partir de este punto, se realizan las restantes transiciones de manera que la cadena generada sea $q$ y el transductor se mantiene en el mismo estado, ya que $q_p$ solo tiene transiciones hacia sí mismo. De esta manera se demuestra el Lema \ref{lem:clause}. 
 \end{proof}
 
-Seguidamente se demuestra el Lema \ref{lem:sat}.
+Seguidamente, se demuestra el Lema \ref{lem:sat}.
 
 \begin{proof}[Demostración del Lema \ref{lem:sat}] \
     
@@ -525,6 +524,6 @@ En este trabajo se conjetura que cualquier formalismo $G$ que genere el lenguaje
 
 En la literatura consultada para este trabajo aparecen dos formalismos que pueden generar el lenguaje $L_{copy}$: las gramáticas de índice global \cite{globalIndexLanguages} y las gramáticas de concatenación de rango \cite{propertiesRCGBib}. En ambos casos, la gramática que genera el lenguaje $L_{copy}$ tiene tamaño $O(1)$. La conjetura está basada en el hecho de que el lenguaje $L_{0,1,d}$ tiene características similares al lenguaje $L_{copy}$.
 
-En este capítulo se presentó una estrategia para resolver el SAT usando teoría de lenguajes que se basa en definir y construir el lenguaje de todas las fórmulas satisfacibles. Además se presentó un primer acercamiento para construir este lenguaje, mediante una transducción finita. Esta forma de construir el lenguaje demuestra que el problema de la palabra para todos los formalismos que generen $L_{0,1,d}$ y sean cerrados bajo transducción finita es NP-Duro.
+En este capítulo se presentó una estrategia para resolver el SAT usando teoría de lenguajes que se basa en definir y construir el lenguaje de todas las fórmulas satisfacibles. Además, se presentó un primer acercamiento para construir este lenguaje, mediante una transducción finita. Esta forma de construir el lenguaje demuestra que el problema de la palabra para todos los formalismos que generen $L_{0,1,d}$ y sean cerrados bajo transducción finita es NP-Duro.
 
 En el próximo capítulo se argumenta que la estrategia presentada en este para construir $L_{S-SAT}$ no es la única, porque se construye una RCG que reconoce el lenguaje $L_{S-SAT}$, y los lenguajes de concatenación de rango no son cerrados bajo transducción finita.
