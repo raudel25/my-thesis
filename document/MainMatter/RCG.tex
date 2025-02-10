@@ -35,7 +35,7 @@ Cada argumento de los predicados puede estar formado por variables y terminales.
 
 Por convenio, las variables se denotan por letras mayúsculas del final del alfabeto, y a los terminales, como es 
 usual, con letras minúsculas. Con este convenio, el siguiente predicado: $B(aX, XY, abZ)$, tiene aridad 3. Su 
-primer argumento está formado por el terminal a y la variable $X$. El segundo argumento por la concatenación 
+primer argumento está formado por el terminal $a$ y la variable $X$. El segundo argumento por la concatenación 
 de las variables $X$ e $Y$. El tercer argumento está formado por la concatenación de los terminales $a$, $b$ y 
 la variable $Z$. 
 
@@ -202,7 +202,7 @@ Las RCG, a diferencia de las gramáticas definidas en la sección \ref{sec:gramm
     rango de la cadena, respetando la estructura del argumento que se asocia a la cadena que se reconoce. 
 \end{definition}
 
-Por ejemplo, dado el predicado $A(Xa)$ donde $X \in V$ y $a \in T$, la estructura el argumento de $A$ es una variable $X$ seguida del terminal $a$. Si el no terminal $A$ recibe la cadena $baa$, $X$ se puede asociar con el rango $ba$ de la cadena original porque si $X=ba$, entonces $Xa=baa$.
+Por ejemplo, dado el predicado $A(Xa)$ donde $X \in V$ y $a \in T$, la estructura del argumento de $A$ es una variable $X$ seguida del terminal $a$. Si el no terminal $A$ recibe la cadena $baa$, $X$ se puede asociar con el rango $ba$ de la cadena original porque si $X=ba$, entonces $Xa=baa$.
 
 Por otro lado, la variable $X$ no puede tomar el valor $baa$, porque ningún caracter de la cadena de entrada coincidiría 
 con el terminal $a$. De manera similar, $X$ tampoco puede tomar el valor $b$ porque el valor que se asigna a $X$ no permite que el argumento $Xa$ cubra la cadena completa.

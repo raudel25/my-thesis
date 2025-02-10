@@ -17,7 +17,7 @@ del lenguaje $L_{copy}$ sobre el alfabeto $\{0,1,d\}$. Este lenguaje permitiría
 
 Para definir el lenguaje $L_{S-SAT}$ se presenta una vía para codificar una fórmula booleana mediante cadenas sobre el alfabeto $\Sigma=\{a, b,c,d\}$, y para construirlo se utiliza una transducción finita del lenguaje $L_{0,1,d}$, que es una variante del lenguaje $L_{copy}$ sobre el alfabeto $\{0,1,d\}$.
 
-La estructura de este capítulo es la siguiente: en la sección \ref{sec:codsat} se muestra como codificar una fórmula booleana cualquiera usando el alfabeto $\{a,b,c,d\}$ y se define el lenguaje $L_{S-SAT}$.  En la sección \ref{sec:LSATCFL} se demuestra que $L_{S-SAT}$ no es un lenguaje libre del contexto.  En la sección \ref{sec:intsat} se muestra cómo interpretar las cadenas sobre el alfabeto $\{0,1,d\}$ como asignaciones de las variables. Finalmente, en la sección \ref{sec:tsat} se presenta un transductor finito que convierte cadenas del lenguaje $L_{0,1,d}$ en cadenas sobre el alfabeto $\{a,b,c,d\}$ que representan fórmulas booleanas satisfacibles. Seguidamente se conjetura por qué la representación del lenguaje de las fórmulas booleanas satisfacibles, en cualquier formalismo que lo genere usando la estrategia propuesta en este capítulo, tiene un tamaño $O(1)$. Esto implica que el problema de la palabra para todos estos formalismos es NP-Duro.
+La estructura de este capítulo es la siguiente: en la sección \ref{sec:codsat} se muestra cómo codificar una fórmula booleana cualquiera usando el alfabeto $\{a,b,c,d\}$ y se define el lenguaje $L_{S-SAT}$.  En la sección \ref{sec:LSATCFL} se demuestra que $L_{S-SAT}$ no es un lenguaje libre del contexto.  En la sección \ref{sec:intsat} se muestra cómo interpretar las cadenas sobre el alfabeto $\{0,1,d\}$ como asignaciones de las variables. Finalmente, en la sección \ref{sec:tsat} se presenta un transductor finito que convierte cadenas del lenguaje $L_{0,1,d}$ en cadenas sobre el alfabeto $\{a,b,c,d\}$ que representan fórmulas booleanas satisfacibles. Seguidamente se conjetura por qué la representación del lenguaje de las fórmulas booleanas satisfacibles, en cualquier formalismo que lo genere usando la estrategia propuesta en este capítulo, tiene un tamaño $O(1)$. Esto implica que el problema de la palabra para todos estos formalismos es NP-Duro.
 
 
 A continuación se presenta cómo codificar una fórmula booleana cualquiera mediante una cadena sobre el alfabeto $\{a,b,c,d\}$.
@@ -238,7 +238,7 @@ para los caracteres que se leyeron hasta el momento. Las transiciones entre los 
 dependiendo de si la asignación que se realiza, en el momento de leer y de escribir satisface la cláusula 
 generada o no.
 
-A continuación de describe el funcionamiento de cada estado del transductor $T_{CLAUSE}$:
+A continuación se describe el funcionamiento de cada estado del transductor $T_{CLAUSE}$:
 \begin{itemize}
     \item Estado $q_0$: representa el estado inicial.  Si se lee un 1 y se escribe una $a$, se pasa al estado positivo, ya que se genera una variable sin negar a la cual se le asigna el valor \true{}.  Si se lee un 1 y se escribe una $b$, se pasa al estado negativo, ya que se genera una variable negada a la cual se le asigna el valor \true{}.  Si se lee un 1 y se escribe una $c$, se mantiene en el mismo estado, ya que se genera una variable (con valor \true) que no está en la cláusula.  Si se lee un 0 y se escribe una $a$, se pasa al estado negativo, ya que se genera una variable sin negar a la cual se le asigna el valor \false{}.  Si se lee un 0 y se escribe una $b$, se pasa al estado positivo, ya que se genera una variable negada a la cual se le asigna el valor \false{}.  Si se lee un 0 y se escribe una $c$, se mantiene en el mismo estado, ya que se genera una variable (con valor \false) que no está en la cláusula.
           
@@ -326,7 +326,7 @@ Las transiciones para el estado $q_n$ (estado negativo de $T_{CLAUSE}$) son las 
     \label{fig:transducer_clause} % Esto es para referenciar la figura en el texto
 \end{figure}
 
-A continuación se presenta como construir el transductor $T_{SAT}$, mediante una modificación de $T_{CLAUSE}$.
+A continuación se presenta cómo construir el transductor $T_{SAT}$, mediante una modificación de $T_{CLAUSE}$.
 
 Si se tiene una cadena binaria $w$ se pueden generar todas las fórmulas booleanas de una cláusula 
 satisfacibles por la asignación de valores que representa $w$ (si el $i$-ésimo caracter es un 1, la 
@@ -347,7 +347,7 @@ La modificación de $T_{CALUSE}$ se logra definiendo $q_0$ como el estado de ace
 transición del estado $q_p$ al estado $q_0$ que lea una $d$ y escriba una $d$. De esta manera, cuando se lee una $d$ y el transductor se encuentra en el estado positivo, significa
 que se generó una cláusula con un valor de verdad positivo, y entonces se comienza a generar la siguiente cláusula desde el estado inicial. 
 
-Esta modificación de $T_{CALUSE}$ tiene un inconveniente y es que el transductor genera la cadena vacía, y la cadena vacía representa una fórmula booleana con 0 variables, por lo que no tiene sentido que se considere en $L_{S-SAT}$. Para solucionar esto se pueden concatenar 2 transductores $T_{CLAUSE}$ y unirlos mediante una transición, esta idea se expone a continuación.
+Esta modificación de $T_{CALUSE}$ tiene un inconveniente y es que el transductor genera la cadena vacía, y la cadena vacía representa una fórmula booleana con 0 cláusulas, por lo que no tiene sentido que se considere en $L_{S-SAT}$. Para solucionar esto se pueden concatenar 2 transductores $T_{CLAUSE}$ y unirlos mediante una transición, esta idea se expone a continuación.
 
 Para definir el transductor $T_{SAT}$ (Figura \ref{fig:transducer_sat}) se concatenan 2 transductores $T_{CLAUSE}$ ($T_1$ y $T_2$ respectivamente). Sean los estados: $q_{0_1}$, $q_{p_1}$ y $q_{n_1}$ estado inicial, positivo y negativo de $T_1$, respectivamente, y los estados $q_{0_2}$, $q_{p_2}$ y $q_{n_2}$ estado inicial, positivo y negativo de $T_2$, respectivamente. $T_1$ y $T_2$ se concatenan añadiendo una transición de $q_{p_1}$ a $q_{0_2}$ con el símbolo $d$ (tanto de lectura como de escritura) y además se agrega una transición de $q_{p_2}$ a $q_{0_2}$ con el símbolo $d$ (tanto de lectura como de escritura).  Para terminar se definen el estado inicial y el estado final de $T_{SAT}$, los cuales serían $q_{0_1}$ y $q_{0_2}$, respectivamente.
 
@@ -523,7 +523,7 @@ Una restricción importante en la demostración anterior es que la representaci�
 
 En este trabajo se conjetura que cualquier formalismo $G$ que genere el lenguaje $L_{0,1,d}$, tiene tamaño $O(1)$ en cualquiera de sus representaciones, y como el transductor $T_{SAT}$ tiene una cantidad de estados $O(1)$, entonces $G'$ tiene que tener tamaño $O(1)$ en su representación.
 
-En la literatura consultada para este trabajo aparecen dos formalismo que pueden generar el lenguaje $L_{copy}$: las gramáticas de índice global \cite{globalIndexLanguages} y las gramáticas de concatenación de rango \cite{propertiesRCGBib}. En ambos casos, la gramática que genera el lenguaje $L_{copy}$ tiene tamaño $O(1)$. La conjetura está basada en el hecho de que el lenguaje $L_{0,1,d}$ tiene características similares al lenguaje $L_{copy}$.
+En la literatura consultada para este trabajo aparecen dos formalismos que pueden generar el lenguaje $L_{copy}$: las gramáticas de índice global \cite{globalIndexLanguages} y las gramáticas de concatenación de rango \cite{propertiesRCGBib}. En ambos casos, la gramática que genera el lenguaje $L_{copy}$ tiene tamaño $O(1)$. La conjetura está basada en el hecho de que el lenguaje $L_{0,1,d}$ tiene características similares al lenguaje $L_{copy}$.
 
 En este capítulo se presentó una estrategia para resolver el SAT usando teoría de lenguajes que se basa en definir y construir el lenguaje de todas las fórmulas satisfacibles. Además se presentó un primer acercamiento para construir este lenguaje, mediante una transducción finita. Esta forma de construir el lenguaje demuestra que el problema de la palabra para todos los formalismos que generen $L_{0,1,d}$ y sean cerrados bajo transducción finita es NP-Duro.
 

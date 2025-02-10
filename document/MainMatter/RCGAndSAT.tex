@@ -13,7 +13,7 @@
 En este capítulo se presenta cómo resolver el SAT usando el problema de la palabra, mediante gramáticas de 
 concatenación de rango. Para ello se obtiene una gramática de concatenación de rango que reconoce el lenguaje $L_{S-SAT}$, la cual permite demostrar que las RCG reconocen todos los problemas que pertenecen a la clase NP, y se deja como problema abierto obtener una RCG que permita reconocer todas las instancias de SAT que son solubles en tiempo polinomial.
 
-Para el desarrollo del capítulo primeramente se describe como reconocer el lenguaje $L_{0,1,d}$ mediante una gramática de concatenación de rango y a continuación se describe por qué no es posible usar las RCG para construir el lenguaje $L_{S-SAT}$ mediante una transducción finita de un lenguaje de concatenación de rango. A pesar de ello, es posible construir una RCG que reconoce todas las fórmulas booleanas satisfacibles y se demuestra que las RCG reconocen todos los problemas en la clase NP. Por último se presenta una RCG que permite reconocer problemas 2-SAT, pero que tiene el problema de la palabra no polinomial. Se propone como problema abierto buscar una RCG que permita reconocer problemas 2-SAT en tiempo polinomial.
+Para el desarrollo del capítulo primeramente se describe cómo reconocer el lenguaje $L_{0,1,d}$ mediante una gramática de concatenación de rango y a continuación se describe por qué no es posible usar las RCG para construir el lenguaje $L_{S-SAT}$ mediante una transducción finita de un lenguaje de concatenación de rango. A pesar de ello, es posible construir una RCG que reconoce todas las fórmulas booleanas satisfacibles y se demuestra que las RCG reconocen todos los problemas en la clase NP. Por último se presenta una RCG que permite reconocer problemas 2-SAT, pero que tiene el problema de la palabra no polinomial. Se propone como problema abierto buscar una RCG que permita reconocer problemas 2-SAT en tiempo polinomial.
 
 En la siguiente sección se describe una RCG que reconoce el lenguaje $L_{0,1,d}$.
 
@@ -89,7 +89,7 @@ denominado $L_{G_{0,1,d}}$.
     
     Por la estructura de la cláusula $B(XdY,P)\to B(Y,P) C(X) Eq(X,P)$ solo se puede hacer una derivación en esta cláusula si a las variables $X$ y $Y$ se le asocian subcadenas de la primera cadena del vector que reconoce $B$, tales que el valor de $X$ es una cadena binaria y además es igual a la segunda cadena del vector que reconoce $B$. Si esta sustitución de rango existe, entonces se vuelve a derivar en $B$ pero esta vez el vector en entrada está formado por la primera cadena del vector de entrada original sin su primer bloque de 0 y 1, y la segunda cadena del vector de entrada original.
     
-    En cada derivación del predicado $B$ se comprueba que la primera cadena del vector de entrada está formada por un prefijo $w'$, tal que $w'$, esta seguida de una $d$ y $w'$ es igual a la segunda cadena del vector de entrada. Además se comprueba que el resto de la primera cadena del vector de entrada es la cadena vacía o cumple la misma condición.
+    En cada derivación del predicado $B$ se comprueba que la primera cadena del vector de entrada está formada por un prefijo $w'$, tal que $w'$, está seguida de una $d$ y $w'$ es igual a la segunda cadena del vector de entrada. Además, se comprueba que el resto de la primera cadena del vector de entrada es la cadena vacía o cumple la misma condición.
     
     Del predicado $B$ solo se deriva a la cadena vacía si la primera cadena del vector de entrada es la cadena vacía. Por tanto el predicado $B$ reconoce el vector $[z_r,w]$ si $z_r$ está formado por varios bloques de 0 y 1, separados por una $d$ y cada uno de estos bloques es igual a $w$.
     
@@ -273,7 +273,7 @@ A continuación se demuestra el Lema \ref{lem:predc} y con eso se garantiza la p
     
     Para finalizar la demostración del Lema \ref{lem:predc}, es necesario probar que si $C(q,w)$ se reconoce, entonces $w$ satisface a $F_q$. 
     
-    Por la estructura de la gramática, si existe una secuencia de derivaciones desde $C(q,w)$ hasta la cadena vacía entonces hay una derivación desde $Cn$ hacia $Cp$, sin pérdida de la generalidad esta derivación ocurre en el en índice $i$ de ambas cadenas. Esta derivación solo es posible por una combinación de una $a$ y un 1 o de una $b$ y un 0, por lo tanto una de estas combinaciones existe en el índice $i$. Por lo que cuando se le asignan los valores de $w$ a las variables de $F_q$ la variable con índice $i$ está
+    Por la estructura de la gramática, si existe una secuencia de derivaciones desde $C(q,w)$ hasta la cadena vacía entonces hay una derivación desde $Cn$ hacia $Cp$, sin pérdida de la generalidad esta derivación ocurre en el índice $i$ de ambas cadenas. Esta derivación solo es posible por una combinación de una $a$ y un 1 o de una $b$ y un 0, por lo tanto una de estas combinaciones existe en el índice $i$. Por lo que cuando se le asignan los valores de $w$ a las variables de $F_q$ la variable con índice $i$ está
     sin negar con valor \true{} o está negada con valor \false{}, lo cual implica que $w$ satisface $F_q$, por tanto se demuestra el Lema \ref{lem:predc}.
 \end{proof}
 
@@ -396,8 +396,7 @@ Para el predicado $N$, con el vector $[\mathbf{d}b\mathbf{d},0]$, no existe ning
 $N$ no reconoce el vector $[\mathbf{d}b\mathbf{d},0]$.
 
 Después de realizarse todas las posibles derivaciones y sustituciones de rango, $G_{S-SAT}$ no reconoce la cadena
-$a\mathbf{d}b\mathbf{d}$. Esto co
-incide con el hecho de que $x_1 \wedge \neg x_1$ no es satisfacible para ninguna asignación de valores a sus variables.
+$a\mathbf{d}b\mathbf{d}$. Esto coincide con el hecho de que $x_1 \wedge \neg x_1$ no es satisfacible para ninguna asignación de valores a sus variables.
 
 
 Como $G_{S-SAT}$ reconoce las fórmulas booleanas satisfacibles, para determinar si una fórmula es satisfacible se debe determinar si su cadena asociada se reconoce por $G_{S-SAT}$. A continuación se analiza la complejidad del problema de la palabra para $G_{S-SAT}$.
@@ -411,7 +410,7 @@ La fase de la gramática que provoca que el algoritmo de reconocimiento sea expo
 todas las cadenas binarias que representan la asignación de valores para las variables booleanas.
 Estas cadenas se pasan como argumentos a los predicados de las fases posteriores, mediante las derivaciones de la gramática.
 
-Si se analiza el algoritmo de reconocimiento descrito en \cite{mainRCGBib} un factor en la complejidad del 
+Si se analiza el algoritmo de reconocimiento descrito en \cite{mainRCGBib}, un factor en la complejidad del 
 algoritmo de reconocimiento es la cantidad de rangos posibles para una cadena que se reconoce por un predicado. 
 En este caso la cadena que representa los valores de las variables de la fórmula booleana puede tomar $2^n$
 valores distintos, donde $n$ es la cantidad de variables en la fórmula booleana, ya que dicha cadena se genera 
@@ -436,14 +435,14 @@ finita para construir el lenguaje de todas las fórmulas booleanas satisfacibles
 gramática que tiene tamaño $O(1)$ lo que apoya la conjetura formulada en el capítulo \ref{chap:LSATFT}, 
 que plantea que todo formalismo que sea capaz de describir el lenguaje $L_{0,1,d}$, tiene un tamaño $O(1)$ en su representación.
 
-En \cite{mainRCGBib} se menciona las RCG reconocen todos los problemas de la clase P. Como se mostró en la sección anterior con la gramática $G_{S-SAT}$, existe una RCG que reconoce el lenguaje de las fórmulas satisfacibles, y como el SAT se puede reducir a cualquier problema en NP en una complejidad polinomial, entonces para todo problema en NP también existe una RCG que lo reconoce en su representación como lenguaje formal.
+En \cite{mainRCGBib} se menciona que las RCG reconocen todos los problemas de la clase P. Como se mostró en la sección anterior con la gramática $G_{S-SAT}$, existe una RCG que reconoce el lenguaje de las fórmulas satisfacibles, y como el SAT se puede reducir a cualquier problema en NP en una complejidad polinomial, entonces para todo problema en NP también existe una RCG que lo reconoce en su representación como lenguaje formal.
 
 En la próxima sección se utilizan las gramáticas de concatenación de rango para determinar si una fórmula booleana asociada al 2-SAT es satisfacible.
 
 \section{Instancias de SAT polinomiales empleando RCG}
 \label{sec:pSATRCG}
 
-En esta sección se presenta una RCG que es capaz de reconocer problemas SAT, satisfacibles que pertenecen al 2-SAT, es decir, problemas SAT donde cada cláusula tiene a lo sumo 2 literales. La idea detrás de esta gramática es obtener una RCG que reconozca cuando la fórmula booleana pertenece al conjunto de fórmulas booleanas de 2-SAT y luego intersectar dicha gramática con $G_{S-SAT}$.  Para ello se define la siguiente RCG:
+En esta sección se presenta una RCG que es capaz de reconocer problemas SAT satisfacibles que pertenecen al 2-SAT, es decir, problemas SAT donde cada cláusula tiene a lo sumo 2 literales. La idea detrás de esta gramática es obtener una RCG que reconozca cuándo la fórmula booleana pertenece al conjunto de fórmulas booleanas de 2-SAT y luego intersectar dicha gramática con $G_{S-SAT}$.  Para ello se define la siguiente RCG:
 \[
     G_{2-SAT} = (N, T, V, P, S),
 \]
@@ -492,7 +491,7 @@ $$G_{S-2-SAT}=G_{S-SAT}\cap G_{2-SAT}.$$
 En esta sección se proponen varios problemas abiertos, los cuales tienen relación con el contenido de las secciones
 de este capítulo.
 
-Como se demostró en la sección \ref{sec:demg01d}, la gramática $G_{0,1,d}$ reconoce el lenguaje $L_{0,1,d}$, pero las RCG no son cerradas bajo transducción finita. Por tanto cuando se aplica $T_{SAT}$ a $G_{0,1,d}$, el formalismo resultante no tiene que ser necesariamente una RCG. Se propone como problema abierto, analizar qué tipo de formalismo se obtiene al aplicar el transductor $T_{SAT}$ sobre $G_{0,1,d}$ y realizar un análisis de la complejidad del problema de la palabra para dicho formalismo.
+Como se demostró en la sección \ref{sec:demg01d}, la gramática $G_{0,1,d}$ reconoce el lenguaje $L_{0,1,d}$, pero las RCG no son cerradas bajo transducción finita. Por tanto, cuando se aplica $T_{SAT}$ a $G_{0,1,d}$, el formalismo resultante no tiene que ser necesariamente una RCG. Se propone como problema abierto, analizar qué tipo de formalismo se obtiene al aplicar el transductor $T_{SAT}$ sobre $G_{0,1,d}$ y realizar un análisis de la complejidad del problema de la palabra para dicho formalismo.
 
 Otro aspecto a considerar sería investigar qué propiedades de las RCG limitan que estas no sean cerradas bajo transducción finita.  Una vez identificadas estas propiedades se puede tratar de construir un nuevo formalismo basado en las RCG que sea cerrado bajo transducción finita y comprobar si este formalismo es capaz de describir el lenguaje $L_{0,1,d}$.
 
