@@ -1,0 +1,318 @@
+\documentclass{beamer}
+
+% Paquetes adicionales (opcional)
+\usepackage[utf8]{inputenc} % Para caracteres especiales
+\usepackage[spanish]{babel} % Idioma español
+\usepackage{graphicx} % Para incluir imágenes
+
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+
+
+
+% Información del título
+\title{Una aproximación al lenguaje de todas las fórmulas booleanas satisfacibles}
+\author{Raudel Alejando Gómez Molina}
+\institute{Facultad de Matemática y Computación \\ Universidad de La Habana}
+\date{\today}
+
+\newcommand{\tutor}{MSc. Fernando Raul Rodriguez Flores} %
+% Comando personalizado para la información de la portada
+
+
+\begin{document}
+
+% Portada
+\begin{frame}
+    \titlepage
+    \vspace{1cm} % Espacio adicional
+    \begin{center}
+        Tutor: \tutor \\ % Muestra el nombre del tutor
+        \smallskip
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Objetivos del trabajo}
+
+    \begin{itemize}
+        \item Objetivo general: Definir y construir el lenguaje de todas las fórmulas booleanas satisfacibles
+        \item Objetivos específicos:
+              \begin{itemize}
+                  \item Estudiar el estado del arte
+                  \item Codificación de una fórmula booleana en una cadena
+                  \item Definir el lenguaje de todas las fórmulas booleanas satisfacibles $L_{S-SAT}$
+                  \item Construir $L_{S-SAT}$ utilizando una transducción finita
+                  \item Construir $L_{S-SAT}$ utilizando gramáticas de concatenación de rango y sin usar la transducción finita.
+                  \item Analizar las implicaciones computacionales
+              \end{itemize}
+    \end{itemize}
+
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Gramáticas de concatenación de rango (RCG)}
+
+    \begin{itemize}
+        \item Un rango es un intervalo de la cadena
+        \item A los no terminales se les llama predicados
+        \item Cada predicado tiene una secuencia de argumentos y recibe un vector de cadenas
+        \item Cada argumento está formado por variables y no terminales
+              $$A(aX,cbYZ)$$
+        \item Una sustitución de rango asocia una variable a un rango
+        \item A las producciones se les llama cláusulas
+              \[
+                  A(x_1, \ldots, x_k) \to B_1(y_{1,1}, \ldots, y_{1,m_1}) \ldots B_n(y_{n,1}, \ldots, y_{n,m_n}),
+              \]
+
+
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Gramáticas de concatenación de rango (RCG)}
+
+    \begin{itemize}
+
+
+        \item Cuando se deriva en las RCG
+              \begin{itemize}
+                  \item Se asocia cada cadena del vector que recibe el predicado izquierdo a un argumento
+                  \item Se hace la sustitución de rango para cada argumento obteniendo los valores de las variables
+                  \item Con los valores de las variables se construyen los vectores con los que se evalúa
+                        en los predicados derechos
+                  \item Se repite el mismo proceso en cada uno de los predicados derechos
+              \end{itemize}
+        \item Un predicado reconoce un vector si existe una secuencia de derivaciones y sustituciones de rango, tales
+              que se deriva en la cadena vacía
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Codificación de una fórmula booleana en una cadena}
+
+    \begin{itemize}
+        \item $a$: la variable está sin negar en la cláusula
+        \item $b$: la variable está negada en la cláusula
+        \item $c$: la variable no está en la cláusula
+        \item $d$: separador para delimitar una cláusula
+    \end{itemize}
+
+    \vspace{0.5cm}
+
+    \begin{center}
+        $(x_1)\wedge(x_1\vee \neg x_2 \vee x_3) \wedge (\neg x_2\vee x_3)$ $\Leftrightarrow$ $acc\mathbf{d}aba\mathbf{d}cba\mathbf{d}$
+    \end{center}
+
+    \vspace{0.5cm}
+
+    \begin{itemize}
+        \item $L_{FULL-SAT}$ lenguaje de todas las fórmulas booleanas en forma normal conjuntiva
+        \item $L_{SAT}$ lenguaje de todas las fórmulas booleanas satisfacibles
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Asignación de variables para una fórmula booleana}
+
+    \begin{itemize}
+        \item $L_{0,1,d}=\{(wd)^+\mid w\in\{0,1\}^+\}$
+        \item $r\in L_{0,1,d}$ representa una asignación de valores y $e\in L_{FULL-SAT}$ representa una fórmula booleana:
+              se debe cumplir que $|e|=|r|$ y que $e$ tenga la misma cantidad de caracteres $d$ que $r$
+        \item $r=101\mathbf{d}101\mathbf{d}101\mathbf{d}$ y $e=abc\mathbf{d}cbb\mathbf{d}acc\mathbf{d}$,
+              $$(x_1\vee\neg x_2)\wedge (\neg x_2 \vee \neg x_3)\wedge (x_1)$$
+              $$(true\vee\neg false)\wedge (\neg false \vee \neg true)\wedge (true)=true$$
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Transductor $T_{CLAUSE}$}
+
+    \begin{columns}
+        \begin{column}{0.38\textwidth}
+            Entrada: $r\in L_{0,1,d}$\\
+            Salida: $e\in L_{FULL-SAT}$
+            \vspace{1cm}
+
+            Estados de $T_{CLAUSE}$
+            \begin{itemize}
+                \item $q_0$: estado inicial
+                \item $q_p$: representa el estado positivo (estado de aceptación)
+                \item $q_n$: representa el estado negativo
+            \end{itemize}
+        \end{column}
+
+        \begin{column}{0.6\textwidth}
+
+            \begin{figure}[h]
+                \centering  \begin{otherlanguage}{english}
+                    \begin{tikzpicture}[shorten >=1pt, node distance=3cm, on grid, auto]
+
+                        % Nodos
+                        \node[state, initial] (q0)   {$q_0$};
+                        \node[state] (qn) [above right=of q0] {$q_n$};
+                        \node[state, accepting] (qp) [below right=of q0] {$q_p$};
+
+                        % Transiciones
+                        \path[->]
+                        (q0) edge [bend left] node {0/a,1/b} (qn)
+                        (q0) edge [bend right] node {1/a,0/b} (qp)
+                        (q0) edge [loop right] node {0/c,1/c} (q0)
+
+                        (qn) edge [bend left] node {1/a,0/b} (qp)
+                        (qn) edge [loop above] node {0/a,1/b,0/c,1/c} (qn)
+
+                        (qp) edge [loop below] node {1/a,0/b,0/a,1/b,0/c,1/c} (qp);
+
+                    \end{tikzpicture}
+                \end{otherlanguage}
+            \end{figure}
+        \end{column}
+
+    \end{columns}
+
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Transductor $T_{SAT}$}
+
+    \begin{figure}[h]
+        \scalebox{0.9}{
+            \begin{otherlanguage}{english}
+                \centering \begin{tikzpicture}[shorten >=1pt, node distance=3cm, on grid, auto]
+
+                    % Nodos
+                    \node[state, initial] (q01)   {$q_{0_1}$};
+                    \node[state] (qn1) [above right=of q01] {$q_{n_1}$};
+                    \node[state] (qp1) [below right=of q0] {$q_{p_1}$};
+                    \node[state, accepting] (q02) [right=6cm of q01] {$q_{0_2}$};
+                    \node[state] (qn2) [above right=of q02] {$q_{n_2}$};
+                    \node[state] (qp2) [below right=of q02] {$q_{p_2}$};
+
+
+                    % Transiciones
+                    \path[->]
+                    (q01) edge [bend left] node {0/a,1/b} (qn1)
+                    (q01) edge [bend right] node {1/a,0/b} (qp1)
+                    (q01) edge [loop right] node {0/c,1/c} (q01)
+
+                    (qn1) edge [bend left] node {1/a,0/b} (qp1)
+                    (qn1) edge [loop above] node {0/a,1/b,0/c,1/c} (qn1)
+
+                    (qp1) edge [loop below] node {1/a,0/b,0/a,1/b,0/c,1/c} (qp1)
+
+                    (q02) edge [bend left] node {0/a,1/b} (qn2)
+                    (q02) edge [bend right] node {1/a,0/b} (qp2)
+                    (q02) edge [loop right] node {0/c,1/c} (q02)
+
+                    (qn2) edge [bend left] node {1/a,0/b} (qp2)
+                    (qn2) edge [loop above] node {0/a,1/b,0/c,1/c} (qn2)
+
+                    (qp2) edge [loop below] node {1/a,0/b,0/a,1/b,0/c,1/c} (qp2)
+
+                    (qp1) edge [bend right] node {d/d} (q02)
+                    (qp2) edge [bend left=75] node {d/d} (q02);
+
+                \end{tikzpicture}
+            \end{otherlanguage}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{$L_{0,1,d}$ como lenguaje de concatenación de rango}
+
+    Producciones de la gramática $G_{0,1,d}$
+    \begin{itemize}
+        \item $S(X)\to A(X)$
+        \item $A(XdY)\to B(Y,X)C(X)$
+        \item $B(XdY,P)\to B(Y,P) C(X) Eq(X,P)$
+        \item $B(\varepsilon,P)\to \varepsilon$
+    \end{itemize}
+    \vspace{0.5cm}
+    \begin{itemize}
+        \item $C$ comprueba que la cadena está formada por 0 y 1
+        \item $Eq$ comprueba que 2 cadenas sean iguales
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Construcción de $L_{SAT}$ mediante una RCG}
+
+    Las producciones de la gramática $G_{S-SAT}$ se agrupan en 4 grupos (fases):
+
+    \begin{enumerate}
+        \item Derivación inicial de la gramática
+        \item Mientras se reconoce la cadena se generan todas las posibles interpretaciones
+              que hacen verdadera la primera cláusula
+        \item Comprobar que la interpretación generada en la primera fase satisface el resto de las cláusulas
+        \item Comprobar si la interpretación generada en la primera fase satisface una cláusula
+    \end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Producciones de $G_{S-SAT}$}
+
+    Producciones agrupadas por fases
+    \begin{enumerate}
+        \item $S(X)\to A(X)$
+        \item Compuesta por los predicados $A$, $P$ (estado positivo) y $N$ (estado negativo)
+              $$H(\_X,Y)\to J(X,Y\_)$$
+        \item $B(X_1dX_2,Y)\to C(X_1,Y) B(X_2,Y)$ y $B(\varepsilon,Y)\to\varepsilon$
+        \item Compuesta por los predicados $C$, $Cp$ (estado positivo) y $Cn$ estado negativo\\
+              $$H(\_X,\_Y)\to J(X,Y)$$
+
+    \end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Resultados derivados de $T_{SAT}$ y $G_{S-SAT}$}
+
+    Resultados derivados de $T_{SAT}$
+    \begin{itemize}
+        \item El problema de la palabra para todo formalismo que genere $L_{0,1,d}$ y sea cerrado bajo transducción finita, es NP-Duro
+        \item Se conjetura que todo formalismo que genere $L_{0,1,d}$ tiene tamaño $O(1)$ en su representación
+    \end{itemize}
+    \vspace{0.5cm}
+    Resultados derivados de $G_{S-SAT}$
+    \begin{itemize}
+        \item No es necesaria la transducción finita de $T_{SAT}$ para construir $L_{S-SAT}$
+        \item Las RCG reconocen todos los problemas de la clase NP-Completo en su representación como lenguaje formal
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Problemas propuestos}
+
+    Instancias polinomiales de SAT
+    \begin{itemize}
+        \item Encontrar una RCG que permita reconocer el 2-SAT y cuyo problema de la palabra sea polinomial
+
+    \end{itemize}
+    \vspace{0.5cm}
+    Nuevo formalismo basado en las RCG
+    \begin{itemize}
+        \item Investigar qué propiedades de las RCG limitan que estas no sean cerradas bajo transducción finita
+        \item Construir un nuevo formalismo basado en las RCG que sea cerrado bajo transducción finita
+        \item Comprobar si este formalismo es capaz de describir el lenguaje $L_{0,1,d}$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \titlepage
+    \vspace{1cm} % Espacio adicional
+    \begin{center}
+        Tutor: \tutor\\
+        \vspace{1cm}
+        {\LARGE Muchas gracias}
+        \smallskip
+    \end{center}
+\end{frame}
+
+
+\end{document}
