@@ -129,7 +129,7 @@
     \frametitle{Estados de una variable en una cláusula}
     
     \begin{Large}    
-        $$\textcolor{blue}{x_1}\vee \textcolor{gray}{x_2}\vee \neg \textcolor{red}{x_3}$$
+        $$\textcolor{blue}{x_1}\vee \textcolor{gray}{x_2}\vee \neg \textcolor{blue}{x_3}$$
     \end{Large}
     
     \pause
@@ -139,7 +139,7 @@
               \pause
         \item  $\textcolor{gray}{x_2}$ no está en la cláusula
               \pause
-        \item $\textcolor{red}{x_3}$ está negada en la cláusula
+        \item $\textcolor{blue}{x_3}$ está negada en la cláusula
     \end{itemize}
 \end{frame}
 
@@ -158,7 +158,7 @@
     
     \begin{Large}
 
-        $$\textcolor{blue}{x_1}\vee \textcolor{gray}{x_2}\vee \neg \textcolor{red}{x_3}\ \Leftrightarrow\ acb$$
+        $$\textcolor{blue}{x_1}\vee \textcolor{gray}{x_2}\vee \neg \textcolor{blue}{x_3}$$$$acb$$
         
     \end{Large}
     
@@ -178,7 +178,31 @@
     \vspace{1cm}
     
     \begin{Large}
-        $$(x_1)\wedge(x_1\vee \neg x_2 \vee x_3) \wedge (\neg x_2\vee x_3)\ \Leftrightarrow\ acc\mathbf{d}aba\mathbf{d}cba\mathbf{d}$$
+        \begin{columns}
+            \begin{column}{1cm}
+                $$x_1$$
+                $$acc\mathbf{d}$$
+            \end{column}
+            \pause
+            \begin{column}{0.2cm}
+                $$\wedge$$
+                $$\ $$
+            \end{column}
+            \begin{column}{3cm}
+                $$x_1\vee \neg x_2 \vee x_3$$
+                $$aba\mathbf{d}$$
+            \end{column}
+            \pause
+            \begin{column}{0.2cm}
+                $$\wedge$$
+                $$\ $$
+            \end{column}
+            \begin{column}{2cm}
+                $$\neg x_2\vee x_3$$
+                $$cba\mathbf{d}$$
+            \end{column}
+        \end{columns}
+        
     \end{Large}
 \end{frame}
 
@@ -198,15 +222,17 @@
     \frametitle{Asignar valores a una cláusula mediante una cadena binaria}
     
     \begin{itemize}
-        \item Se tiene una cadena $q$ que representa una cláusula
+        \item Se tiene una cadena $q=acb$ que representa una cláusula
               \pause
-        \item Se tiene una cadena binaria $w$ que representa una asignación
+        \item Se tiene una cadena binaria $w=101$ que representa una asignación
               \pause
         \item Se debe cumplir que $|q|=|w|$
               \pause
-        \item Si el $i$-ésimo caracter de $q$ es 1, $x_i=true$
+        \item Si el $i$-ésimo caracter de $q$ es 1, $x_i=true$\\
+              $x_1=true$ y $x_3=true$
               \pause
-        \item Si el $i$-ésimo caracter de $q$ es 0, $x_i=false$
+        \item Si el $i$-ésimo caracter de $q$ es 0, $x_i=false$\\
+              $x_2=false$
     \end{itemize}
     
 \end{frame}
@@ -655,21 +681,67 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Reconocer un vector y Problema de la palabra}
+    \frametitle{Derivación en las RCG}
+    
+    \begin{itemize}
+        \item Se tiene la cláusula $$A(XYZ,W)\to B(X)C(XY,Z)D(W)$$
+              \pause
+        \item $A$ recibe el vector $[abc,d]$
+              \pause
+        \item La sustitución de rango asocia los valores:\\
+              $X=ab$, $Y=\varepsilon$, $Z=c$ y $W=d$
+              \pause
+        \item En la parte derecha se evalúa con los vectores:\\
+              $[ab]$, $[\varepsilon, cab]$, $[d]$
+              \pause
+    \end{itemize}
+    
+    $$A(abc,d)\to B(ab)C(\varepsilon,cab)D(d)$$
+    
+    
+\end{frame}
+
+\begin{frame}
+    \frametitle{Reconocer un vector}
     
     \begin{itemize}
         \item Si existe una secuencia de derivaciones y sustituciones de rango
               \pause
         \item Tales que desde el predicado se deriva en la cadena vacía
     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Reconocer un vector}
+    
+    \begin{enumerate}
+        \item $A(XYZ,W)\to B(X)C(XY,Z)D(W)$
+        \item $B(ab)\to \varepsilon$
+        \item $C(\varepsilon,cab)\to \varepsilon$
+        \item $D(d)\to \varepsilon$
+    \end{enumerate}
+    
+    \pause
+    
     \vspace{1cm}
+    
+    \begin{itemize}
+        \item $A$ reconoce el vector $[abc,d]$
+              \pause
+        \item $A(abc,d)$ deriva como $B(ab)C(\varepsilon,cab)D(d)$
+              \pause
+        \item $B(ab)$, $C(\varepsilon,cab)$ y $D(d)$ derivan en la cadena vacía
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Problema de la palabra}
     \begin{itemize}
         \item Para la mayoría de las RCG el problema de la palabra es polinomial
               \pause
         \item RCG ambiguas cuyo problema de la palabra no es polinomial
     \end{itemize}
 \end{frame}
-
 
 \section{Construcción $L_{S-SAT}$ utilizando una RCG}
 \begin{frame}
@@ -690,6 +762,18 @@
         \item $C$ comprueba que la cadena está formada por 0 y 1
               \pause
         \item $Eq$ comprueba que 2 cadenas sean iguales
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{$L_{0,1,d}$ como lenguaje de concatenación de rango}
+    
+    \begin{itemize}
+        \item Cuando se le aplica $T_{SAT}$ a $G_{0,1,d}$
+              \pause
+        \item El formalismo resultante no es necesariamente una RCG
+              \pause
+        \item Porque las RCG no son cerradas bajo transducción finita
     \end{itemize}
 \end{frame}
 
@@ -730,15 +814,24 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Resultados derivados de $G_{S-SAT}$}
+    \frametitle{Construcción de $L_{S-SAT}$ mediante $G_{S-SAT}$}
     
     
     \begin{itemize}
         \item $L_{S-SAT}$ = $L_{G_{S-SAT}}$
               \pause
         \item Problema de la palabra $G_{S-SAT}$ no es polinomial
-              \pause
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Resultados derivados de $G_{S-SAT}$}
+    
+    
+    \begin{itemize}
         \item No es necesaria la transducción finita de $T_{SAT}$ para construir $L_{S-SAT}$
+              \pause
+        \item Las RCG reconocen todos los problemas de la clase P
               \pause
         \item Las RCG reconocen todos los problemas de la clase NP
     \end{itemize}
