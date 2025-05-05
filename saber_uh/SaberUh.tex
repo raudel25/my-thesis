@@ -49,6 +49,78 @@ todos los problemas de la clase NP y que el problema de la palabra para estas gr
 
 \section{Introducción}
 
+El problema de satisfacibilidad booleana (\textit{SAT}) \cite{authomataTheory} es uno de los problemas más estudiados en
+la teoría de la computación y la lógica \cite{biere2021handbook}.  Consiste en determinar si existe una asignación
+de valores verdaderos o falsos que satisfaga una fórmula booleana dada, compuesta por variables y operadores
+lógicos como conjunciones, disyunciones y negaciones. SAT surge en 1971 como el primer problema NP-Completo
+demostrado por Stephen Cook \cite{Cook1971}, lo que significa que, en el peor de los casos, su resolución
+requiere tiempo exponencial respecto al tamaño de la entrada, pero también que muchos otros problemas pueden
+reducirse a él. Esto implica un especial interés por parte de la comunidad científica en la búsqueda de
+métodos eficientes para la solución del SAT \cite{biere2021handbook}.
+
+La teoría de lenguajes es una rama fundamental de la Ciencia de la Computación y la matemática que se enfoca
+en el estudio de los lenguajes formales \cite{authomataTheory}. Estos lenguajes, definidos a través de
+gramáticas, autómatas y expresiones regulares, permiten modelar y analizar la estructura de los lenguajes
+naturales y artificiales. Su aplicación es amplia y abarca desde el diseño de compiladores y procesadores de
+lenguaje natural hasta la verificación de sistemas y la teoría de la computabilidad \cite{authomataTheory}.
+
+En este trabajo se vinculan las dos ramas de la computación descritas anteriormente, presentando
+un enfoque para resolver el SAT utilizando formalismos de teoría de lenguajes. Dicho enfoque resulta un
+tema no evidenciado en la literatura consultada y permite demostrar que una serie de problemas
+relacionados con la teoría de lenguajes pertenecen a la clase NP-Completo.
+
+En estudios anteriores realizados en la facultad de Matemática y Computación de la Universidad de La Habana \cite{aCFSAT,aSRCSAT},
+se propone resolver variantes específicas del SAT utilizando el problema del vacío de varios tipos de
+gramáticas. En cambio, en este trabajo se propone resolver variantes del SAT mediante el problema de la
+palabra.
+
+Para ello se propone una codificación de una fórmula booleana cualquiera en forma normal conjuntiva usando
+cadenas sobre el alfabeto $\{a,b,c,d\}$ y usando dicha codificación se define el lenguaje de todas las fórmulas
+booleanas satisfacibles. Entonces si se desea determinar si una fórmula booleana es satisfacible
+solo hay que determinar si la cadena asociada a la fórmula booleana pertenece o no a este lenguaje.
+
+Las gramáticas de concatenación de rango (RCG) \cite{mainRCGBib} son un formalismo de
+gramáticas desarrollado en 1988 como una propuesta de Pierre Boullier, su objetivo principal era
+proporcionar un modelo más general y expresivo que las gramáticas libres del contexto para describir lenguajes.
+
+Además de definir el lenguaje de todas las fórmulas booleanas satisfacibles, se propone una gramática de concatenación de rango para construirlo.
+
+El objetivo general de este trabajo es definir y construir el lenguaje de todas las fórmulas booleanas satisfacibles, empleando gramáticas de concatenación de rango.
+
+Para cumplir el objetivo general se definen los siguientes objetivos específicos:
+
+\begin{itemize}
+    \item Estudiar el estado del arte referido a los formalismos de teoría de lenguajes y el SAT.
+    \item Establecer una representación de cualquier SAT como una cadena que pueda ser interpretada por un formalismo de la teoría de lenguajes.
+    \item Definir el lenguaje de todas las fórmulas booleanas satisfacibles.
+    \item Construir el lenguaje de todas las fórmulas booleanas satisfacibles  utilizando gramáticas de concatenación de rango.
+    \item Analizar las implicaciones computacionales.
+\end{itemize}
+
+Las implicaciones computacionales del último punto son: que para todo problema en la clase NP, existe una gramática
+de concatenación de rango que lo reconoce como lenguaje formal, pero el algoritmo de reconocimiento es no
+polinomial, lo cual a efectos prácticos no constituye una mejora para la solución de los problemas.
+
+Este trabajo se ha estructurado en 4 secciones: en las 2 primeras se presentan los principales conceptos y definiciones
+relacionados con las gramáticas de concatenación de rango y se define una codificación de una fórmula booleana en una cadena.
+En las secciones restantes se presenta una gramática de concatenación de rango que permite reconocer fórmulas booleanas satisfacibles
+y se analiza el empleo de esta gramática en las instancias polinomiales del SAT.
+
+En la sección \ref{sec:RCG} se presentan las gramáticas de concatenación de rango: las principales definiciones,
+su proceso de derivación y un análisis de la complejidad del algoritmo de reconocimiento.
+
+En la sección \ref{sec:codsat} se muestra cómo codificar una fórmula booleana mediante una cadena de símbolos. Posteriormente,
+se define el lenguaje de todas las fórmulas booleanas satisfacibles utilizando la codificación anterior.
+
+En la sección \ref{sec:LSATRCG} se construye una gramática de concatenación
+de rango que reconoce este lenguaje. Por otro lado, se demuestra que las gramáticas de concatenación de rango
+reconocen todos los problemas de la clase NP-Completo.
+
+En la sección \ref{sec:pSATRCG} se analizan un enfoque para solucionar el problema 2-SAT, que es una instancia
+polinomial del SAT utilizando la gramática que se construye en la sección anterior. Además, se proponen
+problemas que se derivan del análisis anterior.
+
+En la próxima sección se presentan los principales conceptos y definiciones de las gramáticas de concatenación de rango.
 
 \section{Gramáticas de Concatenación de Rango}
 \label{sec:RCG}
@@ -245,6 +317,9 @@ En la próxima sección se muestra como codificar una fórmula booleana como una
 
 \section{Codificación de una fórmula booleana a una cadena}
 \label{sec:codsat}
+
+Toda fórmula booleana tiene una fórmula booleana en forma normal conjuntiva (\textit{CNF}) equivalente, este trabajo se utiliza esta propiedad para definir
+una codificación de una fórmula booleana en una cadena.
 
 Una fórmula booleana $F$, con $v$ variables en CNF tiene la siguiente estructura:
 $$F=X_1 \wedge X_2 \wedge \ldots \wedge X_n$$
@@ -681,9 +756,35 @@ Si se observa el enfoque seguido en la construcción de $G_{S-SAT}$, en la repre
 Finalmente, la gramática que reconoce los problemas 2-SAT satisfacibles sería:
 $$G_{S-2-SAT}=G_{S-SAT}\cap G_{2-SAT}.$$
 
-\section{Problemas propuestos}
+\subsection{Problemas propuestos}
 
 Como las RCG reconocen todos los problemas de la clase P, entonces es posible diseñar una RCG para el 2-SAT y para cada instancia polinomial del SAT, donde el problema de la palabra sea polinomial para dicha gramática.  Lo anterior queda propuesto como un problema abierto, porque tiene que existir una RCG que reconozca el 2-SAT en tiempo polinomial. La estructura de esta gramática puede conducir a encontrar nuevas instancias polinomiales del SAT.
+
+\section{Conclusiones y Recomendaciones}
+
+En este trabajo se presentó una estrategia para resolver el SAT usando teoría de lenguajes que se basa en
+codificar una fórmula booleana mediante una cadena sobre el alfabeto $\{a,b,d,c\}$ y definir el lenguaje de
+todas las fórmulas booleanas satisfacibles $L_{S-SAT}$. A partir de este lenguaje, para determinar si una
+fórmula booleana es satisfacible solo es necesario verificar si la cadena asociada a dicha fórmula pertenece
+a $L_{S-SAT}$.
+
+En la sección \ref{sec:LSATRCG}, se construyó una RCG que reconoce el lenguaje $L_{S-SAT}$. La gramática que se construyó tiene el
+problema de la palabra no polinomial, y constituye un ejemplo de una RCG donde el algoritmo de reconocimiento
+es no polinomial.  Además, al obtener una RCG que reconoce $L_{S-SAT}$, se demostró que las
+RCG reconocen todos los problemas de la clase NP.
+
+La estrategia presentada constituye una vía diferente para resolver el SAT, y aunque el problema de
+la palabra para el formalismo que se construyó es no polinomial, este acercamiento puede contribuir a nuevas
+líneas de investigación para la búsqueda de algoritmos eficientes que permitan resolver el SAT.
+
+A partir del trabajo realizado se proponen como temas para investigaciones futuras los
+siguientes:
+
+\begin{itemize}
+    \item Construir una RCG que reconozca fórmulas booleanas satisfacibles, donde cada cláusula tiene a lo sumo dos literales (2-SAT), y que tenga el problema de la palabra polinomial.
+    \item Buscar otro formalismo que genere o reconozca el lenguaje $L_{S-SAT}$ y analizar la complejidad del problema de la palabra para este formalismo.
+    \item Analizar si las RCG reconocen otro tipo de lenguajes que no pertenezcan a la clase NP.
+\end{itemize}
 
 \begin{thebibliography}{99}
 
@@ -696,26 +797,6 @@ Como las RCG reconocen todos los problemas de la clase P, entonces es posible di
     Boullier, Pierre.
     \textit{A Cubic Time Extension of Context-Free Grammars}.
     Research Report RR-3611, INRIA, 1999.
-
-    \bibitem{propertiesRCGBib1}
-    Eberhard Bertsch and Mark-Jan Nederhof
-    \textit{On the Complexity of Some Extensions of RCG Parsing}.
-    International Workshop/Conference on Parsing Technologies, 2001.
-
-    \bibitem{propertiesRCGBib2}
-    Boullier, Pierre.
-    \textit{Counting with range concatenation grammar}.
-    Theor. Comput. Sci., 2003.
-
-    \bibitem{simpleMatrixLanguages}
-    Ibarra, Oscar H.
-    \textit{Simple matrix languages}.
-    \textit{Information and Control}, Vol. 17, No. 4, pp. 359-394, 1970.
-
-    \bibitem{globalIndexLanguages}
-    Castaño, José M.
-    \textit{Global Index Languages}.
-    Ph.D. Thesis, The Faculty of the Graduate School of Arts and Sciences, Brandeis University, 2004.
 
     \bibitem{authomataTheory}
     Hopcroft, John E., Motwani, Rajeev, y Ullman, Jeffrey D.
@@ -732,15 +813,22 @@ Como las RCG reconocen todos los problemas de la clase P, entonces es posible di
     \textit{Problema de la Satisfacibilidad Booleana de Concatenación de Rango Simple}.
     Facultad de Matemática y Computación, Universidad de La Habana, 2016.
 
-    \bibitem{aSMSAT}
-    Rodríguez Salgado, José Jorge.
-    \textit{Gramáticas Matriciales Simples. Primera aproximación para una solución al problema SAT}.
-    Facultad de Matemática y Computación, Universidad de La Habana, 2019.
-
     \bibitem{boullier1999chinese}
     Boullier, Pierre.
     \textit{Chinese Numbers, MIX, Scrambling, and Range Concatenation Grammars}.
     Proceedings of the Ninth Conference of the European Chapter of the Association for Computational Linguistics, pages 53--60. Association for Computational Linguistics, 1999.
+
+    \bibitem{biere2021handbook}
+    Biere, A. and Heule, M. and van Maaren, H.
+    \textit{Handbook of Satisfiability: Second Edition}.
+    Frontiers in Artificial Intelligence and Applications, pages 3--55. IOS Press, 2021.
+    ISBN 9781643681610.
+
+    \bibitem{Cook1971}
+    Cook, Stephen A.
+    \textit{The Complexity of Theorem-Proving Procedures}.
+    Proceedings of the Third Annual ACM Symposium on Theory of Computing (STOC), pages 151--158. ACM, 1971.
+    DOI: 10.1145/800157.805047.
 
 \end{thebibliography}
 
