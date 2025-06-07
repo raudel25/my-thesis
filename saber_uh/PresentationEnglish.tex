@@ -1,0 +1,775 @@
+\documentclass{beamer}
+
+% Additional packages (optional)
+\usepackage[utf8]{inputenc} % For special characters
+\usepackage[english]{babel} % English language
+\usepackage{graphicx} % For images
+
+\usetheme{Madrid} % You can try other themes like Warsaw, AnnArbor, etc.
+
+\usepackage{graphicx} % Allows including images
+\usepackage{hyperref} % Clickable links
+\usepackage{tikz} % For diagrams
+\usepackage{ragged2e}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usetikzlibrary{shapes.geometric, arrows}
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!20]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!20]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\usepackage{cancel}
+
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+
+% \AtBeginSection[]{
+%     \begin{frame}{Contents}
+%         \tableofcontents[currentsection]
+%     \end{frame}
+% }
+
+% Title information
+\title{An Approach to the Language of All Satisfiable Boolean Formulas Using Range Concatenation Grammars}
+\author{Raudel Alejandro Gómez Molina}
+\institute{Faculty of Mathematics and Computer Science \\ University of Havana}
+\date{\today}
+
+\newcommand{\tutor}{MSc. Fernando Raul Rodriguez Flores} %
+% Custom command for cover information
+
+\begin{document}
+
+% Cover page
+\begin{frame}
+    \titlepage
+    \vspace{1cm} % Additional space
+    \begin{center}
+        Advisor: \tutor \\ % Shows the advisor's name
+        \smallskip
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Language Theory (Concepts)}
+
+    \begin{block}{Alphabet}
+        An alphabet is a finite set of symbols
+        $$\Sigma=\{0,1\}$$
+    \end{block}
+
+    \pause
+
+    \begin{block}{String}
+        A string is a finite sequence of symbols from the alphabet
+        $$w=0001111$$
+    \end{block}
+
+    \pause
+
+    \begin{block}{Language}
+        A language is a finite set of strings
+        $$L=\{0^n1^m\mid n,m\in \mathbb{N}\}$$
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Language Theory (Problems)}
+
+    \begin{block}{Word Problem}
+        \begin{itemize}
+            \item Determine if a string belongs to a language. Does $w$ belong to $L$?
+                  \pause
+            \item $10001\in \{1w\mid w\in\{0,1\}^*\}$
+                  \pause
+            \item $00001\notin \{1w\mid w\in\{0,1\}^*\}$
+        \end{itemize}
+    \end{block}
+
+    \pause
+
+    \begin{block}{Problem in Computer Science}
+        \begin{itemize}
+            \item Every problem can be reduced to a word problem
+                  \pause
+            \item Every problem can be encoded as a formal language
+                  \pause
+            \item Determine if two numbers are coprime
+                  \pause
+            \item Determine if an array is sorted
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Problem Classes}
+
+    \begin{itemize}
+        \item There are problems for which no efficient solution is known
+              \pause
+        \item Verifying a solution is efficient (class NP)
+              \pause
+        \item SAT was the first problem proven to be NP-Complete
+              \pause
+        \item It belongs to the NP class
+              \pause
+        \item Can be reduced to any problem in NP
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Boolean Satisfiability Problem (SAT)}
+
+    \begin{itemize}
+        \item It consists of determining if a Boolean formula is satisfiable
+              \begin{Large}
+                  $$x_1\vee x_2 \wedge \neg x_1 \wedge x_3$$
+              \end{Large}
+              \pause
+        \item Polynomial instances exist: 2-SAT, Horn-SAT, and XOR-SAT
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Presentation Structure}
+
+    Define and construct the language of all satisfiable Boolean formulas
+
+    \pause
+
+    \begin{block}{Define $L_{S-SAT}$}
+        \begin{itemize}
+            \item Encode a Boolean formula
+            \item Define $L_{S-SAT}$
+        \end{itemize}
+    \end{block}
+
+    \pause
+
+    \begin{block}{Construct $L_{S-SAT}$ using a Range Concatenation Grammar}
+        \begin{itemize}
+            \item Introduce Range Concatenation Grammars (RCG)
+            \item RCG that recognizes $L_{S-SAT}$
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Presentation Structure}
+
+    Define and construct the language of all satisfiable Boolean formulas
+
+    \begin{block}{Define $L_{S-SAT}$}
+        \begin{itemize}
+            \item Encode a Boolean formula
+            \item Define $L_{S-SAT}$
+        \end{itemize}
+    \end{block}
+
+    \setbeamercolor{block title}{fg=white, bg=gray!50} % Block title color (50% gray)
+    \setbeamercolor{block body}{bg=gray!20}
+
+    \begin{block}{Construct $L_{S-SAT}$ using a Range Concatenation Grammar}
+        \begin{itemize}
+            \item Introduce Range Concatenation Grammars (RCG)
+            \item RCG that recognizes $L_{S-SAT}$
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\section{Encoding a Boolean Formula into a String}
+
+\begin{frame}
+    \frametitle{Conjunctive Normal Form (CNF)}
+
+    \begin{itemize}
+        \item Every Boolean formula has an equivalent CNF formula
+              \pause
+        \item We assume Boolean formulas are in CNF
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Variable States in a Clause}
+
+    \begin{Large}
+        $$(x_1\vee \neg x_3)$$
+    \end{Large}
+
+    \pause
+    \vspace{1cm}
+    \begin{itemize}
+        \item<1-> $x_1$ appears unnegated in the clause
+        \item<3-> $x_2$ does not appear in the clause
+        \item<2-> $x_3$ appears negated in the clause
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Encoding a Clause into a String}
+
+    \begin{itemize}
+        \item $a$: the variable appears unnegated in the clause
+              \pause
+        \item $b$: the variable appears negated in the clause
+              \pause
+        \item $c$: the variable does not appear in the clause
+    \end{itemize}
+
+    \pause
+
+    \begin{Large}
+        $$x_1\vee \neg x_3$$
+
+        \pause
+
+        \begin{columns}
+            \begin{column}{1cm}
+                $$({x_1}$$$$a$$
+            \end{column}
+            \pause
+            \begin{column}{1cm}
+                $$\cancel{\vee}$$$$\ $$
+            \end{column}
+            \begin{column}{1cm}
+                $$\cancel{x_2}$$$$c$$
+            \end{column}
+            \pause
+            \begin{column}{1cm}
+                $$\vee$$$$\ $$
+            \end{column}
+            \begin{column}{1cm}
+                $$\neg{x_3})$$$$b$$
+            \end{column}
+        \end{columns}
+
+        \pause
+
+        $$acb$$
+    \end{Large}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Encoding a Boolean Formula into a String}
+
+    \begin{itemize}
+        \item Obtain the encoding of each clause
+              \pause
+        \item Set a separator to delimit clauses ($d$)
+              \pause
+        \item Concatenate each clause followed by the separator $d$
+    \end{itemize}
+
+    \pause
+
+    \begin{Large}
+        $$(x_1)\wedge (x_1\vee \neg x_2 \vee x_3)\wedge (\neg x_2\vee x_3)$$
+
+        \pause
+
+        \begin{columns}
+            \begin{column}{1cm}
+                $$(x_1)$$
+                $$acc\mathbf{d}$$
+            \end{column}
+            \pause
+            \begin{column}{0.2cm}
+                $$\wedge$$
+                $$\ $$
+            \end{column}
+            \begin{column}{3cm}
+                $$(x_1\vee \neg x_2 \vee x_3)$$
+                $$aba\mathbf{d}$$
+            \end{column}
+            \pause
+            \begin{column}{0.2cm}
+                $$\wedge$$
+                $$\ $$
+            \end{column}
+            \begin{column}{2cm}
+                $$(\neg x_2\vee x_3)$$
+                $$cba\mathbf{d}$$
+            \end{column}
+        \end{columns}
+        \pause
+
+        $$acc\mathbf{d}aba\mathbf{d}cba\mathbf{d}$$
+    \end{Large}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Language of All Satisfiable Boolean Formulas}
+
+    \begin{itemize}
+        \item $L_{FULL-SAT}$: language of all Boolean formulas in CNF
+              \pause
+        \item $L_{S-SAT}$: language of all satisfiable Boolean formulas
+              \pause
+              \begin{Large}
+                  $$x_1\wedge x_2 \wedge x_3$$
+                  $$acc\mathbf{d}cac\mathbf{d}cca\mathbf{d}\in L_{S-SAT}$$
+              \end{Large}
+    \end{itemize}
+\end{frame}
+
+\section{Range Concatenation Grammars (RCG)}
+
+\begin{frame}
+    \frametitle{Presentation Structure}
+
+    Define and construct the language of all satisfiable Boolean formulas
+
+    \setbeamercolor{block title}{fg=white, bg=gray!50} % Block title color (50% gray)
+    \setbeamercolor{block body}{bg=gray!20}
+
+    \begin{block}{Define $L_{S-SAT}$}
+        \begin{itemize}
+            \item Encode a Boolean formula
+            \item Define $L_{S-SAT}$
+        \end{itemize}
+    \end{block}
+
+    \setbeamercolor{block title}{fg=white, bg=structure}
+    \setbeamercolor{block body}{bg=structure!20}
+
+    \begin{block}{Construct $L_{S-SAT}$ using a Range Concatenation Grammar}
+        \begin{itemize}
+            \item Introduce Range Concatenation Grammars (RCG)
+            \item RCG that recognizes $L_{S-SAT}$
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Range Concatenation Grammars (RCG)}
+
+    \begin{itemize}
+        \item Developed in 1988 by Pierre Boullier
+              \pause
+        \item More general and expressive model than context-free grammars
+              \pause
+        \item Analyze properties of natural language
+              \pause
+        \item Chinese numbers and random order of German words
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Range Concatenation Grammars (RCG)}
+
+    \begin{itemize}
+        \item A range is an interval of the string
+              $$a\textcolor{red}{bc}d$$
+              \pause
+        \item Non-terminals are called predicates
+              \pause
+        \item Each predicate has a sequence of arguments
+              \pause
+        \item Each argument consists of variables and terminals
+              $$A(aX,cbYZ)$$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Range Substitution}
+
+    \begin{itemize}
+        \item<1-> Each predicate receives a vector of strings
+        \item<2-> Each argument is assigned a string
+        \item<3-> The predicate $A(aX,cbYZ)$ receives the vector $[aaa,cbff]$
+            \only<3>{\begin{Large}
+                    $$A(aX,cbYZ)$$
+                    $$A(aaa,cbff)$$
+                \end{Large}}
+            \only<4>{
+                \begin{Large}
+                    $$A(\textcolor{red}{aX},cbYZ)$$
+                    $$A(\textcolor{red}{aaa},cbff)$$
+                \end{Large}}
+            \only<5>{
+                \begin{Large}
+                    $$A(aX,\textcolor{red}{cbYZ})$$
+                    $$A(aaa,\textcolor{red}{cbff})$$
+                \end{Large}}
+            \only<6>{
+                \begin{Large}
+                    $$A(\textcolor{green}{a}X,cbYZ)$$
+                    $$A(\textcolor{green}{a}aa,cbff)$$
+                \end{Large}}
+            \only<7>{
+                \begin{Large}
+                    $$A(aX,\textcolor{green}{c}bYZ)$$
+                    $$A(aaa,\textcolor{green}{c}bff)$$
+                \end{Large}}
+            \only<8>{
+                \begin{Large}
+                    $$A(aX,c\textcolor{green}{b}YZ)$$
+                    $$A(aaa,c\textcolor{green}{b}ff)$$
+                \end{Large}}
+            \only<9>{
+                \begin{Large}
+                    $$A(a\textcolor{red}{X},cbYZ)$$
+                    $$A(a\textcolor{red}{aa},cbff)$$
+                    \begin{center} $X=aa$\end{center}
+                \end{Large}}
+            \only<10>{
+                \begin{Large}
+                    $$A(aX,cb\textcolor{red}{Y}Z)$$
+                    $$A(aaa,cb\textcolor{red}{ff})$$
+                    \begin{center} $X=aa$, $Y=ff$\end{center}
+                \end{Large}}
+            \only<11>{
+                \begin{Large}
+                    $$A(aX,cbY\textcolor{red}{Z})$$
+                    $$A(aaa,cbff)$$
+                    \begin{center} $X=aa$, $Y=ff$, $Z=\varepsilon$\end{center}
+                \end{Large}}
+            \only<12>{
+                \begin{Large}
+                    $$A(aX,cb\textcolor{red}{Y}Z)$$
+                    $$A(aaa,cb\textcolor{red}{f}f)$$
+                    \begin{center} $X=aa$, $Y=f$\end{center}
+                \end{Large}}
+            \only<13>{
+                \begin{Large}
+                    $$A(aX,cbY\textcolor{red}{Z})$$
+                    $$A(aaa,cbf\textcolor{red}{f})$$
+                    \begin{center} $X=aa$, $Y=f$, $Z=f$\end{center}
+                \end{Large}}
+            \only<14>{\begin{Large}
+                    $$A(aX,cb\textcolor{red}{Y}Z)$$
+                    $$A(aaa,cbff)$$
+                    \begin{center} $X=aa$, $Y=\varepsilon$\end{center}
+                \end{Large}}
+            \only<15>{\begin{Large}
+                    $$A(aX,cbY\textcolor{red}{Z})$$
+                    $$A(aaa,cb\textcolor{red}{ff})$$
+                    \begin{center} $X=aa$, $Y=\varepsilon$, $Z=ff$\end{center}
+                \end{Large}}
+            \only<16>{\begin{Large}
+                    $$A(aX,cbYZ)$$
+                    $$A(aaa,cbff)$$
+                \end{Large}}
+        \item<16-> Range substitution
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{RCG Productions}
+
+    \begin{itemize}
+        \item Productions are called clauses
+              \[
+                  A(x_1, \ldots, x_k) \to B_1(y_{1,1}, \ldots, y_{1,m_1}) \ldots B_n(y_{n,1}, \ldots, y_{n,m_n})
+              \]
+              \pause
+        \item $A(aX,cbYZ)\to B(X,Y,Z)$
+              \pause
+        \item $A$ receives the vector $[aaa,cbff]$
+              \pause
+        \item $X=aa$, $Y=f$, and $Z=f$
+              \pause
+        \item The vector $[aa,f,f]$ is constructed
+              \pause
+        \item Evaluated in $B$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{RCG Productions}
+
+    \begin{itemize}
+        \item Another type of production:
+              $$A(x_1, \ldots, x_k) \to \varepsilon$$
+              \pause
+        \item $B(aa,f,f)\to \varepsilon$
+              \pause
+        \item A predicate recognizes a vector
+              \pause
+        \item If there exists a sequence of derivations and range substitutions
+              \pause
+        \item That derives the empty string
+              \pause
+        \item $B$ recognizes the vector $[aa,f,f]$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{RCG Properties}
+
+    \begin{itemize}
+        \item RCGs do not generate; instead, they recognize strings
+              \pause
+        \item For most RCGs, the word problem is polynomial
+              \pause
+        \item Ambiguous RCGs whose word problem is not polynomial
+              \pause
+        \item RCGs recognize all problems in class P
+    \end{itemize}
+\end{frame}
+
+\section{Constructing $L_{S-SAT}$ Using an RCG}
+
+\begin{frame}
+    \frametitle{Constructing $L_{SAT}$ Using an RCG}
+
+    The productions of the grammar $G_{S-SAT}$ are grouped into 4 phases:
+
+    \begin{enumerate}
+        \item Initial derivation of the grammar
+              \pause
+        \item All possible interpretations (first clause is true)
+              \pause
+        \item The generated interpretation satisfies the remaining clauses
+              \pause
+        \item The generated interpretation satisfies a clause
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Productions of $G_{S-SAT}$}
+
+    \begin{block}{First phase}
+        $S(X)\to A(X)$
+        \pause
+        $$S(abcd)\to A(abcd)$$
+    \end{block}
+
+    \pause
+    \begin{block}{Second phase}
+        Predicates $A$, $P$ (positive state), and $N$ (negative state)
+        \begin{columns}
+            \begin{column}{0.45\textwidth}
+                \begin{itemize}
+                    \item $A(aX)\to P(X,1)$
+                          \pause
+                    \item $A(aX)\to N(X,0)$
+                          \pause
+                    \item $N(bX,Y)\to P(X,Y0)$
+                \end{itemize}
+            \end{column}
+            \pause
+            \begin{column}{0.45\textwidth}
+                \begin{itemize}
+                    \item $N(bX,Y)\to N(X,Y1)$
+                          \pause
+                    \item $P(\_X,Y)\to P(X,Y\_)$
+                          \pause
+                    \item $P(dX,Y)\to B(X,Y)$
+                \end{itemize}
+            \end{column}
+        \end{columns}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Productions of $G_{S-SAT}$}
+
+    \begin{block}{Third phase}
+        \begin{itemize}
+            \item $B(X_1dX_2,Y)\to C(X_1,Y) B(X_2,Y)$
+                  \pause
+            \item $B(\varepsilon,Y)\to\varepsilon$
+                  \pause
+                  $$B(abcdaacd,100)\to C(abc,100) B(aacd,100)$$
+        \end{itemize}
+    \end{block}
+    \pause
+    \begin{block}{Fourth phase}
+        Predicates $C$, $Cp$ (positive state), and $Cn$ (negative state)\\
+        \begin{columns}
+            \begin{column}{0.45\textwidth}
+                \begin{itemize}
+                    \item $C(X,Y)\to Cn(X,Y)$
+                          \pause
+                    \item $Cn(aX,1Y)\to Cp(X,Y)$
+                          \pause
+                    \item $Cn(bX,1Y)\to Cn(X,Y)$
+                \end{itemize}
+            \end{column}
+            \pause
+            \begin{column}{0.45\textwidth}
+                \begin{itemize}
+                    \item $Cn(cX,\_Y)\to Cn(X,Y)$
+                          \pause
+                    \item $Cp(\_X,\_Y)\to Cp(X,Y)$
+                          \pause
+                    \item $Cp(\varepsilon,\varepsilon)\to \varepsilon$
+                \end{itemize}
+            \end{column}
+        \end{columns}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Grammar $G_{S-SAT}$ Definition}
+
+    \[
+        G_{S-SAT} = (N, T, V, P, S),
+    \]
+    where:
+
+    \begin{itemize}
+        \item $N=\{S,A,B,C,P,N,Cp,Cn\}$
+        \item $T=\{a,b,c,d\}$.
+        \item $V=\{X,Y,X_1,X_2\}$.
+        \item The \textbf{initial symbol} is $S$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Grammar $G_{S-SAT}$ Productions}
+
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{itemize}
+                \item $S(X)\to A(X)$.
+
+                \item $A(aX)\to P(X,1)$
+                \item $A(aX)\to N(X,0)$
+                \item $A(bX)\to N(X,1)$
+                \item $A(bX)\to P(X,0)$
+                \item $A(cX)\to N(X,1)$
+                \item $A(cX)\to N(X,0)$
+
+                \item $P(aX,Y)\to P(X,Y1)$
+                \item $P(aX,Y)\to P(X,Y0)$
+                \item $P(bX,Y)\to P(X,Y1)$
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{itemize}
+                \item $P(bX,Y)\to P(X,Y0)$
+
+                \item $P(cX,Y)\to P(X,Y1)$
+                \item $P(cX,Y)\to P(X,Y0)$
+                \item $P(dX,Y)\to B(X,Y)$
+
+                \item $N(aX,Y)\to P(X,Y1)$
+                \item $N(aX,Y)\to N(X,Y0)$
+                \item $N(bX,Y)\to N(X,Y1)$
+                \item $N(bX,Y)\to P(X,Y0)$
+                \item $N(cX,Y)\to N(X,Y1)$
+                \item $N(cX,Y)\to N(X,Y0)$
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Grammar $G_{S-SAT}$ Productions}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item $B(X_1dX_2,Y)\to C(X_1,Y) B(X_2,Y)$
+                \item $B(\varepsilon,Y)\to\varepsilon$
+
+                \item $C(X,Y)\to Cn(X,Y)$
+
+                \item $Cn(aX,1Y) \to Cp(X,Y)$
+                \item $Cn(aX,0Y) \to Cn(X,Y)$
+                \item $Cn(bX,1Y) \to Cn(X,Y)$
+                \item $Cn(bX,0Y) \to Cp(X,Y)$
+                \item $Cn(cX,1Y) \to Cn(X,Y)$
+
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item $Cn(cX,0Y) \to Cn(X,Y)$
+                \item $Cp(aX,1Y) \to Cp(X,Y)$
+                \item $Cp(aX,0Y) \to Cp(X,Y)$
+                \item $Cp(bX,1Y) \to Cp(X,Y)$
+                \item $Cp(bX,0Y) \to Cp(X,Y)$
+                \item $Cp(cX,1Y) \to Cp(X,Y)$
+                \item $Cp(cX,0Y) \to Cp(X,Y)$
+                \item $Cp(\varepsilon,\varepsilon)\to \varepsilon$
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Results Derived from $G_{S-SAT}$}
+
+    \begin{block}{Language of All Satisfiable Boolean Formulas}
+        $$L_{S-SAT} = L_{G_{S-SAT}}$$
+    \end{block}
+    \pause
+    \begin{block}{Summary}
+        \begin{itemize}
+            \item 8 predicates, 4 terminals, 4 variables, and 36 productions
+                  \pause
+            \item Word problem for $G_{S-SAT}$ is not polynomial (memoization algorithm)
+        \end{itemize}
+    \end{block}
+    \pause
+    \begin{block}{Results}
+        \begin{itemize}
+            \item RCGs recognize all problems in class NP
+                  \pause
+            \item The word problem for RCGs is NP-Hard
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Presentation Structure}
+
+    Define and construct the language of all satisfiable Boolean formulas
+
+    \setbeamercolor{block title}{fg=white, bg=gray!50} % Block title color (50% gray)
+    \setbeamercolor{block body}{bg=gray!20}
+
+    \begin{block}{Define $L_{S-SAT}$}
+        \begin{itemize}
+            \item Encode a Boolean formula
+            \item Define $L_{S-SAT}$
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Construct $L_{S-SAT}$ using a Range Concatenation Grammar}
+        \begin{itemize}
+            \item Introduce Range Concatenation Grammars (RCG)
+            \item RCG that recognizes $L_{S-SAT}$
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusions}
+
+    \begin{itemize}
+        \item It is possible to describe $L_{S-SAT}$ using a regulated rewriting formalism
+        \item RCGs recognize all problems in class NP
+              \pause
+        \item The word problem for RCGs is NP-Hard
+    \end{itemize}
+\end{frame}
+
+\section{Recommendations}
+\begin{frame}
+    \frametitle{Recommendations}
+
+    \begin{itemize}
+        \item Investigate other algorithms for the RCG word problem?
+              \pause
+        \item RCG that recognizes polynomial-time solvable SAT (2-SAT)
+              \pause
+        \item Explore other formalisms capable of describing $L_{S-SAT}$
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+    \titlepage
+    \vspace{1cm} % Espacio adicional
+    \begin{center}
+        Tutor: \tutor
+    \end{center}
+\end{frame}
+
+\end{document}
